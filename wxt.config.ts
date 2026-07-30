@@ -41,6 +41,11 @@ export default defineConfig({
     modules: ['@wxt-dev/module-react'],
     vite: () => viteConfig,
     manifest,
+    dev: {
+        server: {
+            port: 3000
+        }
+    },
     // @ts-ignore
     webExt: {
         chromiumArgs: [
