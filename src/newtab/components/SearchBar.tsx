@@ -26,8 +26,9 @@ export default function SearchBar() {
   }
 
   return (
-    <div className='search-bar'>
+    <>
       <select
+        className='search-engine-select'
         value={engines.current}
         onChange={(e) => handleEngineChange(e.target.value)}
       >
@@ -37,13 +38,16 @@ export default function SearchBar() {
           </option>
         ))}
       </select>
+      <span className='search-divider' />
       <input
+        className='search-input'
         type='text'
         value={query}
         onChange={(e) => setQuery(e.target.value)}
         onKeyDown={handleKeyDown}
         placeholder='搜索...'
+        autoFocus
       />
-    </div>
+    </>
   )
 }
