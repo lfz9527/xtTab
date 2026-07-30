@@ -16,7 +16,7 @@ style.textContent = `
   body {
     font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display',
       'Segoe UI', Roboto, 'Noto Sans SC', sans-serif;
-    background: linear-gradient(135deg, #0d0f14 0%, #161a22 50%, #1a1f2e 100%);
+    background: #f5f6f8;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -45,17 +45,18 @@ style.textContent = `
     align-items: center;
     width: 100%;
     height: 56px;
-    background: rgba(255, 255, 255, 0.06);
-    border: 1px solid rgba(255, 255, 255, 0.10);
+    background: #ffffff;
+    border: 1px solid #e2e4e8;
     border-radius: 16px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
     transition: border-color 0.25s, box-shadow 0.25s, background 0.25s;
     overflow: hidden;
   }
 
   .search-wrapper:focus-within {
-    border-color: rgba(129, 140, 248, 0.5);
-    box-shadow: 0 0 0 3px rgba(129, 140, 248, 0.15);
-    background: rgba(255, 255, 255, 0.08);
+    border-color: #818cf8;
+    box-shadow: 0 0 0 3px rgba(129, 140, 248, 0.20), 0 4px 16px rgba(0, 0, 0, 0.04);
+    background: #ffffff;
   }
 
   .search-icon {
@@ -63,7 +64,7 @@ style.textContent = `
     padding: 0 8px 0 20px;
     font-size: 18px;
     line-height: 1;
-    color: rgba(255, 255, 255, 0.35);
+    color: #9ca0a8;
     user-select: none;
   }
 
@@ -73,24 +74,24 @@ style.textContent = `
     -webkit-appearance: none;
     border: none;
     background: transparent;
-    color: rgba(255, 255, 255, 0.55);
+    color: #6b6f78;
     font-size: 14px;
     font-family: inherit;
     padding: 0 20px 0 4px;
     outline: none;
     cursor: pointer;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' fill='none'%3E%3Cpath d='M1 1l4 4 4-4' stroke='rgba(255,255,255,0.4)' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' fill='none'%3E%3Cpath d='M1 1l4 4 4-4' stroke='rgba(0,0,0,0.3)' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
     background-repeat: no-repeat;
     background-position: right 4px center;
     transition: color 0.2s;
   }
 
   .search-engine-select:hover {
-    color: rgba(255, 255, 255, 0.8);
+    color: #1a1a2e;
   }
 
   .search-engine-select option {
-    color: #1a1a1a;
+    color: #1a1a2e;
     background: #fff;
   }
 
@@ -98,7 +99,7 @@ style.textContent = `
     flex-shrink: 0;
     width: 1px;
     height: 24px;
-    background: rgba(255, 255, 255, 0.10);
+    background: #e2e4e8;
     margin: 0 4px;
   }
 
@@ -106,7 +107,7 @@ style.textContent = `
     flex: 1;
     border: none;
     background: transparent;
-    color: #f0f0f2;
+    color: #1a1a2e;
     font-size: 16px;
     font-family: inherit;
     padding: 0 20px 0 12px;
@@ -115,7 +116,7 @@ style.textContent = `
   }
 
   .search-input::placeholder {
-    color: rgba(255, 255, 255, 0.25);
+    color: #b0b3b9;
   }
 
   .time-display {
@@ -130,7 +131,7 @@ style.textContent = `
     font-size: 88px;
     font-weight: 300;
     letter-spacing: 4px;
-    color: #f0f0f2;
+    color: #1a1a2e;
     line-height: 1;
     user-select: none;
   }
@@ -146,7 +147,7 @@ style.textContent = `
   .time-date {
     font-size: 15px;
     font-weight: 400;
-    color: rgba(255, 255, 255, 0.35);
+    color: #8e9199;
     letter-spacing: 1px;
     user-select: none;
   }
@@ -166,11 +167,10 @@ function App() {
   )
 }
 
-// 提示文字样式
 const hintStyle = document.createElement('style')
 hintStyle.textContent = `
   .search-hint {
-    color: rgba(255, 255, 255, 0.20);
+    color: #b0b3b9;
     font-size: 13px;
     letter-spacing: 0.3px;
     animation: fadeIn 0.8s ease-out 0.3s both;
