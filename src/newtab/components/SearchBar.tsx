@@ -53,7 +53,7 @@ export default function SearchBar() {
         <button
           type='button'
           onClick={() => setOpen(!open)}
-          className='flex items-center gap-1.5 pl-1 pr-5 cursor-pointer outline-none bg-[url("data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%2710%27 height=%276%27 fill=%27none%27%3E%3Cpath d=%27M1 1l4 4 4-4%27 stroke=%27rgba(0,0,0,0.3)%27 stroke-width=%271.5%27 stroke-linecap=%27round%27 stroke-linejoin=%27round%27/%3E%3C/svg%3E")] bg-no-repeat bg-[right_4px_center]'
+          className='flex items-center gap-1.5 pl-5 pr-5 cursor-pointer outline-none bg-[url("data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%2710%27 height=%276%27 fill=%27none%27%3E%3Cpath d=%27M1 1l4 4 4-4%27 stroke=%27rgba(0,0,0,0.3)%27 stroke-width=%271.5%27 stroke-linecap=%27round%27 stroke-linejoin=%27round%27/%3E%3C/svg%3E")] bg-no-repeat bg-[right_4px_center]'
         >
           <img
             src={engineIcons[currentEngine.key]}
