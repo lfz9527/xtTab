@@ -34,8 +34,11 @@ const manifest = {
         default_title: 'Click Me'
     },
     side_panel: {
-        default_path: 'sidePanel/index.html'
-    }
+        default_path: 'sidePanel.html'
+    },
+    chrome_url_overrides: {
+        newtab: "newTab.html"
+    },
 }
 
 export default defineConfig({
