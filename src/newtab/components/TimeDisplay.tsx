@@ -23,12 +23,12 @@ export default function TimeDisplay() {
   }, [])
 
   return (
-    <div className='time-display'>
-      <div className='time-clock'>
-        {now.hour}<span className='time-colon'>:</span>{now.minute}
+    <div className='flex flex-col items-center gap-2 animate-[fadeIn_0.6s_ease-out]'>
+      <div className='text-[88px] font-light tracking-[4px] text-[#1a1a2e] leading-none select-none'>
+        {now.hour}<span className='animate-[blink_1s_step-end_infinite]'>:</span>{now.minute}
       </div>
-      <div className='time-date'>
-        {now.year}年{now.month}月{now.day}日 &middot; 周{now.weekday}
+      <div className='text-sm font-normal text-[#8e9199] tracking-[1px] select-none'>
+        {now.year}年{now.month}月{now.day}日 · 周{now.weekday}
       </div>
     </div>
   )

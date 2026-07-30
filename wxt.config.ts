@@ -2,10 +2,13 @@ import { defineConfig } from 'wxt'
 import type { WxtViteConfig } from 'wxt'
 import path from 'path'
 
+import tailwindcss from '@tailwindcss/vite'
+
 const resolve = (dir: string) => path.join(__dirname, dir)
 
 // vite配置
 const viteConfig: WxtViteConfig = {
+    plugins: [tailwindcss()],
     resolve: {
         alias: {
             '@': resolve('src'),
