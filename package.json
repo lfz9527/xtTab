@@ -21,6 +21,7 @@
     "@webext-core/messaging": "^2.3.0",
     "@wxt-dev/browser": "^0.0.326",
     "@wxt-dev/storage": "^1.1.1",
+    "lucide-react": "^1.28.0",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "tiny-uid": "^1.1.2"

@@ -4,14 +4,16 @@
 
 ## 项目
 
-- **技术栈**: WXT 0.20, React 19, TypeScript, Vite, Vitest
+- **技术栈**: WXT 0.20, React 19, TypeScript, Vite, Vitest, TailwindCSS v4
 - **包管理**: pnpm
-- **入口**: `src/entries/` 下有 `background/` (后台脚本)、`content/` (内容脚本)、`sidePanel/` (侧边栏)
-  - `src/entries/background/index.ts` → 转导出 `@/background`
-  - `src/entries/content/index.tsx` → 注入 React 根节点 (ShadowRoot UI)
-  - `src/entries/sidePanel/index.html` → 引用 `@/sidePanel`
+- **入口**: `src/entries/` 下有 4 个 WXT 入口点
+  - `entries/background/index.ts` → 转导出 `@/background`
+  - `entries/content/index.tsx` → 注入 ShadowRoot React UI
+  - `entries/sidePanel/index.html` → 引用 `@/sidePanel`
+  - `entries/newtab/index.html` → 引用 `@/newTab/main.tsx` (替换新标签页)
 - **路径别名**: `@` → `src/`
-- **扩展权限**: `activeTab`、`tabs`、`sidePanel`、`storage`
+- **扩展权限**: `activeTab`、`tabs`、`sidePanel`、`storage`、`host_permissions: <all_urls>`
+- **静态资源**: `public/` 存放不经过 Vite 处理的图片等 (如 `icon/`)
 
 ## 命令
 
@@ -30,15 +32,17 @@ pnpm lint            # (通过 ESLint)
 
 ## 架构
 
+入口层 (`entries/`) 与实现层分离：`entries/*/` 仅做 re-export 或简单编排，实际逻辑在 `src/` 对应目录。
+
 | 模块 | 位置 | 职责 |
 |---|---|---|
-| **entries (入口)** | `src/entries/` | WXT 入口点 — background / content / sidePanel |
-| **background** | `src/background/` | Service Worker 后台逻辑 |
-| **content** | `src/content/` | 注入页面的 React 内容脚本 (ShadowRoot UI) |
+| **background** | `src/background/` | Service Worker — 图标点击打开侧边栏、标签事件监听、消息总线注册 |
+| **content** | `src/content/` | 注入页面的 React 组件 (ShadowRoot UI) |
 | **sidePanel** | `src/sidePanel/` | 侧边栏面板 (React 应用) |
-| **services** | `src/services/` | HTTP 请求封装 (Fetch 包装器 + Services 类)，支持请求取消 |
-| **messages** | `src/messages/` | 基于 `@webext-core/messaging` 的跨上下文消息总线 (content ↔ background ↔ sidePanel) |
-| **hooks** | `src/hooks/` | React Hooks — `useTabs` (管理标签页)、`useWxtStorage` (WXT storage 包装) |
+| **newtab** | `src/newtab/` | 新标签页 React 应用 (SearchBar + TimeDisplay) |
+| **services** | `src/services/` | HTTP 请求封装 (Fetch 包装器 + Services 类)，支持请求取消与超时 |
+| **messages** | `src/messages/` | 自定义消息总线 (`MessageBus` 单例) + Content 消息类，基于 `browser.runtime.onMessage` |
+| **hooks** | `src/hooks/` | React Hooks — `useTabs` (标签页管理)、`useWxtStorage` (WXT storage 包装) |
 | **constants** | `src/constants/` | 枚举定义体系 (`BaseEnumCls` 抽象类模式)、常量 |
 | **types** | `src/types/` | 全局类型定义 (`anyObject`、`Response<T>`) |
 | **utils** | `src/utils/` | 通用工具函数 |
