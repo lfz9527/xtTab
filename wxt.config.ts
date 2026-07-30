@@ -32,6 +32,9 @@ const manifest = {
     },
     side_panel: {
         default_path: 'sidePanel/index.html'
+    },
+    chrome_url_overrides: {
+        newtab: 'newtab/index.html'
     }
 }
 
