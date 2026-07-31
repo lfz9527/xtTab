@@ -16,7 +16,7 @@ const searchEnginesStorage = storage.defineItem<SearchEnginesState>(
   'local:searchEngines',
   {
     fallback: {
-      current: 'google',
+      current: 'baidu',
       list: [
         {
           key: 'google',
