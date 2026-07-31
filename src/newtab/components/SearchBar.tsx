@@ -122,6 +122,8 @@ export default function SearchBar() {
     return () => clearTimeout(timer)
   }, [query, currentEngine])
 
+  console.log(333, suggestions)
+
   return (
     <>
       <InputGroup ref={inputGroupRef} className='h-12 rounded-2xl bg-white shadow-[0_2px_12px_rgba(0,0,0,0.04)] px-2'>
@@ -173,8 +175,7 @@ export default function SearchBar() {
       <Popover open={suggestOpen && suggestions.length > 0} onOpenChange={setSuggestOpen}>
         <PopoverContent
           anchor={inputGroupRef}
-          align="start"
-          alignOffset={-8}
+          align="center"
           sideOffset={8}
           className='p-1.5 shadow-none rounded-2xl max-h-[300px] overflow-y-auto'
           style={{ width: popoverWidth }}
