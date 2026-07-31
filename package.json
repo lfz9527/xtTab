@@ -13,7 +13,7 @@
     "zip:firefox": "wxt zip -b firefox",
     "compile": "tsc --noEmit",
     "postinstall": "wxt prepare",
-    "clear": "rimraf node_modules pnpm-lock.yaml",
+    "clear": "rimraf node_modules && rimraf pnpm-lock.yaml",
     "openapi": "ts-node openapi.config.js",
     "test": "vitest"
   },
