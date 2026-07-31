@@ -122,7 +122,6 @@ export default function SearchBar() {
     return () => clearTimeout(timer)
   }, [query, currentEngine])
 
-  console.log(333, suggestions)
 
   return (
     <>

@@ -8,12 +8,24 @@ describe('parseSuggestResponse', () => {
     ).toEqual(['hello world', 'hello kitty'])
   })
 
-  it('解析百度 JSONP 格式', () => {
+  it('解析百度 sugrec 标准 JSON (g[].q)', () => {
     expect(
       parseSuggestResponse(
-        'window.baidu.sug({"q":"hello","p":false,"s":["hello world","hello kitty"]})'
+        '{"q":"搜索","p":false,"g":[{"q":"搜索AI伙伴","type":"direct_new"},{"q":"搜索引擎平台"}]}'
       )
-    ).toEqual(['hello world', 'hello kitty'])
+    ).toEqual(['搜索AI伙伴', '搜索引擎平台'])
+  })
+
+  it('g 缺失时返回空数组', () => {
+    expect(parseSuggestResponse('{"q":"搜索","p":false}')).toEqual([])
+  })
+
+  it('过滤 g 中非字符串元素', () => {
+    expect(
+      parseSuggestResponse(
+        '{"g":[{"q":"有效词"},{"q":123},null,{"type":"direct_new"}]}'
+      )
+    ).toEqual(['有效词'])
   })
 
   it('非法文本返回空数组', () => {
