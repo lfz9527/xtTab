@@ -6,11 +6,11 @@
 
 - **技术栈**: WXT 0.20, React 19, TypeScript, Vite, Vitest, TailwindCSS v4
 - **包管理**: pnpm
-- **入口**: `src/entries/` 下有 4 个 WXT 入口点
-  - `entries/background/index.ts` → 转导出 `@/background`
-  - `entries/content/index.tsx` → 注入 ShadowRoot React UI
-  - `entries/sidePanel/index.html` → 引用 `@/sidePanel`
-  - `entries/newtab/index.html` → 引用 `@/newTab/main.tsx` (替换新标签页)
+- **入口**: `src/entries/` 下有 4 个 WXT 入口点 (`srcDir: 'src'`, `entrypointsDir: 'entries'`)
+  - `src/entries/background/index.ts` → 转导出 `@/background`
+  - `src/entries/content/index.tsx` → 注入 ShadowRoot React UI (matches `<all_urls>`)
+  - `src/entries/sidePanel/index.html` → 引用 `@/sidePanel`
+  - `src/entries/newTab/index.html` → 引用 `@/newTab/main.tsx` (替换新标签页)
 - **路径别名**: `@` → `src/`
 - **扩展权限**: `activeTab`、`tabs`、`sidePanel`、`storage`、`host_permissions: <all_urls>`
 - **静态资源**: `public/` 存放不经过 Vite 处理的图片等 (如 `icon/`)
@@ -23,9 +23,11 @@ pnpm dev:firefox     # 启动开发服务器 (Firefox)
 pnpm build           # 构建生产版本
 pnpm build:firefox   # 构建 Firefox 版本
 pnpm zip             # 打包 .zip
+pnpm zip:firefox     # 打包 Firefox 版本 .zip
 pnpm compile         # tsc 类型检查
 pnpm test            # vitest 运行测试
-pnpm lint            # (通过 ESLint)
+pnpm openapi         # 从 swagger 重新生成 src/services/ 接口代码
+# 无 lint 脚本；需要时用 `pnpm exec eslint .`
 ```
 
 测试文件匹配 `src/**/*.test.{ts,tsx}`。
@@ -36,20 +38,22 @@ pnpm lint            # (通过 ESLint)
 
 | 模块 | 位置 | 职责 |
 |---|---|---|
-| **background** | `src/background/` | Service Worker — 图标点击打开侧边栏、标签事件监听、消息总线注册 |
+| **background** | `src/background/` | Service Worker — 图标点击打开侧边栏、消息总线注册、suggest 搜索联想 API 代理 |
 | **content** | `src/content/` | 注入页面的 React 组件 (ShadowRoot UI) |
 | **sidePanel** | `src/sidePanel/` | 侧边栏面板 (React 应用) |
-| **newtab** | `src/newtab/` | 新标签页 React 应用 (SearchBar + TimeDisplay) |
+| **newTab** | `src/newTab/` | 新标签页 React 应用 (SearchBar + SuggestPopover + useSearchEngines) |
 | **services** | `src/services/` | HTTP 请求封装 (Fetch 包装器 + Services 类)，支持请求取消与超时 |
 | **messages** | `src/messages/` | 自定义消息总线 (`MessageBus` 单例) + Content 消息类，基于 `browser.runtime.onMessage` |
 | **hooks** | `src/hooks/` | React Hooks — `useTabs` (标签页管理)、`useWxtStorage` (WXT storage 包装) |
 | **constants** | `src/constants/` | 枚举定义体系 (`BaseEnumCls` 抽象类模式)、常量 |
 | **types** | `src/types/` | 全局类型定义 (`anyObject`、`Response<T>`) |
 | **utils** | `src/utils/` | 通用工具函数 |
+| **lib** | `src/lib/` | shadcn 工具 (`cn` class 合并) |
+| **styles** | `src/styles/` | 全局样式 (`globals.css`) |
 
 ## 约定
 
-- **缩进**: 2 空格 (EditorConfig + Prettier)
+- **缩进**: 2 空格 (EditorConfig + Prettier) — 注意部分历史文件 (如 `src/background/index.ts`) 为 4 空格，改动时遵循配置
 - **引号**: 单引号 (`singleQuote: true`)，JSX 也用单引号 (`jsxSingleQuote: true`)
 - **分号**: 无分号 (`semi: false`)
 - **尾逗号**: 无 (`trailingComma: 'none'`)
@@ -64,4 +68,4 @@ pnpm lint            # (通过 ESLint)
 
 ## 备注
 
-(留空供后续补充)
+- 需求/设计文档位于 `docs/reasonix/plans/` 与 `docs/reasonix/specs/` (文档驱动开发)
