@@ -81,32 +81,10 @@ export default function SuggestPopover({
   }
 
   const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>): boolean => {
-    if (e.key === 'ArrowDown') {
-      e.preventDefault()
-      if (suggestions.length === 0) return true
-      setSuggestOpen(true)
-      setActiveIndex((i) => (i + 1) % suggestions.length)
-      return true
-    }
-    if (e.key === 'ArrowUp') {
-      e.preventDefault()
-      if (suggestions.length === 0) return true
-      setActiveIndex((i) => (i <= 0 ? suggestions.length - 1 : i - 1))
-      return true
-    }
     if (e.key === 'Escape') {
       setSuggestOpen(false)
       setActiveIndex(-1)
       return true
-    }
-    if (e.key === 'Enter') {
-      if (e.nativeEvent.isComposing) return true
-      if (suggestOpen && activeIndex >= 0 && suggestions[activeIndex]) {
-        e.preventDefault()
-        search(suggestions[activeIndex])
-        return true
-      }
-      return false // 未选中联想词，交由父组件普通搜索
     }
     return false
   }

@@ -58,7 +58,10 @@ export default function SearchBar() {
   const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
     // 联想导航优先消费，未消费的 Enter 走普通搜索
     if (suggestRef.current?.handleKeyDown(e)) return
-    if (e.key === 'Enter') handleSearch()
+    if (e.key === 'Enter') {
+      if (e.nativeEvent.isComposing) return
+      handleSearch()
+    }
   }
 
   const handleEngineChange = (key: string) => {
