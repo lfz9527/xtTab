@@ -4,7 +4,7 @@
 
 **Goal:** 为新标签页搜索栏增加输入联想：输入关键词时通过 background 转发请求当前引擎的 suggest API（GitHub 无 API 或失败时回退百度），以 Popover 下拉展示，点击/回车直接搜索。
 
-**Architecture:** newtab SearchBar 防抖 200ms 后通过 MessageBus 发送 `{ engine, query }` 给 background；background 用原生 fetch 请求 suggest API，解析响应（Google/Bing 标准 JSON 数组、百度 JSONP），空/失败回退百度，返回 `MessageResponse<string[]>`。联想下拉复用项目 Popover 组件（新增 `anchor` 透传），内容最大高度 300px 可滚动。
+**Architecture:** newtab SuggestPopover 通过 useDebounceFn 防抖 200ms 后经 MessageBus 发送 `{ engine, query }` 给 background；background 用原生 fetch 请求 suggest API，解析响应（Google/Bing 标准 JSON 数组、百度 sugrec `g[].q`），统一截断前 10 条（`MAX_SUGGESTIONS`），空/失败回退百度，返回 `MessageResponse<string[]>`。联想下拉复用项目 Popover 组件（新增 `anchor` 透传），高度随词条自然撑开。仅输入内容变化触发查询，切换引擎不触发。
 
 **Tech Stack:** WXT 0.20 / React 19 / TypeScript / @base-ui/react 1.6.0 / Vitest 4
 
@@ -19,13 +19,14 @@
 
 | 文件 | 动作 | 职责 |
 |---|---|---|
-| `src/constants/suggest.ts` | 新增 | suggest API 映射、action 常量、回退引擎、响应解析纯函数 |
+| `src/constants/suggest.ts` | 新增 | suggest API 映射、action 常量、回退引擎、`MAX_SUGGESTIONS`、响应解析纯函数 |
 | `src/constants/suggest.test.ts` | 新增 | `parseSuggestResponse` 单测 |
 | `src/messages/types.ts` | 修改 | `MessageHandler` 允许返回 `MessageResponse \| Promise<MessageResponse> \| void` |
 | `src/messages/message.ts` | 修改 | `registerListener` 等待 handler 返回值并 `sendResponse` 首个含 code 的结果 |
-| `src/background/index.ts` | 修改 | 注册 `SUGGEST_ACTION` 监听：fetch → parse → 回退百度 |
+| `src/background/index.ts` | 修改 | 注册 `SUGGEST_ACTION` 监听：fetch → parse → slice(0,10) → 回退百度 |
 | `src/components/ui/popover.tsx` | 修改 | `PopoverContent` 透传 `anchor` 给 Positioner（用户已批准例外） |
-| `src/newTab/components/SearchBar.tsx` | 修改 | 防抖请求、联想下拉（Popover + 300px）、键盘导航、直搜 |
+| `src/newTab/components/SuggestPopover.tsx` | 新增 | 联想下拉组件：useDebounceFn 防抖、输入法拦截、聚焦状态拦截关闭、直搜 |
+| `src/newTab/components/SearchBar.tsx` | 修改 | 维护 `inputFocused` 状态并渲染 `SuggestPopover` |
 
 ---
 
@@ -351,9 +352,10 @@ git commit -m "feat: PopoverContent 透传 anchor 支持自定义锚点
 
 ---
 
-### Task 5: SearchBar 联想下拉
+### Task 5: SuggestPopover 联想下拉（独立组件）
 
 **Files:**
+- Create: `src/newTab/components/SuggestPopover.tsx`
 - Modify: `src/newTab/components/SearchBar.tsx`
 
 - [ ] **Step 1: 新增 import 与状态**
@@ -526,10 +528,11 @@ Expected: 构建成功，无报错
 - [ ] **Step 4: 手动验收清单**（由用户或开发者在 Chrome 中加载 `pnpm dev` 验证）
 
 - [ ] 输入关键词出现联想下拉，宽度与搜索框一致
-- [ ] 下拉内容超过 300px 时可滚动
-- [ ] 点击 / 回车选中联想词 → 当前引擎打开搜索
-- [ ] `↑`/`↓` 导航高亮同步，`Esc` 关闭，点击外部关闭
-- [ ] 切换引擎后联想词刷新
+- [ ] 下拉高度随词条自然撑开，各引擎结果不超过 10 条
+- [ ] 点击选中联想词 → 当前引擎打开搜索
+- [ ] 连续点击输入框不关闭联想列表，点击外部 / Esc 正常关闭
+- [ ] 输入法组合输入期间不发起联想请求
+- [ ] 切换引擎不触发联想查询，仅输入内容变化触发（使用当前引擎）
 - [ ] GitHub 引擎与断网时回退百度（或返回空不展示）
 
 - [ ] **Step 5: 收尾提交（如验证中发现修复项，单独提交）**

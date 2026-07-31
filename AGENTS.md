@@ -44,7 +44,7 @@ pnpm openapi         # 从 swagger 重新生成 src/services/ 接口代码
 | **newTab** | `src/newTab/` | 新标签页 React 应用 (SearchBar + SuggestPopover + useSearchEngines) |
 | **services** | `src/services/` | HTTP 请求封装 (Fetch 包装器 + Services 类)，支持请求取消与超时 |
 | **messages** | `src/messages/` | 自定义消息总线 (`MessageBus` 单例) + Content 消息类，基于 `browser.runtime.onMessage` |
-| **hooks** | `src/hooks/` | React Hooks — `useTabs` (标签页管理)、`useWxtStorage` (WXT storage 包装) |
+| **hooks** | `src/hooks/` | React Hooks — `useTabs` (标签页管理)、`useWxtStorage` (WXT storage 包装)、`useDebounceFn`/`useDebounceValue` (防抖)、`useLatest` (最新值引用)、`useUnmount` (卸载回调) |
 | **constants** | `src/constants/` | 枚举定义体系 (`BaseEnumCls` 抽象类模式)、常量 |
 | **types** | `src/types/` | 全局类型定义 (`anyObject`、`Response<T>`) |
 | **utils** | `src/utils/` | 通用工具函数 |
