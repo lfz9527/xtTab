@@ -38,7 +38,6 @@ export default function SearchBar() {
   useEffect(() => {
     if (inputGroupRef.current) {
       const w = inputGroupRef.current.offsetWidth
-      console.log('InputGroup width:', w)
       setPopoverWidth(w)
     }
   }, [])
@@ -56,12 +55,8 @@ export default function SearchBar() {
   }
 
   const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
-    // 联想导航优先消费，未消费的 Enter 走普通搜索
-    if (suggestRef.current?.handleKeyDown(e)) return
-    if (e.key === 'Enter') {
-      if (e.nativeEvent.isComposing) return
-      handleSearch()
-    }
+    if (e.nativeEvent.isComposing) return
+    if (e.key === 'Enter') handleSearch()
   }
 
   const handleEngineChange = (key: string) => {
@@ -108,6 +103,7 @@ export default function SearchBar() {
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           onKeyDown={handleKeyDown}
+          onFocus={() => suggestRef.current?.onFocus()}
           placeholder='搜索...'
           autoFocus
         />
