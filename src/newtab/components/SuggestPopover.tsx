@@ -115,7 +115,7 @@ export default function SuggestPopover({
         sideOffset={8}
         initialFocus={false}
         finalFocus={false}
-        className='p-1.5 shadow-none rounded-2xl max-h-[300px] overflow-y-auto'
+        className='p-1.5 shadow-none rounded-2xl'
         style={{ width }}
       >
         <ul className='flex flex-col'>

@@ -1,6 +1,6 @@
 import uid from "tiny-uid"
 import MessageBus from '@/messages/message'
-import { FALLBACK_ENGINE, SUGGEST_ACTION, SUGGEST_APIS, parseSuggestResponse } from '@/constants/suggest'
+import { FALLBACK_ENGINE, MAX_SUGGESTIONS, SUGGEST_ACTION, SUGGEST_APIS, parseSuggestResponse } from '@/constants/suggest'
 import { type MessageResponse } from '@/messages/types'
 import { MessagingCode } from '@/constants'
 import { type anyObject } from '@/types'
@@ -34,7 +34,8 @@ async function fetchSuggestions(engine: string, query: string): Promise<string[]
   const api = SUGGEST_APIS[engine] ?? SUGGEST_APIS[FALLBACK_ENGINE]
   const res = await fetch(api + encodeURIComponent(query))
   if (!res.ok) throw new Error(`suggest request failed: ${res.status}`)
-  return parseSuggestResponse(await res.text())
+  // 统一截断为前 MAX_SUGGESTIONS 条，bing 等引擎返回条数多于其他引擎
+  return parseSuggestResponse(await res.text()).slice(0, MAX_SUGGESTIONS)
 }
 
 MessageBus.on(SUGGEST_ACTION, async (req) => {

@@ -11,6 +11,9 @@ export const SUGGEST_APIS: Record<string, string> = {
 // 无 suggest API 或请求失败/为空时的回退引擎
 export const FALLBACK_ENGINE = 'baidu'
 
+// 联想词最大返回条数，各引擎（google/baidu/bing）统一截断
+export const MAX_SUGGESTIONS = 10
+
 /**
  * 解析 suggest API 响应文本为联想词数组
  * 支持 Google/Bing 标准 JSON 数组 与 百度 sugrec 标准 JSON (g[].q)
