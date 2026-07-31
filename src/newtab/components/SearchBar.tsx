@@ -28,6 +28,7 @@ export default function SearchBar() {
   const [query, setQuery] = useState('')
   const inputGroupRef = useRef<HTMLDivElement>(null)
   const [popoverWidth, setPopoverWidth] = useState<number | undefined>(undefined)
+  const [enginePopoverOpen, setEnginePopoverOpen] = useState(false)
 
   useEffect(() => {
     if (inputGroupRef.current) {
@@ -53,12 +54,13 @@ export default function SearchBar() {
 
   const handleEngineChange = (key: string) => {
     setEngines({ ...engines, current: key })
+    setEnginePopoverOpen(false)
   }
 
   return (
     <InputGroup ref={inputGroupRef} className='h-12 rounded-2xl bg-white shadow-[0_2px_12px_rgba(0,0,0,0.04)] px-2'>
       <InputGroupAddon align="inline-start" className='h-full p-0'>
-        <Popover>
+        <Popover open={enginePopoverOpen} onOpenChange={setEnginePopoverOpen}>
           <PopoverTrigger className='group flex h-full w-full cursor-pointer items-center gap-1 px-2 outline-none border-0'>
             <img
               src={engineIcons[currentEngine.key]}
