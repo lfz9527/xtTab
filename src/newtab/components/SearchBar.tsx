@@ -8,12 +8,12 @@ import {
 } from '@/components/ui/input-group'
 import {
   Popover,
-  PopoverArrow,
   PopoverTrigger,
   PopoverContent
 } from '@/components/ui/popover'
-import messageBus from '@/messages/message'
-import { SUGGEST_ACTION } from '@/constants/suggest'
+import SuggestPopover, {
+  type SuggestPopoverHandle
+} from './SuggestPopover'
 import useSearchEngines from '../store/useSearchEngines'
 import googleIcon from '../assets/brand-icon/google-icon.png'
 import baiduIcon from '../assets/brand-icon/baidu-icon.png'
@@ -33,10 +33,7 @@ export default function SearchBar() {
   const inputGroupRef = useRef<HTMLDivElement>(null)
   const [popoverWidth, setPopoverWidth] = useState<number | undefined>(undefined)
   const [enginePopoverOpen, setEnginePopoverOpen] = useState(false)
-  const [suggestions, setSuggestions] = useState<string[]>([])
-  const [suggestOpen, setSuggestOpen] = useState(false)
-  const [activeIndex, setActiveIndex] = useState(-1)
-  const queryRef = useRef({ query: '', engine: '' })
+  const suggestRef = useRef<SuggestPopoverHandle>(null)
 
   useEffect(() => {
     if (inputGroupRef.current) {
@@ -48,13 +45,10 @@ export default function SearchBar() {
   const currentEngine = engines.list.find(
     (e) => e.key === engines.current
   ) ?? engines.list[0]
-  queryRef.current = { query, engine: currentEngine.key }
   const search = (word: string) => {
     const trimmed = word.trim()
     if (!trimmed) return
     window.open(currentEngine.url + encodeURIComponent(trimmed), '_blank')
-    setSuggestOpen(false)
-    setActiveIndex(-1)
   }
 
   const handleSearch = () => {
@@ -62,66 +56,15 @@ export default function SearchBar() {
   }
 
   const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'ArrowDown') {
-      e.preventDefault()
-      if (suggestions.length === 0) return
-      setSuggestOpen(true)
-      setActiveIndex((i) => (i + 1) % suggestions.length)
-    } else if (e.key === 'ArrowUp') {
-      e.preventDefault()
-      if (suggestions.length === 0) return
-      setActiveIndex((i) => (i <= 0 ? suggestions.length - 1 : i - 1))
-    } else if (e.key === 'Escape') {
-      setSuggestOpen(false)
-      setActiveIndex(-1)
-    } else if (e.key === 'Enter') {
-      if (e.nativeEvent.isComposing) return
-      if (suggestOpen && activeIndex >= 0 && suggestions[activeIndex]) {
-        e.preventDefault()
-        search(suggestions[activeIndex])
-      } else {
-        handleSearch()
-      }
-    }
+    // 联想导航优先消费，未消费的 Enter 走普通搜索
+    if (suggestRef.current?.handleKeyDown(e)) return
+    if (e.key === 'Enter') handleSearch()
   }
 
   const handleEngineChange = (key: string) => {
     setEngines({ ...engines, current: key })
     setEnginePopoverOpen(false)
   }
-
-  // 联想请求：防抖 200ms，响应过期丢弃
-  useEffect(() => {
-    const trimmed = query.trim()
-    if (!trimmed) {
-      setSuggestions([])
-      setSuggestOpen(false)
-      setActiveIndex(-1)
-      return
-    }
-    setSuggestions([])
-    setActiveIndex(-1)
-    const timer = setTimeout(async () => {
-      const res = await messageBus.send<{ engine: string; query: string }, string[]>(
-        SUGGEST_ACTION,
-        {
-          engine: currentEngine.key,
-          query: trimmed
-        }
-      )
-      if (
-        queryRef.current.query !== trimmed ||
-        queryRef.current.engine !== currentEngine.key
-      ) {
-        return // 过期响应丢弃
-      }
-      setSuggestions(res?.data ?? [])
-      setSuggestOpen(true)
-      setActiveIndex(-1)
-    }, 200)
-    return () => clearTimeout(timer)
-  }, [query, currentEngine])
-
 
   return (
     <>
@@ -171,32 +114,14 @@ export default function SearchBar() {
           </Button>
         </InputGroupAddon>
       </InputGroup>
-      <Popover open={suggestOpen && suggestions.length > 0} onOpenChange={setSuggestOpen}>
-        <PopoverContent
-          anchor={inputGroupRef}
-          align="center"
-          sideOffset={8}
-          className='p-1.5 shadow-none rounded-2xl max-h-[300px] overflow-y-auto'
-          style={{ width: popoverWidth }}
-        >
-          <ul className='flex flex-col'>
-            {suggestions.map((s, i) => (
-              <li key={s}>
-                <button
-                  type='button'
-                  onMouseDown={(e) => e.preventDefault()}
-                  onClick={() => search(s)}
-                  onMouseEnter={() => setActiveIndex(i)}
-                  className={`flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-left text-sm text-foreground ${i === activeIndex ? 'bg-muted' : ''}`}
-                >
-                  <SearchIcon className='size-3.5 shrink-0 text-muted-foreground' />
-                  <span className='truncate'>{s}</span>
-                </button>
-              </li>
-            ))}
-          </ul>
-        </PopoverContent>
-      </Popover>
+      <SuggestPopover
+        ref={suggestRef}
+        query={query}
+        engineKey={currentEngine.key}
+        anchor={inputGroupRef}
+        width={popoverWidth}
+        onSearch={search}
+      />
     </>
   )
 }
