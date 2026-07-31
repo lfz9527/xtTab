@@ -10,6 +10,7 @@ import { SearchIcon } from 'lucide-react'
 import { Popover, PopoverContent } from '@/components/ui/popover'
 import messageBus from '@/messages/message'
 import { SUGGEST_ACTION } from '@/constants/suggest'
+import { useDebounceFn } from '@/hooks/useDebounceFn'
 
 export interface SuggestPopoverHandle {
   /** 输入框聚焦时，如果有联想词则展开下拉 */
@@ -55,16 +56,8 @@ export default function SuggestPopover({
   }, [])
 
   // 联想请求：防抖 200ms
-  useEffect(() => {
-    if (composing) return
-    const trimmed = query.trim()
-    if (!trimmed) {
-      setSuggestions([])
-      setSuggestOpen(false)
-      return
-    }
-    setSuggestions([])
-    const timer = setTimeout(async () => {
+  const { run: runSuggest, cancel: cancelSuggest } = useDebounceFn(
+    async (trimmed: string) => {
       const res = await messageBus.send<{ engine: string; query: string }, string[]>(
         SUGGEST_ACTION,
         { engine: engineKey, query: trimmed }
@@ -72,9 +65,25 @@ export default function SuggestPopover({
       if (queryRef.current.query !== trimmed || queryRef.current.engine !== engineKey) return
       setSuggestions(res?.data ?? [])
       setSuggestOpen(true)
-    }, 200)
-    return () => clearTimeout(timer)
-  }, [query, engineKey, composing])
+    },
+    { delay: 200 }
+  )
+
+  useEffect(() => {
+    if (composing) {
+      cancelSuggest()
+      return
+    }
+    const trimmed = query.trim()
+    if (!trimmed) {
+      cancelSuggest()
+      setSuggestions([])
+      setSuggestOpen(false)
+      return
+    }
+    setSuggestions([])
+    runSuggest(trimmed)
+  }, [query, engineKey, composing, runSuggest, cancelSuggest])
 
   const search = (word: string) => {
     onSearch(word)
