@@ -119,6 +119,7 @@ export default function SuggestPopover({
         anchor={anchor}
         align="center"
         sideOffset={8}
+        initialFocus={false}
         className='p-1.5 shadow-none rounded-2xl max-h-[300px] overflow-y-auto'
         style={{ width }}
       >
