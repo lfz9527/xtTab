@@ -83,7 +83,8 @@ export default function SuggestPopover({
     }
     setSuggestions([])
     runSuggest(trimmed)
-  }, [query, engineKey, composing, runSuggest, cancelSuggest])
+    // 仅输入框内容变化时触发查询；切换搜索引擎不重新查询联想，避免无谓展开列表
+  }, [query, composing, runSuggest, cancelSuggest])
 
   const search = (word: string) => {
     onSearch(word)
