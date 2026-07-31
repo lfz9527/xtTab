@@ -25,7 +25,6 @@ class MessageBus {
 
     browser.runtime.onMessage.addListener(
       (request: MessageRequest, sender, sendResponse) => {
-
         const action = request.action
         if (!action) {
           sendResponse({ code: MessagingCode.ERROR_CODE_NORMAL.key, message: '消息 action 未定义' })
@@ -39,24 +38,37 @@ class MessageBus {
           return true
         }
 
-
-
-        // 立即返回 sendResponse，异步 handler 自行处理
-        sendResponse({ code: MessagingCode.ERROR_CODE_NORMAL.key })
         const response = request.payload as MessageResponse
-
         const allHandlers = [...(handlers || []), ...(onceHandlers || [])]
-        allHandlers.forEach((handler) => {
-          try {
-            handler(response, sender)
-          } catch (err: any) {
-            console.error(`[MessageBus] handler 错误 action=${action}:`, err)
+
+        // 等待所有 handler 的返回结果，取第一个含 code 字段的响应回传
+        // allSettled：handler Promise 被 reject 时不阻塞 sendResponse，避免调用方挂起
+        Promise.allSettled(
+          allHandlers.map((handler) => {
+            try {
+              return handler(response, sender)
+            } catch (err: any) {
+              console.error(`[MessageBus] handler 错误 action=${action}:`, err)
+              return undefined
+            }
+          })
+        ).then((results) => {
+          const handled = results
+            .filter(
+              (r): r is PromiseFulfilledResult<MessageResponse | void> =>
+                r.status === 'fulfilled'
+            )
+            .map((r) => r.value)
+            .find(
+              (r): r is MessageResponse =>
+                !!r && typeof r === 'object' && 'code' in r
+            )
+          sendResponse(handled ?? { code: MessagingCode.ERROR_CODE_NORMAL.key })
+          // 执行完 onceHandlers 后清理掉
+          if (onceHandlers && onceHandlers.size > 0) {
+            this.onceHandlers.delete(action)
           }
         })
-        // 执行完 onceHandlers 后清理掉
-        if (onceHandlers && onceHandlers.size > 0) {
-          this.onceHandlers.delete(action)
-        }
         // 始终返回 true，以支持异步响应
         return true
       }

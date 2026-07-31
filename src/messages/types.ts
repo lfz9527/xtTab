@@ -15,4 +15,4 @@ export type MessageResponse<T = any> = {
 export type MessageHandler<T = anyObject> = (
   request: MessageResponse<T>,
   sender: Browser.runtime.MessageSender
-) => void
+) => MessageResponse | Promise<MessageResponse> | void
