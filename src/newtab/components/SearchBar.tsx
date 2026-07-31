@@ -30,6 +30,7 @@ const engineIcons: Record<string, string> = {
 export default function SearchBar() {
   const [engines, setEngines] = useSearchEngines()
   const [query, setQuery] = useState('')
+  const [inputFocused, setInputFocused] = useState(false)
   const inputGroupRef = useRef<HTMLDivElement>(null)
   const [popoverWidth, setPopoverWidth] = useState<number | undefined>(undefined)
   const [enginePopoverOpen, setEnginePopoverOpen] = useState(false)
@@ -77,13 +78,15 @@ export default function SearchBar() {
               />
               <ChevronDownIcon className='size-4 text-muted-foreground transition-transform group-aria-expanded:rotate-180' />
             </PopoverTrigger>
-            <PopoverContent align="start" alignOffset={-4} sideOffset={8} className='p-2 shadow-none rounded-[16px]' style={{ width: popoverWidth }}>
+            <PopoverContent align="start" alignOffset={-4} sideOffset={8} className='p-2 shadow-none rounded-2xl' style={{ width: popoverWidth }}>
               <div className='flex items-center gap-1'>
                 {engines.list.map((engine) => (
                   <button
                     key={engine.key}
                     type='button'
-                    onClick={() => handleEngineChange(engine.key)}
+                    onClick={(e) => {
+                      handleEngineChange(engine.key)
+                    }}
                     className='flex flex-col items-center justify-center gap-0.5 rounded-md size-14 text-xs text-foreground hover:bg-muted transition-colors'
                   >
                     <img
@@ -103,7 +106,11 @@ export default function SearchBar() {
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           onKeyDown={handleKeyDown}
-          onFocus={() => suggestRef.current?.onFocus()}
+          onFocus={() => {
+            setInputFocused(true)
+            suggestRef.current?.onFocus()
+          }}
+          onBlur={() => setInputFocused(false)}
           placeholder='搜索...'
           autoFocus
         />
@@ -119,6 +126,7 @@ export default function SearchBar() {
         engineKey={currentEngine.key}
         anchor={inputGroupRef}
         width={popoverWidth}
+        inputFocused={inputFocused}
         onSearch={search}
       />
     </>

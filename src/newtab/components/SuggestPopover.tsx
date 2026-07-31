@@ -21,6 +21,8 @@ interface SuggestPopoverProps {
   engineKey: string
   anchor: RefObject<HTMLDivElement | null>
   width?: number
+  /** 输入框当前是否聚焦，用于拦截点击输入框触发的 outside-press 关闭 */
+  inputFocused: boolean
   onSearch: (word: string) => void
   ref?: Ref<SuggestPopoverHandle>
 }
@@ -30,6 +32,7 @@ export default function SuggestPopover({
   engineKey,
   anchor,
   width,
+  inputFocused,
   onSearch,
   ref
 }: SuggestPopoverProps) {
@@ -79,6 +82,7 @@ export default function SuggestPopover({
   }
 
   const onFocus = () => {
+    if (suggestOpen) return
     if (suggestions.length > 0) {
       setTimeout(() => setSuggestOpen(true), 200)
     }
@@ -87,7 +91,15 @@ export default function SuggestPopover({
   useImperativeHandle(ref, () => ({ onFocus }))
 
   return (
-    <Popover open={suggestOpen && suggestions.length > 0} onOpenChange={setSuggestOpen}>
+    <Popover
+      open={suggestOpen && suggestions.length > 0}
+      onOpenChange={(open, details) => {
+        // 点击输入框（仍聚焦输入）触发的 outside-press 关闭应被忽略，否则连续点击输入框会误关联想列表
+        // 'outside-press' 为 @base-ui/react 内部 REASONS.outsidePress 的值，未从包根公开导出，故用字面量
+        if (!open && details.reason === 'outside-press' && inputFocused) return
+        setSuggestOpen(open)
+      }}
+    >
       <PopoverContent
         anchor={anchor}
         align="center"
