@@ -1,7 +1,6 @@
 import {
   useEffect,
   useImperativeHandle,
-  useRef,
   useState,
   type Ref,
   type RefObject
@@ -11,6 +10,7 @@ import { Popover, PopoverContent } from '@/components/ui/popover'
 import messageBus from '@/messages/message'
 import { SUGGEST_ACTION } from '@/constants/suggest'
 import { useDebounceFn } from '@/hooks/useDebounceFn'
+import { useLatest } from '@/hooks/useLatest'
 
 export interface SuggestPopoverHandle {
   /** 输入框聚焦时，如果有联想词则展开下拉 */
@@ -40,8 +40,7 @@ export default function SuggestPopover({
   const [suggestions, setSuggestions] = useState<string[]>([])
   const [suggestOpen, setSuggestOpen] = useState(false)
   const [composing, setComposing] = useState(false)
-  const queryRef = useRef({ query: '', engine: '' })
-  queryRef.current = { query, engine: engineKey }
+  const queryRef = useLatest({ query, engine: engineKey })
 
   // 监听输入法组合输入
   useEffect(() => {
