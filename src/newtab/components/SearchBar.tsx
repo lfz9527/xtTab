@@ -16,11 +16,13 @@ import useSearchEngines from '../store/useSearchEngines'
 import googleIcon from '../assets/brand-icon/google-icon.png'
 import baiduIcon from '../assets/brand-icon/baidu-icon.png'
 import bingIcon from '../assets/brand-icon/bing-icon.png'
+import githubIcon from '../assets/brand-icon/github-icon.png'
 
 const engineIcons: Record<string, string> = {
   google: googleIcon,
   baidu: baiduIcon,
-  bing: bingIcon
+  bing: bingIcon,
+  github: githubIcon
 }
 
 export default function SearchBar() {

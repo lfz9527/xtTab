@@ -32,6 +32,11 @@ const searchEnginesStorage = storage.defineItem<SearchEnginesState>(
           key: 'bing',
           name: 'Bing',
           url: 'https://www.bing.com/search?q='
+        },
+        {
+          key: 'github',
+          name: 'GitHub',
+          url: 'https://github.com/search?q='
         }
       ]
     }
