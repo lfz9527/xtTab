@@ -2,6 +2,7 @@ import {
   useEffect,
   useImperativeHandle,
   useState,
+  type KeyboardEvent,
   type Ref,
   type RefObject
 } from 'react'
@@ -15,6 +16,8 @@ import { useLatest } from '@/hooks/useLatest'
 export interface SuggestPopoverHandle {
   /** 输入框聚焦时，如果有联想词则展开下拉 */
   onFocus: () => void
+  /** 方向键切换高亮、回车搜索高亮联想词；返回 true 表示事件已被消费 */
+  handleKeyDown: (e: KeyboardEvent<HTMLInputElement>) => boolean
 }
 
 interface SuggestPopoverProps {
@@ -40,6 +43,7 @@ export default function SuggestPopover({
   const [suggestions, setSuggestions] = useState<string[]>([])
   const [suggestOpen, setSuggestOpen] = useState(false)
   const [composing, setComposing] = useState(false)
+  const [activeIndex, setActiveIndex] = useState(-1)
   const queryRef = useLatest({ query, engine: engineKey })
 
   // 监听输入法组合输入
@@ -88,6 +92,33 @@ export default function SuggestPopover({
   const search = (word: string) => {
     onSearch(word)
     setSuggestOpen(false)
+    setActiveIndex(-1)
+  }
+
+  // 联想词刷新后重置高亮
+  useEffect(() => {
+    setActiveIndex(-1)
+  }, [suggestions])
+
+  // 方向键切换高亮、回车搜索高亮联想词；返回 true 表示事件已被消费
+  const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
+    if (!suggestOpen || suggestions.length === 0) return false
+    if (e.key === 'ArrowDown') {
+      e.preventDefault()
+      setActiveIndex((i) => (i + 1) % suggestions.length)
+      return true
+    }
+    if (e.key === 'ArrowUp') {
+      e.preventDefault()
+      setActiveIndex((i) => (i <= 0 ? suggestions.length - 1 : i - 1))
+      return true
+    }
+    if (e.key === 'Enter' && activeIndex >= 0) {
+      e.preventDefault()
+      search(suggestions[activeIndex])
+      return true
+    }
+    return false
   }
 
   const onFocus = () => {
@@ -97,7 +128,7 @@ export default function SuggestPopover({
     }
   }
 
-  useImperativeHandle(ref, () => ({ onFocus }))
+  useImperativeHandle(ref, () => ({ onFocus, handleKeyDown }))
 
   return (
     <Popover
@@ -119,13 +150,15 @@ export default function SuggestPopover({
         style={{ width }}
       >
         <ul className='flex flex-col'>
-          {suggestions.map((s) => (
+          {suggestions.map((s, index) => (
             <li key={s}>
               <button
                 type='button'
                 onMouseDown={(e) => e.preventDefault()}
                 onClick={() => search(s)}
-                className='flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-left text-sm text-foreground hover:bg-muted'
+                className={`flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-left text-sm text-foreground hover:bg-muted ${
+                  index === activeIndex ? 'bg-muted' : ''
+                }`}
               >
                 <SearchIcon className='size-3.5 shrink-0 text-muted-foreground' />
                 <span className='truncate'>{s}</span>

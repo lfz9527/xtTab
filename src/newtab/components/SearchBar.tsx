@@ -57,6 +57,8 @@ export default function SearchBar() {
 
   const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
     if (e.nativeEvent.isComposing) return
+    // 联想列表方向键/回车优先消费；未消费时回车触发搜索
+    if (suggestRef.current?.handleKeyDown(e)) return
     if (e.key === 'Enter') handleSearch()
   }
 
