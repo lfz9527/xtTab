@@ -15,6 +15,7 @@ import SuggestPopover, {
   type SuggestPopoverHandle
 } from './SuggestPopover'
 import useSearchEngines from '../store/useSearchEngines'
+import useSettings from '../store/useSettings'
 import googleIcon from '../assets/brand-icon/google-icon.png'
 import baiduIcon from '../assets/brand-icon/baidu-icon.png'
 import bingIcon from '../assets/brand-icon/bing-icon.png'
@@ -39,6 +40,8 @@ const renderEngineIcon = (engineKey: string, name: string) =>
 
 export default function SearchBar() {
   const [engines, setEngines] = useSearchEngines()
+  const [settings] = useSettings()
+  const openTarget = settings.openTarget ?? 'current'
   const [query, setQuery] = useState('')
   const [inputFocused, setInputFocused] = useState(false)
   const inputGroupRef = useRef<HTMLDivElement>(null)
@@ -58,7 +61,12 @@ export default function SearchBar() {
   const search = (word: string) => {
     const trimmed = word.trim()
     if (!trimmed) return
-    window.open(currentEngine.url + encodeURIComponent(trimmed), '_blank')
+    const url = currentEngine.url + encodeURIComponent(trimmed)
+    if (openTarget === 'new') {
+      window.open(url, '_blank')
+    } else {
+      window.location.href = url
+    }
   }
 
   const handleSearch = () => {
