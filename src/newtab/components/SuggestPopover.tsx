@@ -156,12 +156,16 @@ export default function SuggestPopover({
                 type='button'
                 onMouseDown={(e) => e.preventDefault()}
                 onClick={() => search(s)}
-                className={`flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-left text-sm text-foreground hover:bg-muted ${
+                className={`group flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-left text-sm text-foreground transition-colors duration-500 hover:bg-muted ${
                   index === activeIndex ? 'bg-muted' : ''
                 }`}
               >
-                <SearchIcon className='size-3.5 shrink-0 text-muted-foreground' />
-                <span className='truncate'>{s}</span>
+                <SearchIcon className={`size-3.5 shrink-0 text-muted-foreground transition-all duration-500 group-hover:text-foreground group-hover:translate-x-2.5 ${
+                  index === activeIndex ? 'text-foreground translate-x-2.5' : ''
+                }`} />
+                <span className={`truncate transition-transform duration-500 group-hover:translate-x-2.5 ${
+                  index === activeIndex ? 'translate-x-2.5' : ''
+                }`}>{s}</span>
               </button>
             </li>
           ))}
