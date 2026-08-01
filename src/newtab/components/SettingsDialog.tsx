@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { SettingsIcon } from 'lucide-react'
 import {
   Dialog,
-  DialogPopup,
+  DialogContent,
   DialogTrigger
 } from '@/components/ui/dialog'
 import { cn } from '@/lib/utils'
@@ -36,16 +36,20 @@ export default function SettingsDialog() {
   const openTarget = settings.openTarget ?? 'current'
 
   return (
-    <Dialog>
+    <Dialog modal>
       <DialogTrigger
         aria-label='设置'
         className='fixed right-2 top-2 z-40 flex size-9 cursor-pointer items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-muted hover:text-foreground'
       >
         <SettingsIcon className='size-5' />
       </DialogTrigger>
-      <DialogPopup aria-label='设置' className='max-w-[600px] overflow-hidden p-0'>
+      <DialogContent
+        aria-label='设置'
+        showCloseButton={false}
+        className='max-w-[600px] sm:max-w-[600px] overflow-hidden p-0'
+      >
         <div className='flex min-h-96'>
-          <nav className='flex w-44 shrink-0 flex-col gap-1 border-r border-border p-3'>
+          <nav className='flex w-[130px] shrink-0 flex-col gap-1 border-r border-border p-3'>
             {SETTINGS_TABS.map((tab) => (
               <button
                 key={tab.key}
@@ -93,7 +97,7 @@ export default function SettingsDialog() {
             {activeTab === 'engines' && <div className='flex flex-col gap-3' />}
           </div>
         </div>
-      </DialogPopup>
+      </DialogContent>
     </Dialog>
   )
 }
