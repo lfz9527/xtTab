@@ -19,13 +19,23 @@ import googleIcon from '../assets/brand-icon/google-icon.png'
 import baiduIcon from '../assets/brand-icon/baidu-icon.png'
 import bingIcon from '../assets/brand-icon/bing-icon.png'
 import githubIcon from '../assets/brand-icon/github-icon.png'
+import juejinIcon from '../assets/brand-icon/juejin-icon.svg'
 
 const engineIcons: Record<string, string> = {
   google: googleIcon,
   baidu: baiduIcon,
   bing: bingIcon,
-  github: githubIcon
+  github: githubIcon,
+  juejin: juejinIcon
 }
+
+/** 渲染引擎图标；未配置品牌图标的引擎（如掘金）默认使用 Search 图标 */
+const renderEngineIcon = (engineKey: string, name: string) =>
+  engineIcons[engineKey] ? (
+    <img src={engineIcons[engineKey]} alt={name} className='size-5' />
+  ) : (
+    <SearchIcon className='size-5 text-muted-foreground' />
+  )
 
 export default function SearchBar() {
   const [engines, setEngines] = useSearchEngines()
@@ -73,11 +83,7 @@ export default function SearchBar() {
         <InputGroupAddon align="inline-start" className='h-full p-0'>
           <Popover open={enginePopoverOpen} onOpenChange={setEnginePopoverOpen}>
             <PopoverTrigger className='group flex h-full w-full cursor-pointer items-center gap-1 px-2 outline-none border-0'>
-              <img
-                src={engineIcons[currentEngine.key]}
-                alt={currentEngine.name}
-                className='size-5'
-              />
+              {renderEngineIcon(currentEngine.key, currentEngine.name)}
               <ChevronDownIcon className='size-4 text-muted-foreground transition-transform group-aria-expanded:rotate-180' />
             </PopoverTrigger>
             <PopoverContent align="start" alignOffset={-4} sideOffset={8} className='p-2 shadow-none rounded-2xl' style={{ width: popoverWidth }}>
@@ -91,11 +97,7 @@ export default function SearchBar() {
                     }}
                     className='flex flex-col items-center justify-center gap-0.5 rounded-md size-14 text-xs text-foreground hover:bg-muted transition-colors'
                   >
-                    <img
-                      src={engineIcons[engine.key]}
-                      alt={engine.name}
-                      className='size-5'
-                    />
+                    {renderEngineIcon(engine.key, engine.name)}
                     <span>{engine.name}</span>
                   </button>
                 ))}
