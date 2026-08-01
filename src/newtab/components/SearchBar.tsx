@@ -69,7 +69,7 @@ export default function SearchBar() {
 
   return (
     <>
-      <InputGroup ref={inputGroupRef} className='h-12 rounded-2xl bg-white shadow-[0_2px_12px_rgba(0,0,0,0.04)] px-2'>
+      <InputGroup ref={inputGroupRef} className='h-12 rounded-2xl bg-white shadow-[0_2px_12px_rgba(0,0,0,0.04)] px-2 focus-within:!ring-0 focus-within:!border-input'>
         <InputGroupAddon align="inline-start" className='h-full p-0'>
           <Popover open={enginePopoverOpen} onOpenChange={setEnginePopoverOpen}>
             <PopoverTrigger className='group flex h-full w-full cursor-pointer items-center gap-1 px-2 outline-none border-0'>
