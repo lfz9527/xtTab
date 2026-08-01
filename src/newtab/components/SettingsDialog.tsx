@@ -1,12 +1,20 @@
 import { useState } from 'react'
-import { SettingsIcon } from 'lucide-react'
+import { PlusIcon, SettingsIcon, Trash2Icon } from 'lucide-react'
+import uid from 'tiny-uid'
 import {
   Dialog,
   DialogContent,
+  DialogTitle,
   DialogTrigger
 } from '@/components/ui/dialog'
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { Switch } from '@/components/ui/switch'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
 import { cn } from '@/lib/utils'
-import useSettings from '../store/useSettings'
+import useSettings, { type SettingsState } from '../store/useSettings'
+import useSearchEngines from '../store/useSearchEngines'
+import EngineIcon from './EngineIcon'
 
 interface SettingsTab {
   key: string
@@ -25,6 +33,9 @@ const OPEN_TARGET_OPTIONS = [
   { value: 'new', label: '新标签页' }
 ] as const
 
+/** 设置弹窗左右区域共用高度 */
+const PANEL_HEIGHT_CLASS = 'h-[500px]'
+
 /**
  * 设置弹窗
  * 左右布局：左侧 tab 导航，右侧展示当前 tab 对应的设置项
@@ -34,6 +45,51 @@ export default function SettingsDialog() {
   const [activeTab, setActiveTab] = useState(SETTINGS_TABS[0].key)
   const [settings, setSettings] = useSettings()
   const openTarget = settings.openTarget ?? 'current'
+  const [engines, setEngines] = useSearchEngines()
+
+  /** 切换引擎隐藏状态 */
+  const toggleEngineHidden = (key: string) => {
+    setEngines({
+      ...engines,
+      list: engines.list.map((e) =>
+        e.key === key ? { ...e, hidden: !e.hidden } : e
+      )
+    })
+  }
+
+  /** 删除引擎（当前使用的引擎由 UI 禁用，不会走到这里） */
+  const removeEngine = (key: string) => {
+    setEngines({
+      ...engines,
+      list: engines.list.filter((e) => e.key !== key)
+    })
+  }
+
+  /** 新增引擎表单状态：名称/链接必填，图片链接选填 */
+  const [newEngine, setNewEngine] = useState({ name: '', url: '', icon: '' })
+  /** 添加引擎弹窗开关 */
+  const [addDialogOpen, setAddDialogOpen] = useState(false)
+
+  /** 添加搜索引擎 */
+  const addEngine = () => {
+    const name = newEngine.name.trim()
+    const url = newEngine.url.trim()
+    if (!name || !url) return
+    setEngines({
+      ...engines,
+      list: [
+        ...engines.list,
+        {
+          key: uid(),
+          name,
+          url,
+          icon: newEngine.icon.trim() || undefined
+        }
+      ]
+    })
+    setNewEngine({ name: '', url: '', icon: '' })
+    setAddDialogOpen(false)
+  }
 
   return (
     <Dialog modal>
@@ -46,10 +102,15 @@ export default function SettingsDialog() {
       <DialogContent
         aria-label='设置'
         showCloseButton={false}
-        className='max-w-[600px] sm:max-w-[600px] overflow-hidden p-0'
+        className='max-w-[900px] sm:max-w-[900px] overflow-hidden p-0'
       >
-        <div className='flex min-h-96'>
-          <nav className='flex w-[130px] shrink-0 flex-col gap-1 border-r border-border p-3'>
+        <div className={cn('flex', PANEL_HEIGHT_CLASS)}>
+          <nav
+            className={cn(
+              'flex w-[130px] shrink-0 flex-col gap-1 border-r border-border p-3',
+              PANEL_HEIGHT_CLASS
+            )}
+          >
             {SETTINGS_TABS.map((tab) => (
               <button
                 key={tab.key}
@@ -66,7 +127,7 @@ export default function SettingsDialog() {
           </nav>
           <div
             key={activeTab}
-            className='flex flex-1 flex-col gap-4 p-6 animate-in fade-in slide-in-from-right-2 duration-200'
+            className='flex flex-1 flex-col gap-4 overflow-y-auto p-6 animate-in fade-in slide-in-from-right-2 duration-200'
           >
             {/* 设置项容器：按 activeTab 渲染不同设置项 */}
             {activeTab === 'general' && (
@@ -74,30 +135,139 @@ export default function SettingsDialog() {
                 <span className='text-sm font-medium text-foreground'>
                   搜索结果打开方式
                 </span>
-                <div className='flex w-fit gap-1 rounded-lg bg-muted p-1'>
-                  {OPEN_TARGET_OPTIONS.map((opt) => (
-                    <button
-                      key={opt.value}
-                      type='button'
-                      onClick={() =>
-                        setSettings({ ...settings, openTarget: opt.value })
-                      }
-                      className={cn(
-                        'rounded-md px-3 py-1 text-sm text-muted-foreground transition-colors hover:text-foreground',
-                        openTarget === opt.value &&
-                          'bg-background text-foreground shadow-sm'
-                      )}
-                    >
-                      {opt.label}
-                    </button>
-                  ))}
+                <Tabs
+                  value={openTarget}
+                  onValueChange={(value) =>
+                    setSettings({
+                      ...settings,
+                      openTarget: value as SettingsState['openTarget']
+                    })
+                  }
+                  className='w-fit'
+                >
+                  <TabsList>
+                    {OPEN_TARGET_OPTIONS.map((opt) => (
+                      <TabsTrigger
+                        key={opt.value}
+                        value={opt.value}
+                        className='px-3'
+                      >
+                        {opt.label}
+                      </TabsTrigger>
+                    ))}
+                  </TabsList>
+                </Tabs>
+              </div>
+            )}
+            {activeTab === 'engines' && (
+              <div className='flex flex-col gap-2'>
+                {/* 自定义搜索引擎 */}
+                <Button
+                  variant='default'
+                  className='w-fit'
+                  onClick={() => setAddDialogOpen(true)}
+                >
+                  <PlusIcon className='size-4' />
+                  自定义搜索引擎
+                </Button>
+                <div className='grid grid-cols-2 gap-2'>
+                  {engines.list.map((engine) => {
+                    // 当前正在使用的引擎不允许关闭
+                    const isCurrent = engine.key === engines.current
+                    return (
+                      <div
+                        key={engine.key}
+                        className={cn(
+                          'flex flex-col justify-between gap-2 rounded-lg border bg-card p-3',
+                          isCurrent
+                            ? 'border-primary/60 ring-1 ring-primary/20'
+                            : 'border-border'
+                        )}
+                      >
+                        <div className='flex items-center justify-between gap-2'>
+                          <div className='flex min-w-0 items-center gap-2'>
+                            <EngineIcon
+                              engineKey={engine.key}
+                              name={engine.name}
+                              icon={engine.icon}
+                            />
+                            <span className='truncate text-sm font-medium text-foreground'>
+                              {engine.name}
+                            </span>
+                          </div>
+                          <Switch
+                            checked={!engine.hidden}
+                            onCheckedChange={() => toggleEngineHidden(engine.key)}
+                            disabled={isCurrent}
+                            aria-label={`显示${engine.name}`}
+                          />
+                        </div>
+                        <div className='flex items-center justify-between gap-2'>
+                          <span className='truncate text-xs text-muted-foreground'>
+                            {engine.url}
+                          </span>
+                          <button
+                            type='button'
+                            onClick={() => removeEngine(engine.key)}
+                            disabled={isCurrent}
+                            aria-label={`删除${engine.name}`}
+                            className='shrink-0 rounded p-0.5 text-muted-foreground transition-colors hover:text-destructive disabled:pointer-events-none disabled:opacity-40'
+                          >
+                            <Trash2Icon className='size-3.5' />
+                          </button>
+                        </div>
+                      </div>
+                    )
+                  })}
                 </div>
               </div>
             )}
-            {activeTab === 'engines' && <div className='flex flex-col gap-3' />}
           </div>
         </div>
       </DialogContent>
+      {/* 自定义搜索引擎二次弹窗 */}
+      <Dialog modal open={addDialogOpen} onOpenChange={setAddDialogOpen}>
+        <DialogContent
+          overlayForceRender
+          className='max-w-[600px] sm:max-w-[600px]'
+        >
+          <DialogTitle>自定义搜索引擎</DialogTitle>
+          <div className='flex flex-col gap-2'>
+            <Input
+              placeholder='名称'
+              value={newEngine.name}
+              onChange={(e) =>
+                setNewEngine({ ...newEngine, name: e.target.value })
+              }
+            />
+            <Input
+              placeholder='链接（搜索地址，可用 %s 指定关键字位置，如 https://www.baidu.com/s?wd=%s）'
+              value={newEngine.url}
+              onChange={(e) =>
+                setNewEngine({ ...newEngine, url: e.target.value })
+              }
+            />
+            <Input
+              placeholder='图片链接（可选）'
+              value={newEngine.icon}
+              onChange={(e) =>
+                setNewEngine({ ...newEngine, icon: e.target.value })
+              }
+            />
+          </div>
+          <div className='flex justify-end gap-2'>
+            <Button variant='outline' onClick={() => setAddDialogOpen(false)}>
+              取消
+            </Button>
+            <Button
+              onClick={addEngine}
+              disabled={!newEngine.name.trim() || !newEngine.url.trim()}
+            >
+              添加
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </Dialog>
   )
 }

@@ -5,6 +5,10 @@ export interface SearchEngine {
   key: string
   name: string
   url: string
+  /** 自定义图标图片链接（可选） */
+  icon?: string
+  /** 是否在搜索引擎切换菜单中隐藏 */
+  hidden?: boolean
 }
 
 export interface SearchEnginesState {

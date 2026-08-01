@@ -40,13 +40,16 @@ function DialogContent({
   className,
   children,
   showCloseButton = true,
+  overlayForceRender = false,
   ...props
 }: DialogPrimitive.Popup.Props & {
   showCloseButton?: boolean
+  /** 嵌套 dialog 时强制渲染蒙版（默认 false：嵌套弹窗复用外层蒙版） */
+  overlayForceRender?: boolean
 }) {
   return (
     <DialogPortal>
-      <DialogOverlay />
+      <DialogOverlay forceRender={overlayForceRender} />
       <DialogPrimitive.Popup
         data-slot="dialog-content"
         className={cn(

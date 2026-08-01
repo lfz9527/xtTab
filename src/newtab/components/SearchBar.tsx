@@ -14,29 +14,9 @@ import {
 import SuggestPopover, {
   type SuggestPopoverHandle
 } from './SuggestPopover'
+import EngineIcon from './EngineIcon'
 import useSearchEngines from '../store/useSearchEngines'
 import useSettings from '../store/useSettings'
-import googleIcon from '../assets/brand-icon/google-icon.png'
-import baiduIcon from '../assets/brand-icon/baidu-icon.png'
-import bingIcon from '../assets/brand-icon/bing-icon.png'
-import githubIcon from '../assets/brand-icon/github-icon.png'
-import juejinIcon from '../assets/brand-icon/juejin-icon.svg'
-
-const engineIcons: Record<string, string> = {
-  google: googleIcon,
-  baidu: baiduIcon,
-  bing: bingIcon,
-  github: githubIcon,
-  juejin: juejinIcon
-}
-
-/** 渲染引擎图标；未配置品牌图标的引擎（如掘金）默认使用 Search 图标 */
-const renderEngineIcon = (engineKey: string, name: string) =>
-  engineIcons[engineKey] ? (
-    <img src={engineIcons[engineKey]} alt={name} className='size-5' />
-  ) : (
-    <SearchIcon className='size-5 text-muted-foreground' />
-  )
 
 export default function SearchBar() {
   const [engines, setEngines] = useSearchEngines()
@@ -55,13 +35,19 @@ export default function SearchBar() {
       setPopoverWidth(w)
     }
   }, [])
-  const currentEngine = engines.list.find(
-    (e) => e.key === engines.current
-  ) ?? engines.list[0]
+  const visibleEngines = engines.list.filter((e) => !e.hidden)
+  const currentEngine =
+    engines.list.find((e) => e.key === engines.current && !e.hidden) ??
+    visibleEngines[0] ??
+    engines.list[0]
   const search = (word: string) => {
     const trimmed = word.trim()
     if (!trimmed) return
-    const url = currentEngine.url + encodeURIComponent(trimmed)
+    const keyword = encodeURIComponent(trimmed)
+    // 链接含 %s 时替换为关键字（支持指定位置）；否则追加到末尾
+    const url = currentEngine.url.includes('%s')
+      ? currentEngine.url.replaceAll('%s', keyword)
+      : currentEngine.url + keyword
     if (openTarget === 'new') {
       window.open(url, '_blank')
     } else {
@@ -91,12 +77,16 @@ export default function SearchBar() {
         <InputGroupAddon align="inline-start" className='h-full p-0'>
           <Popover open={enginePopoverOpen} onOpenChange={setEnginePopoverOpen}>
             <PopoverTrigger className='group flex h-full w-full cursor-pointer items-center gap-1 px-2 outline-none border-0'>
-              {renderEngineIcon(currentEngine.key, currentEngine.name)}
+              <EngineIcon
+                engineKey={currentEngine.key}
+                name={currentEngine.name}
+                icon={currentEngine.icon}
+              />
               <ChevronDownIcon className='size-4 text-muted-foreground transition-transform group-aria-expanded:rotate-180' />
             </PopoverTrigger>
             <PopoverContent align="start" alignOffset={-4} sideOffset={8} className='p-2 shadow-none rounded-2xl' style={{ width: popoverWidth }}>
               <div className='flex items-center gap-1'>
-                {engines.list.map((engine) => (
+                {visibleEngines.map((engine) => (
                   <button
                     key={engine.key}
                     type='button'
@@ -105,7 +95,11 @@ export default function SearchBar() {
                     }}
                     className='flex flex-col items-center justify-center gap-0.5 rounded-md size-14 text-xs text-foreground hover:bg-muted transition-colors'
                   >
-                    {renderEngineIcon(engine.key, engine.name)}
+                    <EngineIcon
+                      engineKey={engine.key}
+                      name={engine.name}
+                      icon={engine.icon}
+                    />
                     <span>{engine.name}</span>
                   </button>
                 ))}
