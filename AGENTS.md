@@ -64,7 +64,7 @@ pnpm openapi         # 从 swagger 重新生成 src/services/ 接口代码
 - **命名**: TypeScript 文件使用 `.ts`/`.tsx`；组件文件名小写开头 (如 `useTabs.tsx`、`base.ts`)
 - **测试**: Vitest，放置在 `src/**/*.test.{ts,tsx}`，使用 `WxtVitest` 插件
 - **WXT 配置**: `wxt.config.ts`，入口目录为 `entries/`，React 模块通过 `@wxt-dev/module-react`
-- **组件保护**: 严禁直接修改 `src/components/ui/` 下的 shadcn 组件源码。如需调整样式或行为，从外部传入 className 或封装 wrapper 组件。例外需经我明确同意。
+- **组件保护**: 如需修改 `src/components/ui/` 下的 shadcn 组件源码，必须先征得我同意，并明确列出修改内容，经我二次确认后方可执行。默认优先从外部传入 className 或封装 wrapper 组件。
 
 ## 备注
 
