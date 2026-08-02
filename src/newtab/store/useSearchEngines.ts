@@ -46,6 +46,21 @@ const searchEnginesStorage = storage.defineItem<SearchEnginesState>(
           key: 'juejin',
           name: '掘金',
           url: 'https://juejin.cn/search?query='
+        },
+        {
+          key: 'taobao',
+          name: '淘宝',
+          url: 'https://s.taobao.com/search?q='
+        },
+        {
+          key: 'jd',
+          name: '京东',
+          url: 'https://search.jd.com/Search?keyword='
+        },
+        {
+          key: 'xiaohongshu',
+          name: '小红书',
+          url: 'https://www.xiaohongshu.com/search_result?keyword='
         }
       ]
     }
