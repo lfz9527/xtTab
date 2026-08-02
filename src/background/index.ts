@@ -21,8 +21,11 @@ browser.tabs.onActivated.addListener((activeInfo) => {
     console.log('监听标签页激活事件')
 })
 
-browser.runtime.onInstalled.addListener(() => {
-    console.log('监听插件安装状态')
+browser.runtime.onInstalled.addListener((details) => {
+    // 首次安装时自动打开新标签页主页（不带 url，地址栏保持 chrome://newtab）
+    if (details.reason === 'install') {
+        browser.tabs.create({})
+    }
 })
 
 MessageBus.on('content_bg', () => {
