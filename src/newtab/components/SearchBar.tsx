@@ -17,11 +17,14 @@ import SuggestPopover, {
 import EngineIcon from './EngineIcon'
 import useSearchEngines from '../store/useSearchEngines'
 import useSettings from '../store/useSettings'
+import useSearchHistory from '../store/useSearchHistory'
 
 export default function SearchBar() {
   const [engines, setEngines] = useSearchEngines()
   const [settings] = useSettings()
   const openTarget = settings.openTarget ?? 'current'
+  const { history, addHistory, removeHistory, clearHistory } =
+    useSearchHistory()
   const [query, setQuery] = useState('')
   const [inputFocused, setInputFocused] = useState(false)
   const inputGroupRef = useRef<HTMLDivElement>(null)
@@ -43,6 +46,7 @@ export default function SearchBar() {
   const search = (word: string) => {
     const trimmed = word.trim()
     if (!trimmed) return
+    addHistory(trimmed)
     const keyword = encodeURIComponent(trimmed)
     // 链接含 %s 时替换为关键字（支持指定位置）；否则追加到末尾
     const url = currentEngine.url.includes('%s')
@@ -134,6 +138,9 @@ export default function SearchBar() {
         width={popoverWidth}
         inputFocused={inputFocused}
         onSearch={search}
+        history={history}
+        onRemoveHistory={removeHistory}
+        onClearHistory={clearHistory}
       />
     </>
   )
