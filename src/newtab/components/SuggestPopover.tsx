@@ -1,6 +1,7 @@
 import {
   useEffect,
   useImperativeHandle,
+  useRef,
   useState,
   type KeyboardEvent,
   type Ref,
@@ -16,6 +17,8 @@ import { useLatest } from '@/hooks/useLatest'
 export interface SuggestPopoverHandle {
   /** 输入框聚焦时，如果有联想词或历史记录则展开下拉 */
   onFocus: () => void
+  /** 输入框失焦时强制收起下拉并清除待展开的定时器 */
+  close: () => void
   /** 方向键切换高亮、回车搜索高亮项；返回 true 表示事件已被消费 */
   handleKeyDown: (e: KeyboardEvent<HTMLInputElement>) => boolean
 }
@@ -51,7 +54,9 @@ export default function SuggestPopover({
   const [suggestOpen, setSuggestOpen] = useState(false)
   const [composing, setComposing] = useState(false)
   const [activeIndex, setActiveIndex] = useState(-1)
-  const queryRef = useLatest({ query, engine: engineKey, history })
+  const queryRef = useLatest({ query, engine: engineKey, history, inputFocused })
+  // 聚焦后延迟展开的定时器，失焦时需清除，避免失焦后列表又弹出
+  const openTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   // 输入为空时展示历史，否则展示联想词
   const trimmed = query.trim()
@@ -93,14 +98,14 @@ export default function SuggestPopover({
     if (!trimmed) {
       cancelSuggest()
       setSuggestions([])
-      // 输入清空时回到历史模式：仅聚焦且有历史时展开，失焦时收起
-      setSuggestOpen(inputFocused && history.length > 0)
+      // 输入清空时回到历史模式：仅聚焦且有历史时展开（失焦收起由 close() 处理）
+      setSuggestOpen(queryRef.current.inputFocused && history.length > 0)
       return
     }
     setSuggestions([])
     runSuggest(trimmed)
     // 仅输入框内容变化时触发查询；切换搜索引擎不重新查询联想，避免无谓展开列表
-  }, [query, composing, inputFocused, runSuggest, cancelSuggest])
+  }, [query, composing, runSuggest, cancelSuggest])
 
   const search = (word: string) => {
     onSearch(word)
@@ -138,11 +143,21 @@ export default function SuggestPopover({
     if (suggestOpen) return
     const hasItems = trimmed ? suggestions.length > 0 : history.length > 0
     if (hasItems) {
-      setTimeout(() => setSuggestOpen(true), 200)
+      openTimerRef.current = setTimeout(() => setSuggestOpen(true), 200)
     }
   }
 
-  useImperativeHandle(ref, () => ({ onFocus, handleKeyDown }))
+  // 失焦时强制收起下拉，并清除待展开的定时器，避免失焦后列表又重新弹出
+  const close = () => {
+    if (openTimerRef.current) {
+      clearTimeout(openTimerRef.current)
+      openTimerRef.current = null
+    }
+    setSuggestOpen(false)
+    setActiveIndex(-1)
+  }
+
+  useImperativeHandle(ref, () => ({ onFocus, close, handleKeyDown }))
 
   return (
     <Popover
@@ -172,9 +187,8 @@ export default function SuggestPopover({
                     type='button'
                     onMouseDown={(e) => e.preventDefault()}
                     onClick={() => search(h)}
-                    className={`flex w-full min-w-0 flex-1 items-center gap-2 rounded-md px-2 py-1.5 text-left text-sm text-foreground ${
-                      index === activeIndex ? 'bg-muted' : ''
-                    }`}
+                    className={`flex w-full min-w-0 flex-1 items-center gap-2 rounded-md px-2 py-1.5 text-left text-sm text-foreground ${index === activeIndex ? 'bg-muted' : ''
+                      }`}
                   >
                     <HistoryIcon className='size-3.5 shrink-0 text-muted-foreground' />
                     <span className='truncate'>{h}</span>
@@ -208,16 +222,13 @@ export default function SuggestPopover({
                   type='button'
                   onMouseDown={(e) => e.preventDefault()}
                   onClick={() => search(s)}
-                  className={`group flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-left text-sm text-foreground transition-colors duration-500 hover:bg-muted ${
-                    index === activeIndex ? 'bg-muted' : ''
-                  }`}
+                  className={`group flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-left text-sm text-foreground transition-colors duration-500 hover:bg-muted ${index === activeIndex ? 'bg-muted' : ''
+                    }`}
                 >
-                  <SearchIcon className={`size-3.5 shrink-0 text-muted-foreground transition-all duration-500 group-hover:text-foreground group-hover:translate-x-2.5 ${
-                    index === activeIndex ? 'text-foreground translate-x-2.5' : ''
-                  }`} />
-                  <span className={`truncate transition-transform duration-500 group-hover:translate-x-2.5 ${
-                    index === activeIndex ? 'translate-x-2.5' : ''
-                  }`}>{s}</span>
+                  <SearchIcon className={`size-3.5 shrink-0 text-muted-foreground transition-all duration-500 group-hover:text-foreground group-hover:translate-x-2.5 ${index === activeIndex ? 'text-foreground translate-x-2.5' : ''
+                    }`} />
+                  <span className={`truncate transition-transform duration-500 group-hover:translate-x-2.5 ${index === activeIndex ? 'translate-x-2.5' : ''
+                    }`}>{s}</span>
                 </button>
               </li>
             ))}

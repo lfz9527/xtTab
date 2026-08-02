@@ -14,6 +14,7 @@ import { Input } from '@/components/ui/input'
 import { cn } from '@/lib/utils'
 import useSettings, { type SettingsState } from '../store/useSettings'
 import useSearchEngines from '../store/useSearchEngines'
+import useSearchHistory from '../store/useSearchHistory'
 import EngineIcon from './EngineIcon'
 
 interface SettingsTab {
@@ -46,6 +47,7 @@ export default function SettingsDialog() {
   const [settings, setSettings] = useSettings()
   const openTarget = settings.openTarget ?? 'current'
   const [engines, setEngines] = useSearchEngines()
+  const { clearHistory } = useSearchHistory()
 
   /** 切换引擎隐藏状态 */
   const toggleEngineHidden = (key: string) => {
@@ -131,33 +133,57 @@ export default function SettingsDialog() {
           >
             {/* 设置项容器：按 activeTab 渲染不同设置项 */}
             {activeTab === 'general' && (
-              <div className='rounded-lg border border-border bg-card p-4 flex flex-col gap-3'>
-                <span className='text-sm font-medium text-foreground'>
-                  搜索结果打开方式
-                </span>
-                <Tabs
-                  value={openTarget}
-                  onValueChange={(value) =>
-                    setSettings({
-                      ...settings,
-                      openTarget: value as SettingsState['openTarget']
-                    })
-                  }
-                  className='w-fit'
-                >
-                  <TabsList>
-                    {OPEN_TARGET_OPTIONS.map((opt) => (
-                      <TabsTrigger
-                        key={opt.value}
-                        value={opt.value}
-                        className='px-3'
-                      >
-                        {opt.label}
-                      </TabsTrigger>
-                    ))}
-                  </TabsList>
-                </Tabs>
-              </div>
+              <>
+                <div className='rounded-lg border border-border bg-card p-4 flex flex-col gap-3'>
+                  <span className='text-sm font-medium text-foreground'>
+                    搜索结果打开方式
+                  </span>
+                  <Tabs
+                    value={openTarget}
+                    onValueChange={(value) =>
+                      setSettings({
+                        ...settings,
+                        openTarget: value as SettingsState['openTarget']
+                      })
+                    }
+                    className='w-fit'
+                  >
+                    <TabsList>
+                      {OPEN_TARGET_OPTIONS.map((opt) => (
+                        <TabsTrigger
+                          key={opt.value}
+                          value={opt.value}
+                          className='px-3'
+                        >
+                          {opt.label}
+                        </TabsTrigger>
+                      ))}
+                    </TabsList>
+                  </Tabs>
+                </div>
+                <div className='flex items-center justify-between rounded-lg border border-border bg-card p-4'>
+                  <div className='flex flex-col gap-1'>
+                    <span className='text-sm font-medium text-foreground'>
+                      搜索历史
+                    </span>
+                    <span className='text-xs text-muted-foreground'>
+                      记录搜索过的关键词，便于再次搜索
+                    </span>
+                  </div>
+                  <Switch
+                    checked={settings.searchHistoryEnabled ?? true}
+                    onCheckedChange={(checked) => {
+                      setSettings({
+                        ...settings,
+                        searchHistoryEnabled: checked
+                      })
+                      // 关闭搜索历史时清空已存历史记录
+                      if (!checked) clearHistory()
+                    }}
+                    aria-label='是否开启搜索历史'
+                  />
+                </div>
+              </>
             )}
             {activeTab === 'engines' && (
               <div className='flex flex-col gap-2'>

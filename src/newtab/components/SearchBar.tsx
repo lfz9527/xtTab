@@ -23,6 +23,8 @@ export default function SearchBar() {
   const [engines, setEngines] = useSearchEngines()
   const [settings] = useSettings()
   const openTarget = settings.openTarget ?? 'current'
+  // 搜索历史开关：关闭时不记录、不展示历史
+  const historyEnabled = settings.searchHistoryEnabled ?? true
   const { history, addHistory, removeHistory, clearHistory } =
     useSearchHistory()
   const [query, setQuery] = useState('')
@@ -46,7 +48,7 @@ export default function SearchBar() {
   const search = (word: string) => {
     const trimmed = word.trim()
     if (!trimmed) return
-    addHistory(trimmed)
+    if (historyEnabled) addHistory(trimmed)
     const keyword = encodeURIComponent(trimmed)
     // 链接含 %s 时替换为关键字（支持指定位置）；否则追加到末尾
     const url = currentEngine.url.includes('%s')
@@ -120,7 +122,10 @@ export default function SearchBar() {
             setInputFocused(true)
             suggestRef.current?.onFocus()
           }}
-          onBlur={() => setInputFocused(false)}
+          onBlur={() => {
+            setInputFocused(false)
+            suggestRef.current?.close()
+          }}
           placeholder='搜索...'
           autoFocus
         />
@@ -138,7 +143,7 @@ export default function SearchBar() {
         width={popoverWidth}
         inputFocused={inputFocused}
         onSearch={search}
-        history={history}
+        history={historyEnabled ? history : []}
         onRemoveHistory={removeHistory}
         onClearHistory={clearHistory}
       />
