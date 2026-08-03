@@ -21,7 +21,7 @@ const manifest = {
     version: '1.0.0',
     name: 'xtTab',
     description: '这是一个 wxt-dev 的开发模板',
-    permissions: ['activeTab', 'tabs', 'sidePanel', 'storage'],
+    permissions: ['activeTab', 'tabs', 'sidePanel', 'storage', 'bookmarks'],
     host_permissions: ['<all_urls>'],
     icons: {
         '16': 'icon/16.png',
