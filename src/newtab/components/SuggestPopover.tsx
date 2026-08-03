@@ -13,6 +13,7 @@ import messageBus from '@/messages/message'
 import { SUGGEST_ACTION } from '@/background/suggest'
 import { useDebounceFn } from '@/hooks/useDebounceFn'
 import { useLatest } from '@/hooks/useLatest'
+import { useThrottleFn } from '@/hooks/useThrottledFn'
 
 export interface SuggestPopoverHandle {
   /** 输入框聚焦时，如果有联想词或历史记录则展开下拉 */
@@ -118,17 +119,25 @@ export default function SuggestPopover({
     setActiveIndex(-1)
   }, [suggestions, history])
 
+  // 节流方向键切换：长按 key repeat（~30ms/次）时限制切换频率，避免高亮闪烁不可见
+  const throttledMove = useThrottleFn((direction: -1 | 1) => {
+    setActiveIndex((i) => {
+      if (direction > 0) return (i + 1) % items.length
+      return i <= 0 ? items.length - 1 : i - 1
+    })
+  }, { wait: 180, trailing: false })
+
   // 方向键切换高亮、回车搜索高亮项；返回 true 表示事件已被消费
   const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
     if (!suggestOpen || items.length === 0) return false
     if (e.key === 'ArrowDown') {
       e.preventDefault()
-      setActiveIndex((i) => (i + 1) % items.length)
+      throttledMove(1)
       return true
     }
     if (e.key === 'ArrowUp') {
       e.preventDefault()
-      setActiveIndex((i) => (i <= 0 ? items.length - 1 : i - 1))
+      throttledMove(-1)
       return true
     }
     if (e.key === 'Enter' && activeIndex >= 0) {
