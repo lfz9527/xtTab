@@ -10,37 +10,31 @@
 
 ## BackgroundAction 枚举
 
-### 新建 `src/constants/backgroundAction.ts`
+### 定义于 `src/constants/index.ts`
+
+与 `MessagingCode` 同文件定义，继承 `BaseEnumCls`：
 
 ```ts
-import BaseEnumCls from './base'
-
 // background 消息 action 枚举
 export class BackgroundAction extends BaseEnumCls<string> {
   static readonly SUGGEST = new BackgroundAction('suggest', '搜索联想')
-  static readonly BOOKMARK_GET_TREE = new BackgroundAction('bookmark-get-tree', '获取书签树')
+  static readonly BOOKMARK_GET_TREE = new BackgroundAction(
+    'bookmark-get-tree',
+    '获取书签树'
+  )
 }
 ```
 
 - 与 `MessagingCode` 同构：继承 `BaseEnumCls`，`key` 为消息协议值，`label` 为中文描述
 - `key` 取值沿用现有协议值（`'suggest'` 不变），新增 `'bookmark-get-tree'`
-- 使用方通过 `BackgroundAction.SUGGEST.key` 取消息值
-
-### 修改 `src/constants/index.ts`
-
-re-export `BackgroundAction`，使用方统一从 `@/constants` 导入（与 `MessagingCode` 一致）：
-
-```ts
-export { BackgroundAction } from './backgroundAction'
-```
+- 使用方通过 `BackgroundAction.SUGGEST.key` 取消息值，统一从 `@/constants` 导入
 
 ## 目录结构
 
 ```
 src/
 ├── constants/
-│   ├── backgroundAction.ts        ← 新增：BackgroundAction 枚举
-│   └── index.ts                   ← 修改：re-export BackgroundAction
+│   └── index.ts                   ← 修改：新增 BackgroundAction 枚举（与 MessagingCode 同文件）
 ├── background/
 │   ├── bookmarks.ts               ← 新增：书签模块（getTree 接口）
 │   ├── suggest.ts                 ← 修改：删除 SUGGEST_ACTION 导出，改用 BackgroundAction
