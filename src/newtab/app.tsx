@@ -6,7 +6,7 @@ import SettingsDialog from './components/SettingsDialog'
 
 function App() {
   return (
-    <div className='flex w-full max-w-160 flex-col items-center gap-12 px-6 pt-[200px] pb-6'>
+    <div className='flex w-full max-w-160 flex-col items-center gap-12 px-6 pt-50 pb-6'>
       <SearchBar />
       <SettingsDialog />
     </div>
