@@ -1,10 +1,7 @@
 import MessageBus from '@/messages/message'
 import { type MessageResponse } from '@/messages/types'
-import { MessagingCode } from '@/constants'
+import { MessagingCode, BackgroundAction } from '@/constants'
 import { type anyObject } from '@/types'
-
-// 联想消息 action
-export const SUGGEST_ACTION = 'suggest'
 
 // 引擎 suggest API 前缀（query 由调用方 encodeURIComponent 后拼接）
 export const SUGGEST_APIS: Record<string, string> = {
@@ -65,7 +62,7 @@ async function tryFetchSuggestions(engine: string, query: string): Promise<strin
 
 // 注册 suggest 联想消息监听：主引擎失败/为空时回退 FALLBACK_ENGINE，仍失败则返回空列表
 export function registerSuggestListener() {
-  MessageBus.on(SUGGEST_ACTION, async (req) => {
+  MessageBus.on(BackgroundAction.SUGGEST.key, async (req) => {
     const { engine, query } = (req as anyObject) ?? {}
     if (typeof query !== 'string' || !query.trim()) {
       return { code: MessagingCode.SUCCESS_CODE_NORMAL.key, data: [] } satisfies MessageResponse<string[]>

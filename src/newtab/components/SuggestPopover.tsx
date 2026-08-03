@@ -10,7 +10,7 @@ import {
 import { HistoryIcon, SearchIcon, XIcon } from 'lucide-react'
 import { Popover, PopoverContent } from '@/components/ui/popover'
 import messageBus from '@/messages/message'
-import { SUGGEST_ACTION } from '@/background/suggest'
+import { BackgroundAction } from '@/constants'
 import { useDebounceFn } from '@/hooks/useDebounceFn'
 import { useLatest } from '@/hooks/useLatest'
 import { useThrottleFn } from '@/hooks/useThrottledFn'
@@ -80,7 +80,7 @@ export default function SuggestPopover({
   const { run: runSuggest, cancel: cancelSuggest } = useDebounceFn(
     async (trimmed: string) => {
       const res = await messageBus.send<{ engine: string; query: string }, string[]>(
-        SUGGEST_ACTION,
+        BackgroundAction.SUGGEST.key,
         { engine: engineKey, query: trimmed }
       )
       if (queryRef.current.query !== trimmed || queryRef.current.engine !== engineKey) return
