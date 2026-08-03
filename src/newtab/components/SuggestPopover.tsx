@@ -10,7 +10,7 @@ import {
 import { HistoryIcon, SearchIcon, XIcon } from 'lucide-react'
 import { Popover, PopoverContent } from '@/components/ui/popover'
 import messageBus from '@/messages/message'
-import { SUGGEST_ACTION } from '@/constants/suggest'
+import { SUGGEST_ACTION } from '@/background/suggest'
 import { useDebounceFn } from '@/hooks/useDebounceFn'
 import { useLatest } from '@/hooks/useLatest'
 
