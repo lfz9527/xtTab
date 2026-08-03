@@ -1,10 +1,12 @@
 import uid from "tiny-uid"
 import MessageBus from '@/messages/message'
 import { registerSuggestListener } from '@/background/suggest'
+import { registerBookmarksListener } from '@/background/bookmarks'
 
 export default defineBackground(() => {
     MessageBus.registerListener()
     registerSuggestListener()
+    registerBookmarksListener()
     // 左键点击图标 (如果有 popup 是不会触发的，可以执行 browser.action.setPopup({ popup: '' }) 来监听事件)
     browser.action.setPopup({ popup: '' })
 
