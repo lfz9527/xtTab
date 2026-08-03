@@ -56,7 +56,7 @@ export default function BookmarkDialog() {
             暂无书签
           </p>
         ) : (
-          <div className='max-h-150 overflow-y-auto pr-1'>
+          <div className='h-150 overflow-y-auto pr-1'>
             <BookmarkTree
               nodes={tree}
               expanded={expanded}
