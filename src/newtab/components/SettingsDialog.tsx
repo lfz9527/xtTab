@@ -35,7 +35,7 @@ const OPEN_TARGET_OPTIONS = [
 ] as const
 
 /** 设置弹窗左右区域共用高度 */
-const PANEL_HEIGHT_CLASS = 'h-[500px]'
+const PANEL_HEIGHT_CLASS = 'h-125'
 
 /**
  * 设置弹窗
@@ -104,12 +104,12 @@ export default function SettingsDialog() {
       <DialogContent
         aria-label='设置'
         showCloseButton={false}
-        className='max-w-[900px] sm:max-w-[900px] overflow-hidden p-0'
+        className='max-w-225 sm:max-w-225 overflow-hidden p-0'
       >
         <div className={cn('flex', PANEL_HEIGHT_CLASS)}>
           <nav
             className={cn(
-              'flex w-[130px] shrink-0 flex-col gap-1 border-r border-border p-3',
+              'flex w-32.5 shrink-0 flex-col gap-1 border-r border-border p-3',
               PANEL_HEIGHT_CLASS
             )}
           >
@@ -255,7 +255,7 @@ export default function SettingsDialog() {
       <Dialog modal open={addDialogOpen} onOpenChange={setAddDialogOpen}>
         <DialogContent
           overlayForceRender
-          className='max-w-[600px] sm:max-w-[600px]'
+          className='max-w-150 sm:max-w-150'
         >
           <DialogTitle>自定义搜索引擎</DialogTitle>
           <div className='flex flex-col gap-2'>
