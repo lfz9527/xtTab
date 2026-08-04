@@ -15,6 +15,7 @@ import {
   DialogTrigger
 } from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
+import { ScrollArea } from '@/components/ui/scroll-area'
 import messageBus from '@/messages/message'
 import { BackgroundAction } from '@/constants'
 import { useComposing } from '@/hooks/useComposing'
@@ -200,7 +201,7 @@ export default function BookmarkDialog() {
                 {isSearching ? '未找到匹配的书签' : '此文件夹为空'}
               </p>
             ) : (
-              <div className='scrollbar-thin h-100 overflow-y-auto pr-1'>
+              <ScrollArea className='h-100'>
                 <BookmarkTree
                   nodes={currentNodes}
                   onEnterFolder={enterFolder}
@@ -211,7 +212,7 @@ export default function BookmarkDialog() {
                   }
                   searchQuery={isSearching ? searchQuery : undefined}
                 />
-              </div>
+              </ScrollArea>
             )}
           </>
         )}

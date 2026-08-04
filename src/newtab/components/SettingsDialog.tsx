@@ -9,6 +9,7 @@ import {
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Switch } from '@/components/ui/switch'
 import { Button } from '@/components/ui/button'
+import { ScrollArea } from '@/components/ui/scroll-area'
 import { cn } from '@/lib/utils'
 import useSettings, { type SettingsState } from '../store/useSettings'
 import useSearchEngines from '../store/useSearchEngines'
@@ -111,150 +112,157 @@ export default function SettingsDialog() {
           </nav>
           <div
             key={activeTab}
-            className='flex flex-1 flex-col gap-4 overflow-y-auto p-6 animate-in fade-in slide-in-from-right-2 duration-200'
+            className='flex min-h-0 flex-1 flex-col p-4 animate-in fade-in slide-in-from-right-2 duration-200'
           >
             {/* 设置项容器：按 activeTab 渲染不同设置项 */}
             {activeTab === 'general' && (
-              <>
-                <div className='rounded-lg border border-border bg-card p-4 flex flex-col gap-3'>
-                  <span className='text-sm font-medium text-foreground'>
-                    搜索结果打开方式
-                  </span>
-                  <Tabs
-                    value={openTarget}
-                    onValueChange={(value) =>
-                      setSettings({
-                        ...settings,
-                        openTarget: value as SettingsState['openTarget']
-                      })
-                    }
-                    className='w-fit'
-                  >
-                    <TabsList>
-                      {OPEN_TARGET_OPTIONS.map((opt) => (
-                        <TabsTrigger
-                          key={opt.value}
-                          value={opt.value}
-                          className='px-3'
-                        >
-                          {opt.label}
-                        </TabsTrigger>
-                      ))}
-                    </TabsList>
-                  </Tabs>
-                </div>
-                <div className='rounded-lg border border-border bg-card p-4 flex flex-col gap-3'>
-                  <span className='text-sm font-medium text-foreground'>
-                    书签跳转方式
-                  </span>
-                  <Tabs
-                    value={settings.bookmarkTarget ?? 'new'}
-                    onValueChange={(value) =>
-                      setSettings({
-                        ...settings,
-                        bookmarkTarget: value as SettingsState['bookmarkTarget']
-                      })
-                    }
-                    className='w-fit'
-                  >
-                    <TabsList>
-                      {BOOKMARK_TARGET_OPTIONS.map((opt) => (
-                        <TabsTrigger
-                          key={opt.value}
-                          value={opt.value}
-                          className='px-3'
-                        >
-                          {opt.label}
-                        </TabsTrigger>
-                      ))}
-                    </TabsList>
-                  </Tabs>
-                </div>
-                <div className='flex items-center justify-between rounded-lg border border-border bg-card p-4'>
-                  <div className='flex flex-col gap-1'>
+              <ScrollArea className='min-h-0 flex-1'>
+                <div className='flex flex-col gap-4 pr-3'>
+                  <div className='rounded-lg border border-border bg-card p-4 flex flex-col gap-3'>
                     <span className='text-sm font-medium text-foreground'>
-                      搜索历史
+                      搜索结果打开方式
                     </span>
-                    <span className='text-xs text-muted-foreground'>
-                      记录搜索过的关键词，便于再次搜索
-                    </span>
+                    <Tabs
+                      value={openTarget}
+                      onValueChange={(value) =>
+                        setSettings({
+                          ...settings,
+                          openTarget: value as SettingsState['openTarget']
+                        })
+                      }
+                      className='w-fit'
+                    >
+                      <TabsList>
+                        {OPEN_TARGET_OPTIONS.map((opt) => (
+                          <TabsTrigger
+                            key={opt.value}
+                            value={opt.value}
+                            className='px-3'
+                          >
+                            {opt.label}
+                          </TabsTrigger>
+                        ))}
+                      </TabsList>
+                    </Tabs>
                   </div>
-                  <Switch
-                    checked={settings.searchHistoryEnabled ?? true}
-                    onCheckedChange={(checked) => {
-                      setSettings({
-                        ...settings,
-                        searchHistoryEnabled: checked
-                      })
-                      // 关闭搜索历史时清空已存历史记录
-                      if (!checked) clearHistory()
-                    }}
-                    aria-label='是否开启搜索历史'
-                  />
+                  <div className='rounded-lg border border-border bg-card p-4 flex flex-col gap-3'>
+                    <span className='text-sm font-medium text-foreground'>
+                      书签跳转方式
+                    </span>
+                    <Tabs
+                      value={settings.bookmarkTarget ?? 'new'}
+                      onValueChange={(value) =>
+                        setSettings({
+                          ...settings,
+                          bookmarkTarget: value as SettingsState['bookmarkTarget']
+                        })
+                      }
+                      className='w-fit'
+                    >
+                      <TabsList>
+                        {BOOKMARK_TARGET_OPTIONS.map((opt) => (
+                          <TabsTrigger
+                            key={opt.value}
+                            value={opt.value}
+                            className='px-3'
+                          >
+                            {opt.label}
+                          </TabsTrigger>
+                        ))}
+                      </TabsList>
+                    </Tabs>
+                  </div>
+                  <div className='flex items-center justify-between rounded-lg border border-border bg-card p-4'>
+                    <div className='flex flex-col gap-1'>
+                      <span className='text-sm font-medium text-foreground'>
+                        搜索历史
+                      </span>
+                      <span className='text-xs text-muted-foreground'>
+                        记录搜索过的关键词，便于再次搜索
+                      </span>
+                    </div>
+                    <Switch
+                      checked={settings.searchHistoryEnabled ?? true}
+                      onCheckedChange={(checked) => {
+                        setSettings({
+                          ...settings,
+                          searchHistoryEnabled: checked
+                        })
+                        // 关闭搜索历史时清空已存历史记录
+                        if (!checked) clearHistory()
+                      }}
+                      aria-label='是否开启搜索历史'
+                    />
+                  </div>
                 </div>
-              </>
+              </ScrollArea>
             )}
             {activeTab === 'engines' && (
-              <div className='flex flex-col gap-2'>
-                {/* 自定义搜索引擎 */}
-                <Button
-                  variant='default'
-                  className='w-fit'
-                  onClick={() => setAddDialogOpen(true)}
-                >
-                  <PlusIcon className='size-4' />
-                  自定义搜索引擎
-                </Button>
-                <div className='grid grid-cols-2 gap-2'>
-                  {engines.list.map((engine) => {
-                    // 当前正在使用的引擎不允许关闭
-                    const isCurrent = engine.key === engines.current
-                    return (
-                      <div
-                        key={engine.key}
-                        className={cn(
-                          'flex flex-col justify-between gap-2 rounded-lg border bg-card p-3',
-                          isCurrent
-                            ? 'border-primary/60 ring-1 ring-primary/20'
-                            : 'border-border'
-                        )}
-                      >
-                        <div className='flex items-center justify-between gap-2'>
-                          <div className='flex min-w-0 items-center gap-2'>
-                            <EngineIcon
-                              engineKey={engine.key}
-                              name={engine.name}
-                              icon={engine.icon}
-                            />
-                            <span className='truncate text-sm font-medium text-foreground'>
-                              {engine.name}
-                            </span>
-                          </div>
-                          <Switch
-                            checked={!engine.hidden}
-                            onCheckedChange={() => toggleEngineHidden(engine.key)}
-                            disabled={isCurrent}
-                            aria-label={`显示${engine.name}`}
-                          />
-                        </div>
-                        <div className='flex items-center justify-between gap-2'>
-                          <span className='truncate text-xs text-muted-foreground'>
-                            {engine.url}
-                          </span>
-                          <button
-                            type='button'
-                            onClick={() => removeEngine(engine.key)}
-                            disabled={isCurrent}
-                            aria-label={`删除${engine.name}`}
-                            className='shrink-0 rounded p-0.5 text-muted-foreground transition-colors hover:text-destructive disabled:pointer-events-none disabled:opacity-40'
-                          >
-                            <Trash2Icon className='size-3.5' />
-                          </button>
-                        </div>
-                      </div>
-                    )
-                  })}
+              <div className='flex min-h-0 flex-1 flex-col gap-2'>
+                {/* header：添加按钮固定不滚动 */}
+                <div className='flex items-center justify-end'>
+                  <Button
+                    variant='default'
+                    className='w-fit'
+                    onClick={() => setAddDialogOpen(true)}
+                  >
+                    <PlusIcon className='size-4' />
+                    自定义
+                  </Button>
                 </div>
+                {/* list：仅列表区域滚动 */}
+                <ScrollArea className='min-h-0 flex-1'>
+                  <div className='grid grid-cols-2 gap-2 pr-3'>
+                    {engines.list.map((engine) => {
+                      // 当前正在使用的引擎不允许关闭
+                      const isCurrent = engine.key === engines.current
+                      return (
+                        <div
+                          key={engine.key}
+                          className={cn(
+                            'flex flex-col justify-between gap-2 rounded-lg border bg-card p-3',
+                            isCurrent
+                              ? 'border-primary/60 ring-1 ring-primary/20'
+                              : 'border-border'
+                          )}
+                        >
+                          <div className='flex items-center justify-between gap-2'>
+                            <div className='flex min-w-0 items-center gap-2'>
+                              <EngineIcon
+                                engineKey={engine.key}
+                                name={engine.name}
+                                icon={engine.icon}
+                              />
+                              <span className='truncate text-sm font-medium text-foreground'>
+                                {engine.name}
+                              </span>
+                            </div>
+                            <Switch
+                              checked={!engine.hidden}
+                              onCheckedChange={() => toggleEngineHidden(engine.key)}
+                              disabled={isCurrent}
+                              aria-label={`显示${engine.name}`}
+                            />
+                          </div>
+                          <div className='flex items-center justify-between gap-2'>
+                            <span className='truncate text-xs text-muted-foreground'>
+                              {engine.url}
+                            </span>
+                            <button
+                              type='button'
+                              onClick={() => removeEngine(engine.key)}
+                              disabled={isCurrent}
+                              aria-label={`删除${engine.name}`}
+                              className='shrink-0 rounded p-0.5 text-muted-foreground transition-colors hover:text-destructive disabled:pointer-events-none disabled:opacity-40'
+                            >
+                              <Trash2Icon className='size-3.5' />
+                            </button>
+                          </div>
+                        </div>
+                      )
+                    })}
+                  </div>
+                </ScrollArea>
               </div>
             )}
           </div>
