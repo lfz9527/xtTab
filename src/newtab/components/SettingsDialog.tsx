@@ -1,6 +1,5 @@
 import { useState } from 'react'
 import { PlusIcon, SettingsIcon, Trash2Icon } from 'lucide-react'
-import uid from 'tiny-uid'
 import {
   Dialog,
   DialogContent,
@@ -10,12 +9,12 @@ import {
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Switch } from '@/components/ui/switch'
 import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
 import { cn } from '@/lib/utils'
 import useSettings, { type SettingsState } from '../store/useSettings'
 import useSearchEngines from '../store/useSearchEngines'
 import useSearchHistory from '../store/useSearchHistory'
 import EngineIcon from './EngineIcon'
+import AddEngineDialog from './AddEngineDialog'
 
 interface SettingsTab {
   key: string
@@ -73,31 +72,8 @@ export default function SettingsDialog() {
     })
   }
 
-  /** 新增引擎表单状态：名称/链接必填，图片链接选填 */
-  const [newEngine, setNewEngine] = useState({ name: '', url: '', icon: '' })
   /** 添加引擎弹窗开关 */
   const [addDialogOpen, setAddDialogOpen] = useState(false)
-
-  /** 添加搜索引擎 */
-  const addEngine = () => {
-    const name = newEngine.name.trim()
-    const url = newEngine.url.trim()
-    if (!name || !url) return
-    setEngines({
-      ...engines,
-      list: [
-        ...engines.list,
-        {
-          key: uid(),
-          name,
-          url,
-          icon: newEngine.icon.trim() || undefined
-        }
-      ]
-    })
-    setNewEngine({ name: '', url: '', icon: '' })
-    setAddDialogOpen(false)
-  }
 
   return (
     <Dialog modal>
@@ -285,48 +261,7 @@ export default function SettingsDialog() {
         </div>
       </DialogContent>
       {/* 自定义搜索引擎二次弹窗 */}
-      <Dialog modal open={addDialogOpen} onOpenChange={setAddDialogOpen}>
-        <DialogContent
-          overlayForceRender
-          className='max-w-150 sm:max-w-150'
-        >
-          <DialogTitle>自定义搜索引擎</DialogTitle>
-          <div className='flex flex-col gap-2'>
-            <Input
-              placeholder='名称'
-              value={newEngine.name}
-              onChange={(e) =>
-                setNewEngine({ ...newEngine, name: e.target.value })
-              }
-            />
-            <Input
-              placeholder='链接（搜索地址，可用 %s 指定关键字位置，如 https://www.baidu.com/s?wd=%s）'
-              value={newEngine.url}
-              onChange={(e) =>
-                setNewEngine({ ...newEngine, url: e.target.value })
-              }
-            />
-            <Input
-              placeholder='图片链接（可选）'
-              value={newEngine.icon}
-              onChange={(e) =>
-                setNewEngine({ ...newEngine, icon: e.target.value })
-              }
-            />
-          </div>
-          <div className='flex justify-end gap-2'>
-            <Button variant='outline' onClick={() => setAddDialogOpen(false)}>
-              取消
-            </Button>
-            <Button
-              onClick={addEngine}
-              disabled={!newEngine.name.trim() || !newEngine.url.trim()}
-            >
-              添加
-            </Button>
-          </div>
-        </DialogContent>
-      </Dialog>
+      <AddEngineDialog open={addDialogOpen} onOpenChange={setAddDialogOpen} />
     </Dialog>
   )
 }

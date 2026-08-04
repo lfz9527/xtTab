@@ -36,7 +36,7 @@ export default function EngineIcon({
   const imgClassName = className ?? 'size-5'
   const src = icon ?? engineIcons[engineKey]
   return (
-    <span className='flex size-7 items-center justify-center rounded bg-white'>
+    <span className='flex size-9 items-center justify-center rounded-md bg-white'>
       {src ? (
         <img src={src} alt={name} className={imgClassName} />
       ) : (
