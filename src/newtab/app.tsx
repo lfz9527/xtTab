@@ -1,16 +1,22 @@
 
 import './styles/index.css'
 import '@/styles/globals.css'
+import bgImage from './assets/new-tab-bg.webp'
 import SearchBar from './components/SearchBar'
 import SettingsDialog from './components/SettingsDialog'
 import BookmarkDialog from './components/BookmarkDialog'
 
 function App() {
   return (
-    <div className='flex w-full max-w-160 flex-col items-center gap-12 px-6 pt-50 pb-6'>
-      <SearchBar />
-      <SettingsDialog />
-      <BookmarkDialog />
+    <div
+      className='flex h-full w-full justify-center'
+      style={{ backgroundImage: `url(${bgImage})`, backgroundSize: 'cover', backgroundPosition: 'center' }}
+    >
+      <div className='flex w-full max-w-160 flex-col items-center gap-12 px-6 pt-50 pb-6'>
+        <SearchBar />
+        <SettingsDialog />
+        <BookmarkDialog />
+      </div>
     </div>
   )
 }
