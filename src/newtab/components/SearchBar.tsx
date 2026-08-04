@@ -117,7 +117,7 @@ export default function SearchBar() {
                     <div
                       key={engine.key}
                       onClick={() => handleEngineChange(engine.key)}
-                      className='group relative flex size-16 cursor-pointer flex-col items-center justify-center rounded-md text-xs text-foreground transition-colors hover:bg-muted'
+                      className='group relative flex size-16 cursor-pointer flex-col items-center justify-center rounded-lg text-xs text-foreground transition-colors hover:bg-muted'
                     >
                       {!isCurrent && (
                         <button
@@ -148,7 +148,7 @@ export default function SearchBar() {
                     setEnginePopoverOpen(false)
                     setAddDialogOpen(true)
                   }}
-                  className='group flex flex-col items-center justify-center rounded-md size-16 text-xs text-foreground hover:bg-muted transition-colors'
+                  className='group flex flex-col items-center justify-center rounded-lg size-16 text-xs text-foreground hover:bg-muted transition-colors'
                 >
                   <span className='flex size-9 items-center justify-center rounded-md bg-white transition-shadow group-hover:shadow-md'>
                     <PlusIcon className='size-4.5 text-muted-foreground' />
