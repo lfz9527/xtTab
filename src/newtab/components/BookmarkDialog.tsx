@@ -22,7 +22,16 @@ export default function BookmarkDialog() {
   useEffect(() => {
     messageBus
       .send<undefined, BookmarkTreeNode[]>(BackgroundAction.BOOKMARK_GET_TREE.key)
-      .then((res) => setTree(res?.data ?? []))
+      .then((res) => {
+        const raw = res?.data ?? []
+        // folderType 为 bookmarks-bar 的节点不展示，直接展示其二级数据
+        const flattened = raw.flatMap((node) =>
+          node.folderType === 'bookmarks-bar'
+            ? node.children ?? []
+            : [node]
+        )
+        setTree(flattened)
+      })
   }, [])
 
   // 当前目录内容：根目录为 tree，否则为路径栈顶文件夹的 children
@@ -48,7 +57,7 @@ export default function BookmarkDialog() {
       <DialogContent
         aria-label='书签'
         showCloseButton={false}
-        className='max-w-150 sm:max-w-150'
+        className='max-w-[900px] sm:max-w-[900px]'
       >
         <DialogTitle>书签</DialogTitle>
         {tree.length === 0 ? (

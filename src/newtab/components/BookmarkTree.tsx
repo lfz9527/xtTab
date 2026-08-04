@@ -6,6 +6,7 @@ export interface BookmarkTreeNode {
   title?: string
   url?: string
   children?: BookmarkTreeNode[]
+  folderType?: string
 }
 
 interface BookmarkTreeProps {
