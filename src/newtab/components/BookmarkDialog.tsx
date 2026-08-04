@@ -101,7 +101,7 @@ export default function BookmarkDialog() {
         aria-label='书签'
         showCloseButton={false}
         initialFocus={false}
-        className='max-w-[700px] sm:max-w-[700px]'
+        className='max-w-175 sm:max-w-175'
       >
         <DialogTitle>书签</DialogTitle>
         <div className='min-w-0'>
@@ -172,7 +172,7 @@ export default function BookmarkDialog() {
               ))}
             </BreadcrumbList>
           </Breadcrumb>
-          <div className='relative w-[200px] shrink-0'>
+          <div className='relative w-50 shrink-0'>
             <SearchIcon className='absolute left-2.5 top-1/2 size-4 -translate-y-1/2 text-muted-foreground' />
             <Input
               placeholder='搜索书签...'
@@ -187,17 +187,17 @@ export default function BookmarkDialog() {
           </div>
         </div>
         {tree.length === 0 ? (
-          <p className='flex h-[400px] items-center justify-center text-sm text-muted-foreground'>
+          <p className='flex h-100 items-center justify-center text-sm text-muted-foreground'>
             暂无书签
           </p>
         ) : (
           <>
             {currentNodes.length === 0 ? (
-              <p className='flex h-[400px] items-center justify-center text-sm text-muted-foreground'>
+              <p className='flex h-100 items-center justify-center text-sm text-muted-foreground'>
                 {isSearching ? '未找到匹配的书签' : '此文件夹为空'}
               </p>
             ) : (
-              <div className='h-[400px] overflow-y-auto pr-1'>
+              <div className='h-100 overflow-y-auto pr-1'>
                 <BookmarkTree
                   nodes={currentNodes}
                   onEnterFolder={enterFolder}
