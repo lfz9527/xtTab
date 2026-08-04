@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import { PlusIcon, SettingsIcon, Trash2Icon } from 'lucide-react'
 import {
   Dialog,
@@ -11,7 +10,7 @@ import { Switch } from '@/components/ui/switch'
 import { Button } from '@/components/ui/button'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { cn } from '@/lib/utils'
-import useShortcuts from '@/newTab/hooks/useShortcuts'
+import { useAppStore } from '@/newTab/store/useAppStore'
 import useSettings, { type SettingsState } from '../store/useSettings'
 import useSearchEngines from '../store/useSearchEngines'
 import useSearchHistory from '../store/useSearchHistory'
@@ -52,8 +51,10 @@ const PANEL_HEIGHT_CLASS = 'h-125'
  */
 export default function SettingsDialog() {
   // 弹窗内 tab 状态，不持久化；默认展开「通用」
-  const [activeTab, setActiveTab] = useState(SETTINGS_TABS[0].key)
-  const { settingsOpen: open, setSettingsOpen: setOpen } = useShortcuts()
+  const open = useAppStore((s) => s.settingsOpen)
+  const setOpen = useAppStore((s) => s.setSettingsOpen)
+  const activeTab = useAppStore((s) => s.settingsActiveTab)
+  const setActiveTab = useAppStore((s) => s.setSettingsActiveTab)
   const [settings, setSettings] = useSettings()
   const openTarget = settings.openTarget ?? 'current'
   const [engines, setEngines] = useSearchEngines()
@@ -77,8 +78,9 @@ export default function SettingsDialog() {
     })
   }
 
-  /** 添加引擎弹窗开关 */
-  const [addDialogOpen, setAddDialogOpen] = useState(false)
+  /** 添加引擎弹窗开关（全局状态） */
+  const addDialogOpen = useAppStore((s) => s.addEngineOpen)
+  const setAddDialogOpen = useAppStore((s) => s.setAddEngineOpen)
 
   return (
     <Dialog modal open={open} onOpenChange={setOpen}>

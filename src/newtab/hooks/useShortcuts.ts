@@ -1,15 +1,15 @@
-import { useState } from 'react'
 import { useCommand } from '@/hooks/useCommand'
 import useSettings from '../store/useSettings'
+import { useAppStore } from '../store/useAppStore'
 
 /**
- * 统一管理快捷键注册与弹窗开关状态
- * 书签弹窗、设置弹窗的快捷键在此统一注册，open 状态供对应组件受控使用
+ * 统一管理快捷键注册
+ * 弹窗开关状态由全局 useAppStore 管理（zustand），此处仅注册快捷键
  */
 export default function useShortcuts() {
   const [settings] = useSettings()
-  const [bookmarkOpen, setBookmarkOpen] = useState(false)
-  const [settingsOpen, setSettingsOpen] = useState(false)
+  const setBookmarkOpen = useAppStore((s) => s.setBookmarkOpen)
+  const setSettingsOpen = useAppStore((s) => s.setSettingsOpen)
 
   // 打开书签弹窗
   useCommand(settings.bookmarkShortcut ?? 'ctrl+k', () => {
@@ -20,6 +20,4 @@ export default function useShortcuts() {
   useCommand(settings.settingsShortcut ?? 'ctrl+,', () => {
     setSettingsOpen(true)
   })
-
-  return { bookmarkOpen, setBookmarkOpen, settingsOpen, setSettingsOpen }
 }

@@ -19,7 +19,7 @@ import { ScrollArea } from '@/components/ui/scroll-area'
 import messageBus from '@/messages/message'
 import { BackgroundAction } from '@/constants'
 import { useComposing } from '@/hooks/useComposing'
-import useShortcuts from '@/newTab/hooks/useShortcuts'
+import { useAppStore } from '@/newTab/store/useAppStore'
 import useSettings from '@/newTab/store/useSettings'
 import BookmarkTree, { type BookmarkTreeNode } from './BookmarkTree'
 
@@ -33,7 +33,8 @@ export default function BookmarkDialog() {
   const [path, setPath] = useState<BookmarkTreeNode[]>([])
   const [searchQuery, setSearchQuery] = useState('')
   const composing = useComposing()
-  const { bookmarkOpen: open, setBookmarkOpen: setOpen } = useShortcuts()
+  const open = useAppStore((s) => s.bookmarkOpen)
+  const setOpen = useAppStore((s) => s.setBookmarkOpen)
   const [settings] = useSettings()
 
   useEffect(() => {

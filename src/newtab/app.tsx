@@ -2,11 +2,14 @@
 import './styles/index.css'
 import '@/styles/globals.css'
 import bgImage from './assets/new-tab-bg.webp'
+import useShortcuts from './hooks/useShortcuts'
 import SearchBar from './components/SearchBar'
 import SettingsDialog from './components/SettingsDialog'
 import BookmarkDialog from './components/BookmarkDialog'
 
 function App() {
+  // 注册全局快捷键（书签/设置弹窗）
+  useShortcuts()
   return (
     <div
       className='flex h-full w-full justify-center'
