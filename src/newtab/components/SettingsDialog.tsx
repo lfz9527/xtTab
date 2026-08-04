@@ -11,11 +11,13 @@ import { Switch } from '@/components/ui/switch'
 import { Button } from '@/components/ui/button'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { cn } from '@/lib/utils'
+import useShortcuts from '@/newTab/hooks/useShortcuts'
 import useSettings, { type SettingsState } from '../store/useSettings'
 import useSearchEngines from '../store/useSearchEngines'
 import useSearchHistory from '../store/useSearchHistory'
 import EngineIcon from './EngineIcon'
 import AddEngineDialog from './AddEngineDialog'
+import ShortcutInput from './ShortcutInput'
 
 interface SettingsTab {
   key: string
@@ -25,7 +27,8 @@ interface SettingsTab {
 /** 设置 tab 配置：后续在此追加新 tab，并在内容区按 key 渲染对应设置项 */
 const SETTINGS_TABS: SettingsTab[] = [
   { key: 'general', label: '通用' },
-  { key: 'engines', label: '搜索引擎' }
+  { key: 'engines', label: '搜索引擎' },
+  { key: 'shortcuts', label: '快捷键' }
 ]
 
 /** 书签跳转方式选项 */
@@ -50,6 +53,7 @@ const PANEL_HEIGHT_CLASS = 'h-125'
 export default function SettingsDialog() {
   // 弹窗内 tab 状态，不持久化；默认展开「通用」
   const [activeTab, setActiveTab] = useState(SETTINGS_TABS[0].key)
+  const { settingsOpen: open, setSettingsOpen: setOpen } = useShortcuts()
   const [settings, setSettings] = useSettings()
   const openTarget = settings.openTarget ?? 'current'
   const [engines, setEngines] = useSearchEngines()
@@ -77,7 +81,7 @@ export default function SettingsDialog() {
   const [addDialogOpen, setAddDialogOpen] = useState(false)
 
   return (
-    <Dialog modal>
+    <Dialog modal open={open} onOpenChange={setOpen}>
       <DialogTrigger
         aria-label='设置'
         className='fixed right-2 top-2 z-40 flex size-9 cursor-pointer items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-muted hover:text-foreground'
@@ -264,6 +268,50 @@ export default function SettingsDialog() {
                   </div>
                 </ScrollArea>
               </div>
+            )}
+            {activeTab === 'shortcuts' && (
+              <ScrollArea className='min-h-0 flex-1'>
+                <div className='flex flex-col gap-4 pr-3'>
+                  <div className='flex items-center justify-between rounded-lg border border-border bg-card p-4'>
+                    <div className='flex flex-col gap-1'>
+                      <span className='text-sm font-medium text-foreground'>
+                        打开书签
+                      </span>
+                      <span className='text-xs text-muted-foreground'>
+                        按下组合键快速打开书签弹窗
+                      </span>
+                    </div>
+                    <ShortcutInput
+                      value={settings.bookmarkShortcut ?? 'ctrl+k'}
+                      onChange={(shortcut) =>
+                        setSettings({
+                          ...settings,
+                          bookmarkShortcut: shortcut
+                        })
+                      }
+                    />
+                  </div>
+                  <div className='flex items-center justify-between rounded-lg border border-border bg-card p-4'>
+                    <div className='flex flex-col gap-1'>
+                      <span className='text-sm font-medium text-foreground'>
+                        打开设置
+                      </span>
+                      <span className='text-xs text-muted-foreground'>
+                        按下组合键快速打开设置弹窗
+                      </span>
+                    </div>
+                    <ShortcutInput
+                      value={settings.settingsShortcut ?? 'ctrl+,'}
+                      onChange={(shortcut) =>
+                        setSettings({
+                          ...settings,
+                          settingsShortcut: shortcut
+                        })
+                      }
+                    />
+                  </div>
+                </div>
+              </ScrollArea>
             )}
           </div>
         </div>

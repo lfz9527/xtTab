@@ -19,6 +19,7 @@ import { ScrollArea } from '@/components/ui/scroll-area'
 import messageBus from '@/messages/message'
 import { BackgroundAction } from '@/constants'
 import { useComposing } from '@/hooks/useComposing'
+import useShortcuts from '@/newTab/hooks/useShortcuts'
 import useSettings from '@/newTab/store/useSettings'
 import BookmarkTree, { type BookmarkTreeNode } from './BookmarkTree'
 
@@ -32,6 +33,7 @@ export default function BookmarkDialog() {
   const [path, setPath] = useState<BookmarkTreeNode[]>([])
   const [searchQuery, setSearchQuery] = useState('')
   const composing = useComposing()
+  const { bookmarkOpen: open, setBookmarkOpen: setOpen } = useShortcuts()
   const [settings] = useSettings()
 
   useEffect(() => {
@@ -94,7 +96,7 @@ export default function BookmarkDialog() {
   }
 
   return (
-    <Dialog modal>
+    <Dialog modal open={open} onOpenChange={setOpen}>
       <DialogTrigger
         aria-label='书签'
         className='fixed right-14 top-2 z-40 flex size-9 cursor-pointer items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-muted hover:text-foreground'
@@ -109,113 +111,113 @@ export default function BookmarkDialog() {
       >
         <DialogTitle>书签</DialogTitle>
         <div className='min-w-0'>
-        {/* 返回按钮 + 页眉面包屑 + 搜索框 */}
-        <div className='flex items-center gap-2 pb-2'>
-          {path.length > 0 && (
-            <button
-              type='button'
-              onClick={goBack}
-              aria-label='返回上级'
-              className='flex size-8 shrink-0 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-muted hover:text-foreground'
-            >
-              <ChevronLeftIcon className='size-4' />
-            </button>
-          )}
-          <Breadcrumb className='min-w-0 flex-1'>
-            <BreadcrumbList>
-              {isSearching && (
-                <BreadcrumbItem>
-                  <BreadcrumbPage className='truncate'>
-                    &quot;搜索&quot;
-                  </BreadcrumbPage>
-                </BreadcrumbItem>
-              )}
-              {isSearching && path.map((node, index) => (
-                <BreadcrumbItem key={node.id}>
-                  <BreadcrumbSeparator />
-                  {index === path.length - 1 ? (
-                    <BreadcrumbPage className='truncate'>
-                      {node.title}
-                    </BreadcrumbPage>
-                  ) : (
-                    <BreadcrumbLink
-                      render={
-                        <button
-                          type='button'
-                          onClick={() => setPath(path.slice(0, index + 1))}
-                        />
-                      }
-                      className='truncate'
-                    >
-                      {node.title}
-                    </BreadcrumbLink>
-                  )}
-                </BreadcrumbItem>
-              ))}
-              {!isSearching && path.map((node, index) => (
-                <BreadcrumbItem key={node.id}>
-                  {index > 0 && <BreadcrumbSeparator />}
-                  {index === path.length - 1 ? (
-                    <BreadcrumbPage className='truncate'>
-                      {node.title}
-                    </BreadcrumbPage>
-                  ) : (
-                    <BreadcrumbLink
-                      render={
-                        <button
-                          type='button'
-                          onClick={() => setPath(path.slice(0, index + 1))}
-                        />
-                      }
-                      className='truncate'
-                    >
-                      {node.title}
-                    </BreadcrumbLink>
-                  )}
-                </BreadcrumbItem>
-              ))}
-            </BreadcrumbList>
-          </Breadcrumb>
-          <div className='relative w-50 shrink-0'>
-            <SearchIcon className='absolute left-2.5 top-1/2 size-4 -translate-y-1/2 text-muted-foreground' />
-            <Input
-              placeholder='搜索书签...'
-              value={searchQuery}
-              onChange={(e) => {
-                setSearchQuery(e.target.value)
-                if (e.target.value.trim()) setPath([])
-              }}
-              className='pl-8'
-              autoFocus={false}
-            />
-          </div>
-        </div>
-        {tree.length === 0 ? (
-          <p className='flex h-100 items-center justify-center text-sm text-muted-foreground'>
-            暂无书签
-          </p>
-        ) : (
-          <>
-            {currentNodes.length === 0 ? (
-              <p className='flex h-100 items-center justify-center text-sm text-muted-foreground'>
-                {isSearching ? '未找到匹配的书签' : '此文件夹为空'}
-              </p>
-            ) : (
-              <ScrollArea className='h-100'>
-                <BookmarkTree
-                  nodes={currentNodes}
-                  onEnterFolder={enterFolder}
-                  onOpenBookmark={(url) =>
-                    settings.bookmarkTarget === 'current'
-                      ? (window.location.href = url)
-                      : window.open(url, '_blank')
-                  }
-                  searchQuery={isSearching ? searchQuery : undefined}
-                />
-              </ScrollArea>
+          {/* 返回按钮 + 页眉面包屑 + 搜索框 */}
+          <div className='flex items-center gap-2 pb-2'>
+            {path.length > 0 && (
+              <button
+                type='button'
+                onClick={goBack}
+                aria-label='返回上级'
+                className='flex size-8 shrink-0 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-muted hover:text-foreground'
+              >
+                <ChevronLeftIcon className='size-4' />
+              </button>
             )}
-          </>
-        )}
+            <Breadcrumb className='min-w-0 flex-1'>
+              <BreadcrumbList>
+                {isSearching && (
+                  <BreadcrumbItem>
+                    <BreadcrumbPage className='truncate'>
+                      &quot;搜索&quot;
+                    </BreadcrumbPage>
+                  </BreadcrumbItem>
+                )}
+                {isSearching && path.map((node, index) => (
+                  <BreadcrumbItem key={node.id}>
+                    <BreadcrumbSeparator />
+                    {index === path.length - 1 ? (
+                      <BreadcrumbPage className='truncate'>
+                        {node.title}
+                      </BreadcrumbPage>
+                    ) : (
+                      <BreadcrumbLink
+                        render={
+                          <button
+                            type='button'
+                            onClick={() => setPath(path.slice(0, index + 1))}
+                          />
+                        }
+                        className='truncate'
+                      >
+                        {node.title}
+                      </BreadcrumbLink>
+                    )}
+                  </BreadcrumbItem>
+                ))}
+                {!isSearching && path.map((node, index) => (
+                  <BreadcrumbItem key={node.id}>
+                    {index > 0 && <BreadcrumbSeparator />}
+                    {index === path.length - 1 ? (
+                      <BreadcrumbPage className='truncate'>
+                        {node.title}
+                      </BreadcrumbPage>
+                    ) : (
+                      <BreadcrumbLink
+                        render={
+                          <button
+                            type='button'
+                            onClick={() => setPath(path.slice(0, index + 1))}
+                          />
+                        }
+                        className='truncate'
+                      >
+                        {node.title}
+                      </BreadcrumbLink>
+                    )}
+                  </BreadcrumbItem>
+                ))}
+              </BreadcrumbList>
+            </Breadcrumb>
+            <div className='relative w-50 shrink-0'>
+              <SearchIcon className='absolute left-2.5 top-1/2 size-4 -translate-y-1/2 text-muted-foreground' />
+              <Input
+                placeholder='搜索书签...'
+                value={searchQuery}
+                onChange={(e) => {
+                  setSearchQuery(e.target.value)
+                  if (e.target.value.trim()) setPath([])
+                }}
+                className='pl-8'
+                autoFocus={false}
+              />
+            </div>
+          </div>
+          {tree.length === 0 ? (
+            <p className='flex h-100 items-center justify-center text-sm text-muted-foreground'>
+              暂无书签
+            </p>
+          ) : (
+            <>
+              {currentNodes.length === 0 ? (
+                <p className='flex h-100 items-center justify-center text-sm text-muted-foreground'>
+                  {isSearching ? '未找到匹配的书签' : '此文件夹为空'}
+                </p>
+              ) : (
+                <ScrollArea className='h-100'>
+                  <BookmarkTree
+                    nodes={currentNodes}
+                    onEnterFolder={enterFolder}
+                    onOpenBookmark={(url) =>
+                      settings.bookmarkTarget === 'current'
+                        ? (window.location.href = url)
+                        : window.open(url, '_blank')
+                    }
+                    searchQuery={isSearching ? searchQuery : undefined}
+                  />
+                </ScrollArea>
+              )}
+            </>
+          )}
         </div>
       </DialogContent>
     </Dialog>

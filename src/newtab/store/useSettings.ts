@@ -8,6 +8,10 @@ export interface SettingsState {
   searchHistoryEnabled: boolean
   /** 书签跳转方式：'current' 当前标签页 / 'new' 新标签页 */
   bookmarkTarget: 'current' | 'new'
+  /** 打开书签弹窗快捷键（小写组合，如 ctrl+k） */
+  bookmarkShortcut: string
+  /** 打开设置弹窗快捷键（小写组合，如 ctrl+,） */
+  settingsShortcut: string
   // 配置项字段在此追加
 }
 
@@ -15,7 +19,9 @@ const settingsStorage = storage.defineItem<SettingsState>('local:settings', {
   fallback: {
     openTarget: 'current',
     searchHistoryEnabled: true,
-    bookmarkTarget: 'new'
+    bookmarkTarget: 'new',
+    bookmarkShortcut: 'ctrl+k',
+    settingsShortcut: 'ctrl+,'
   }
 })
 
