@@ -197,7 +197,7 @@ export default function BookmarkDialog() {
                 {isSearching ? '未找到匹配的书签' : '此文件夹为空'}
               </p>
             ) : (
-              <div className='h-100 overflow-y-auto pr-1'>
+              <div className='scrollbar-thin h-100 overflow-y-auto pr-1'>
                 <BookmarkTree
                   nodes={currentNodes}
                   onEnterFolder={enterFolder}
