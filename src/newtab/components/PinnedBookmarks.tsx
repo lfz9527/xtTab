@@ -6,13 +6,8 @@ import usePinBookmarks, {
   findBookmarksByIds
 } from '@/newTab/store/usePinBookmarks'
 import useSettings from '@/newTab/store/useSettings'
+import { faviconUrl } from '@/utils'
 import type { BookmarkTreeNode } from './BookmarkTree'
-
-/**
- * 站点图标外部服务（硬编码 URL：Google favicon 服务，按域名取图标；加载失败组件内兜底 GlobeIcon）
- */
-const faviconUrl = (host: string) =>
-  `https://www.google.com/s2/favicons?domain=${host}&sz=64`
 
 /** 提取 URL 域名，解析失败返回空串（兜底不显示图标） */
 function safeHost(url: string): string {
