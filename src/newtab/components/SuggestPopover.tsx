@@ -12,6 +12,7 @@ import { Popover, PopoverContent } from '@/components/ui/popover'
 import messageBus from '@/messages/message'
 import { BackgroundAction } from '@/constants'
 import { useDebounceFn } from '@/hooks/useDebounceFn'
+import { useComposing } from '@/hooks/useComposing'
 import { useLatest } from '@/hooks/useLatest'
 import { useThrottleFn } from '@/hooks/useThrottledFn'
 
@@ -53,7 +54,7 @@ export default function SuggestPopover({
 }: SuggestPopoverProps) {
   const [suggestions, setSuggestions] = useState<string[]>([])
   const [suggestOpen, setSuggestOpen] = useState(false)
-  const [composing, setComposing] = useState(false)
+  const composing = useComposing()
   const [activeIndex, setActiveIndex] = useState(-1)
   const queryRef = useLatest({ query, engine: engineKey, history, inputFocused })
   // 聚焦后延迟展开的定时器，失焦时需清除，避免失焦后列表又弹出
@@ -63,18 +64,6 @@ export default function SuggestPopover({
   const trimmed = query.trim()
   const isHistoryMode = !trimmed
   const items = isHistoryMode ? history : suggestions
-
-  // 监听输入法组合输入
-  useEffect(() => {
-    const onStart = () => setComposing(true)
-    const onEnd = () => setComposing(false)
-    document.addEventListener('compositionstart', onStart)
-    document.addEventListener('compositionend', onEnd)
-    return () => {
-      document.removeEventListener('compositionstart', onStart)
-      document.removeEventListener('compositionend', onEnd)
-    }
-  }, [])
 
   // 联想请求：防抖 200ms
   const { run: runSuggest, cancel: cancelSuggest } = useDebounceFn(

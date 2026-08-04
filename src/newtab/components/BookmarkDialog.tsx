@@ -17,6 +17,7 @@ import {
 import { Input } from '@/components/ui/input'
 import messageBus from '@/messages/message'
 import { BackgroundAction } from '@/constants'
+import { useComposing } from '@/hooks/useComposing'
 import BookmarkTree, { type BookmarkTreeNode } from './BookmarkTree'
 
 /**
@@ -28,6 +29,7 @@ export default function BookmarkDialog() {
   // 当前目录路径栈，[] 表示根目录
   const [path, setPath] = useState<BookmarkTreeNode[]>([])
   const [searchQuery, setSearchQuery] = useState('')
+  const composing = useComposing()
 
   useEffect(() => {
     messageBus
@@ -64,9 +66,8 @@ export default function BookmarkDialog() {
     return result
   }
 
-  const isSearching = searchQuery.trim().length > 0
+  const isSearching = !composing && searchQuery.trim().length > 0
 
-  // 搜索结果
   const searchResults = useMemo(
     () => (isSearching ? searchBookmarks(tree, searchQuery) : []),
     [tree, searchQuery, isSearching]
