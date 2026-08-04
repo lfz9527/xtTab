@@ -18,9 +18,10 @@ function App() {
     >
       <div className='flex w-full max-w-160 flex-col items-center gap-12 px-6 pt-50 pb-6'>
         <SearchBar />
-        <SettingsDialog />
-        <BookmarkDialog />
       </div>
+      {/* 弹窗组件脱离 max-w-160 容器（fixed 定位，不受父容器布局影响） */}
+      <SettingsDialog />
+      <BookmarkDialog />
       {/* 置顶卡片区脱离 max-w-160 容器，独立居中展示（max-w-300） */}
       <PinnedBookmarks />
     </div>
