@@ -33,7 +33,7 @@ export default function PinnedBookmarks() {
   if (bookmarks.length === 0) return null
 
   return (
-    <div className='flex max-w-300 flex-wrap justify-center gap-3'>
+    <div className='flex w-full max-w-300 flex-wrap justify-center gap-3'>
       {bookmarks.map((bookmark) => (
         <PinnedCard
           key={bookmark.id}
