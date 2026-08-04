@@ -34,12 +34,14 @@ export default function EngineIcon({
   className?: string
 }) {
   const imgClassName = className ?? 'size-5'
-  if (icon) {
-    return <img src={icon} alt={name} className={imgClassName} />
-  }
-  return engineIcons[engineKey] ? (
-    <img src={engineIcons[engineKey]} alt={name} className={imgClassName} />
-  ) : (
-    <SearchIcon className={cn('text-muted-foreground', imgClassName)} />
+  const src = icon ?? engineIcons[engineKey]
+  return (
+    <span className='flex size-7 items-center justify-center rounded bg-white'>
+      {src ? (
+        <img src={src} alt={name} className={imgClassName} />
+      ) : (
+        <SearchIcon className={cn('text-muted-foreground', imgClassName)} />
+      )}
+    </span>
   )
 }

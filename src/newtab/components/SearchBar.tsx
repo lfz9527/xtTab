@@ -87,7 +87,7 @@ export default function SearchBar() {
 
   return (
     <>
-      <InputGroup ref={inputGroupRef} className='h-12 rounded-2xl bg-white shadow-[0_2px_12px_rgba(0,0,0,0.04)] px-2 focus-within:ring-0! focus-within:border-input!'>
+      <InputGroup ref={inputGroupRef} className='h-12 rounded-2xl bg-white shadow-[0_2px_12px_rgba(0,0,0,0.04)] px-2 border-0 focus-within:ring-0!'>
         <InputGroupAddon align="inline-start" className='h-full p-0'>
           <Popover open={enginePopoverOpen} onOpenChange={setEnginePopoverOpen}>
             <PopoverTrigger className='group flex h-full w-full cursor-pointer items-center gap-1 px-2 outline-none border-0'>
@@ -98,7 +98,7 @@ export default function SearchBar() {
               />
               <ChevronDownIcon className='size-4 text-muted-foreground transition-transform group-aria-expanded:rotate-180' />
             </PopoverTrigger>
-            <PopoverContent align="start" alignOffset={-4} sideOffset={8} className='p-2 shadow-none rounded-2xl' style={{ width: popoverWidth }}>
+            <PopoverContent align="start" alignOffset={-4} sideOffset={8} className='bg-background/50 backdrop-blur-md p-2 shadow-none rounded-2xl' style={{ width: popoverWidth }}>
               <div className='flex flex-wrap items-center gap-1'>
                 {visibleEngines.map((engine) => (
                   <button
@@ -113,6 +113,7 @@ export default function SearchBar() {
                       engineKey={engine.key}
                       name={engine.name}
                       icon={engine.icon}
+                      className='size-4.5'
                     />
                     <span>{engine.name}</span>
                   </button>
