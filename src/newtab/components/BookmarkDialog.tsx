@@ -21,6 +21,7 @@ import { BackgroundAction } from '@/constants'
 import { useComposing } from '@/hooks/useComposing'
 import { useAppStore } from '@/newTab/store/useAppStore'
 import useSettings from '@/newTab/store/useSettings'
+import usePinBookmarks from '@/newTab/store/usePinBookmarks'
 import BookmarkTree, { type BookmarkTreeNode } from './BookmarkTree'
 
 /**
@@ -36,6 +37,8 @@ export default function BookmarkDialog() {
   const open = useAppStore((s) => s.bookmarkOpen)
   const setOpen = useAppStore((s) => s.setBookmarkOpen)
   const [settings] = useSettings()
+  const { pinnedIds, togglePin } = usePinBookmarks()
+  const pinnedIdSet = useMemo(() => new Set(pinnedIds), [pinnedIds])
 
   useEffect(() => {
     messageBus
@@ -214,6 +217,8 @@ export default function BookmarkDialog() {
                         : window.open(url, '_blank')
                     }
                     searchQuery={isSearching ? searchQuery : undefined}
+                    pinnedIds={pinnedIdSet}
+                    onTogglePin={togglePin}
                   />
                 </ScrollArea>
               )}

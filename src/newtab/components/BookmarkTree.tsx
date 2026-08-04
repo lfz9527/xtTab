@@ -1,4 +1,4 @@
-import { FolderIcon, GlobeIcon } from 'lucide-react'
+import { FolderIcon, GlobeIcon, PinIcon } from 'lucide-react'
 import { Fragment } from 'react'
 
 /** 书签树节点最小字段（与 background 返回的浏览器书签结构一致） */
@@ -18,6 +18,10 @@ interface BookmarkTreeProps {
   onOpenBookmark: (url: string) => void
   /** 搜索关键词（高亮匹配部分） */
   searchQuery?: string
+  /** 已置顶书签 id 集合 */
+  pinnedIds: Set<string>
+  /** 切换书签置顶状态 */
+  onTogglePin: (id: string) => void
 }
 
 /** 将文本按搜索关键词分割，匹配部分高亮 */
@@ -64,7 +68,9 @@ export default function BookmarkTree({
   nodes,
   onEnterFolder,
   onOpenBookmark,
-  searchQuery
+  searchQuery,
+  pinnedIds,
+  onTogglePin
 }: BookmarkTreeProps) {
   return (
     <ul className='flex flex-col gap-0.5'>
@@ -86,27 +92,38 @@ export default function BookmarkTree({
             </li>
           )
         }
+        const isPinned = pinnedIds.has(node.id)
         return (
           <li key={node.id}>
-            <button
-              type='button'
-              onClick={() => node.url && onOpenBookmark(node.url)}
-              className='flex w-full items-center gap-1.5 rounded-md px-2 py-1.5 text-left text-sm text-foreground transition-colors hover:bg-muted'
-            >
-              <div className='flex min-w-0 flex-1 flex-col gap-0.5'>
-                <div className='flex items-center gap-1.5'>
-                  <GlobeIcon className='size-3.5 shrink-0 text-muted-foreground' />
-                  <span className='truncate'>
-                    <HighlightText text={node.title ?? ''} query={searchQuery} />
-                  </span>
+            <div className='group flex w-full items-center rounded-md px-2 py-1.5 text-sm text-foreground transition-colors hover:bg-muted'>
+              <button
+                type='button'
+                onClick={() => node.url && onOpenBookmark(node.url)}
+                className='flex min-w-0 flex-1 items-center gap-1.5 text-left'
+              >
+                <div className='flex min-w-0 flex-1 flex-col gap-0.5'>
+                  <div className='flex items-center gap-1.5'>
+                    <GlobeIcon className='size-3.5 shrink-0 text-muted-foreground' />
+                    <span className='truncate'>
+                      <HighlightText text={node.title ?? ''} query={searchQuery} />
+                    </span>
+                  </div>
+                  {node.url && (
+                    <span className='truncate pl-5 text-xs text-muted-foreground'>
+                      <HighlightText text={node.url} query={searchQuery} />
+                    </span>
+                  )}
                 </div>
-                {node.url && (
-                  <span className='truncate pl-5 text-xs text-muted-foreground'>
-                    <HighlightText text={node.url} query={searchQuery} />
-                  </span>
-                )}
-              </div>
-            </button>
+              </button>
+              <button
+                type='button'
+                onClick={() => onTogglePin(node.id)}
+                aria-label={isPinned ? '取消置顶' : '置顶'}
+                className={`shrink-0 rounded-md p-1 transition-opacity ${isPinned ? 'text-foreground' : 'text-muted-foreground opacity-0 group-hover:opacity-100 hover:text-foreground'}`}
+              >
+                <PinIcon className={`size-3.5 ${isPinned ? 'fill-foreground' : ''}`} />
+              </button>
+            </div>
           </li>
         )
       })}
