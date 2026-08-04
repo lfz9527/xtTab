@@ -18,6 +18,7 @@ import { Input } from '@/components/ui/input'
 import messageBus from '@/messages/message'
 import { BackgroundAction } from '@/constants'
 import { useComposing } from '@/hooks/useComposing'
+import useSettings from '@/newTab/store/useSettings'
 import BookmarkTree, { type BookmarkTreeNode } from './BookmarkTree'
 
 /**
@@ -30,6 +31,7 @@ export default function BookmarkDialog() {
   const [path, setPath] = useState<BookmarkTreeNode[]>([])
   const [searchQuery, setSearchQuery] = useState('')
   const composing = useComposing()
+  const [settings] = useSettings()
 
   useEffect(() => {
     messageBus
@@ -202,7 +204,11 @@ export default function BookmarkDialog() {
                 <BookmarkTree
                   nodes={currentNodes}
                   onEnterFolder={enterFolder}
-                  onOpenBookmark={(url) => window.open(url, '_blank')}
+                  onOpenBookmark={(url) =>
+                    settings.bookmarkTarget === 'current'
+                      ? (window.location.href = url)
+                      : window.open(url, '_blank')
+                  }
                   searchQuery={isSearching ? searchQuery : undefined}
                 />
               </div>

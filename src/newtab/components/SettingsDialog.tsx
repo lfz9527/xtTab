@@ -28,6 +28,12 @@ const SETTINGS_TABS: SettingsTab[] = [
   { key: 'engines', label: '搜索引擎' }
 ]
 
+/** 书签跳转方式选项 */
+const BOOKMARK_TARGET_OPTIONS = [
+  { value: 'current', label: '当前标签页' },
+  { value: 'new', label: '新标签页' }
+] as const
+
 /** 搜索结果打开方式选项 */
 const OPEN_TARGET_OPTIONS = [
   { value: 'current', label: '当前标签页' },
@@ -150,6 +156,33 @@ export default function SettingsDialog() {
                   >
                     <TabsList>
                       {OPEN_TARGET_OPTIONS.map((opt) => (
+                        <TabsTrigger
+                          key={opt.value}
+                          value={opt.value}
+                          className='px-3'
+                        >
+                          {opt.label}
+                        </TabsTrigger>
+                      ))}
+                    </TabsList>
+                  </Tabs>
+                </div>
+                <div className='rounded-lg border border-border bg-card p-4 flex flex-col gap-3'>
+                  <span className='text-sm font-medium text-foreground'>
+                    书签跳转方式
+                  </span>
+                  <Tabs
+                    value={settings.bookmarkTarget ?? 'new'}
+                    onValueChange={(value) =>
+                      setSettings({
+                        ...settings,
+                        bookmarkTarget: value as SettingsState['bookmarkTarget']
+                      })
+                    }
+                    className='w-fit'
+                  >
+                    <TabsList>
+                      {BOOKMARK_TARGET_OPTIONS.map((opt) => (
                         <TabsTrigger
                           key={opt.value}
                           value={opt.value}

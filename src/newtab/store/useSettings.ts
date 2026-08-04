@@ -6,13 +6,16 @@ export interface SettingsState {
   openTarget: 'current' | 'new'
   /** 是否开启搜索历史记录 */
   searchHistoryEnabled: boolean
+  /** 书签跳转方式：'current' 当前标签页 / 'new' 新标签页 */
+  bookmarkTarget: 'current' | 'new'
   // 配置项字段在此追加
 }
 
 const settingsStorage = storage.defineItem<SettingsState>('local:settings', {
   fallback: {
     openTarget: 'current',
-    searchHistoryEnabled: true
+    searchHistoryEnabled: true,
+    bookmarkTarget: 'new'
   }
 })
 
