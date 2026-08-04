@@ -69,13 +69,13 @@ function BookmarkFavicon({ url }: { url?: string }) {
   const [iconFailed, setIconFailed] = useState(false)
   const host = url ? safeHost(url) : ''
   if (iconFailed || !host) {
-    return <GlobeIcon className='size-5 shrink-0 text-muted-foreground' />
+    return <GlobeIcon className='size-4.5 shrink-0 text-muted-foreground' />
   }
   return (
     <img
       src={faviconUrl(host)}
       alt=''
-      className='size-5 shrink-0'
+      className='size-4.5 shrink-0'
       onError={() => setIconFailed(true)}
     />
   )
