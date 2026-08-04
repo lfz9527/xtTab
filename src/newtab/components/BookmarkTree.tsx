@@ -129,7 +129,7 @@ export default function BookmarkTree({
                     </span>
                   </div>
                   {node.url && (
-                    <span className='truncate pl-8 text-xs text-muted-foreground'>
+                    <span className='truncate pl-7 text-xs text-muted-foreground'>
                       <HighlightText text={node.url} query={searchQuery} />
                     </span>
                   )}
