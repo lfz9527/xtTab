@@ -150,7 +150,7 @@ export default function BookmarkDialog() {
               ))}
               {!isSearching && path.map((node, index) => (
                 <BreadcrumbItem key={node.id}>
-                  <BreadcrumbSeparator />
+                  {index > 0 && <BreadcrumbSeparator />}
                   {index === path.length - 1 ? (
                     <BreadcrumbPage className='truncate'>
                       {node.title}
