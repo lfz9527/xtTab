@@ -43,10 +43,10 @@ pnpm clear           # 清除 node_modules + pnpm-lock.yaml
 | **background** | `src/background/` | Service Worker — 图标点击打开侧边栏、消息总线注册、suggest 搜索联想 API 代理 |
 | **content** | `src/content/` | 注入页面的 React 组件 (ShadowRoot UI) |
 | **sidePanel** | `src/sidePanel/` | 侧边栏面板 (React 应用) |
-| **newTab** | `src/newTab/` | 新标签页 React 应用 (SearchBar + SuggestPopover + useSearchEngines) |
+| **newTab** | `src/newTab/` | 新标签页 React 应用 (SearchBar + SuggestPopover + BookmarkDialog + SettingsDialog + AddEngineDialog + store/ 配置存储) |
 | **services** | `src/services/` | HTTP 请求封装 (`fetch.ts` Fetch 包装器 + `index.ts` Services 类)，支持请求取消与超时；`pnpm openapi` 从 swagger 重新生成 |
 | **messages** | `src/messages/` | 自定义消息总线 (`MessageBus` 单例) + Content 消息类，基于 `browser.runtime.onMessage` |
-| **hooks** | `src/hooks/` | React Hooks — `useTabs` (标签页管理)、`useWxtStorage` (WXT storage 包装)、`useDebounceFn`/`useDebounceValue` (防抖)、`useLatest` (最新值引用)、`useUnmount` (卸载回调) |
+| **hooks** | `src/hooks/` | React Hooks — `useTabs` (标签页管理)、`useWxtStorage` (WXT storage 包装)、`useDebounceFn`/`useDebounceValue` (防抖)、`useThrottledFn` (节流)、`useEventListener` (通用事件监听)、`useComposing` (中文输入法组合状态)、`useLatest` (最新值引用)、`useUnmount` (卸载回调) |
 | **constants** | `src/constants/` | 枚举定义体系 (`BaseEnumCls` 抽象类模式)、常量 |
 | **types** | `src/types/` | 全局类型定义 (`anyObject`、`Response<T>`) |
 | **utils** | `src/utils/` | 通用工具函数 |
