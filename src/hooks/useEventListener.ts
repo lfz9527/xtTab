@@ -39,6 +39,14 @@ function useEventListener<K extends keyof DocumentEventMap>(
   options?: boolean | AddEventListenerOptions
 ): void
 
+// 基于元素的可选监听（element 缺省时回退 window）
+function useEventListener<K extends keyof HTMLElementEventMap>(
+  eventName: K,
+  handler: (event: HTMLElementEventMap[K]) => void,
+  element?: RefObject<HTMLElement>,
+  options?: boolean | AddEventListenerOptions
+): void
+
 function useEventListener<
   KW extends keyof WindowEventMap,
   KH extends keyof HTMLElementEventMap & keyof SVGElementEventMap,
