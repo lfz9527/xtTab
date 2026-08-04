@@ -1,5 +1,6 @@
 import { FolderIcon, GlobeIcon, PinIcon } from 'lucide-react'
-import { Fragment } from 'react'
+import { Fragment, useState } from 'react'
+import { faviconUrl, safeHost } from '@/utils'
 
 /** 书签树节点最小字段（与 background 返回的浏览器书签结构一致） */
 export interface BookmarkTreeNode {
@@ -62,6 +63,25 @@ function HighlightText({ text, query }: { text: string; query?: string }) {
 }
 
 /**
+ * 书签站点图标：用 faviconUrl 加载站点图标，加载失败或域名解析失败兜底 GlobeIcon
+ */
+function BookmarkFavicon({ url }: { url?: string }) {
+  const [iconFailed, setIconFailed] = useState(false)
+  const host = url ? safeHost(url) : ''
+  if (iconFailed || !host) {
+    return <GlobeIcon className='size-3.5 shrink-0 text-muted-foreground' />
+  }
+  return (
+    <img
+      src={faviconUrl(host)}
+      alt=''
+      className='size-3.5 shrink-0'
+      onError={() => setIconFailed(true)}
+    />
+  )
+}
+
+/**
  * 目录内容列表：平铺渲染当前目录的文件夹与书签，点击文件夹进入
  */
 export default function BookmarkTree({
@@ -103,7 +123,7 @@ export default function BookmarkTree({
               >
                 <div className='flex min-w-0 flex-1 flex-col gap-0.5'>
                   <div className='flex items-center gap-1.5'>
-                    <GlobeIcon className='size-3.5 shrink-0 text-muted-foreground' />
+                    <BookmarkFavicon url={node.url} />
                     <span className='truncate'>
                       <HighlightText text={node.title ?? ''} query={searchQuery} />
                     </span>

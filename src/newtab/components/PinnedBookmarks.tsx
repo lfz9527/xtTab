@@ -6,17 +6,8 @@ import usePinBookmarks, {
   findBookmarksByIds
 } from '@/newTab/store/usePinBookmarks'
 import useSettings from '@/newTab/store/useSettings'
-import { faviconUrl } from '@/utils'
+import { faviconUrl, safeHost } from '@/utils'
 import type { BookmarkTreeNode } from './BookmarkTree'
-
-/** 提取 URL 域名，解析失败返回空串（兜底不显示图标） */
-function safeHost(url: string): string {
-  try {
-    return new URL(url).hostname
-  } catch {
-    return ''
-  }
-}
 
 /**
  * 主页置顶书签卡片区：置顶书签以卡片展示，无置顶时整块不渲染
