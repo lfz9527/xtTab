@@ -109,7 +109,7 @@ export default function SearchBar() {
               />
               <ChevronDownIcon className='size-4 text-muted-foreground transition-transform group-aria-expanded:rotate-180' />
             </PopoverTrigger>
-            <PopoverContent align="start" alignOffset={-4} sideOffset={8} className='bg-background/50 backdrop-blur-md p-2 shadow-none rounded-2xl' style={{ width: popoverWidth }}>
+            <PopoverContent align="start" alignOffset={-4} sideOffset={8} className='bg-background/50 backdrop-blur-md p-2 rounded-2xl transition-shadow hover:shadow-lg' style={{ width: popoverWidth }}>
               <div className='flex flex-wrap items-center gap-2'>
                 {visibleEngines.map((engine) => {
                   const isCurrent = engine.key === engines.current
