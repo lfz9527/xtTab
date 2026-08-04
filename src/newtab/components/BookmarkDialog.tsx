@@ -1,5 +1,14 @@
 import { useEffect, useState } from 'react'
-import { BookmarkIcon, ChevronLeftIcon } from 'lucide-react'
+import { ChevronLeftIcon } from 'lucide-react'
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator
+} from '@/components/ui/breadcrumb'
+import { BookmarkIcon } from 'lucide-react'
 import {
   Dialog,
   DialogContent,
@@ -77,27 +86,45 @@ export default function BookmarkDialog() {
                   <ChevronLeftIcon className='size-4' />
                 </button>
               )}
-              <nav className='flex min-w-0 flex-1 items-center gap-1 text-sm text-muted-foreground'>
-                <button
-                  type='button'
-                  onClick={() => setPath([])}
-                  className='shrink-0 rounded px-1 py-0.5 transition-colors hover:bg-muted hover:text-foreground'
-                >
-                  根
-                </button>
-                {path.map((node, index) => (
-                  <span key={node.id} className='flex min-w-0 items-center gap-1'>
-                    <span className='text-muted-foreground/50'>/</span>
-                    <button
-                      type='button'
-                      onClick={() => setPath(path.slice(0, index + 1))}
-                      className='truncate rounded px-1 py-0.5 transition-colors hover:bg-muted hover:text-foreground'
+              <Breadcrumb className='min-w-0 flex-1'>
+                <BreadcrumbList>
+                  <BreadcrumbItem>
+                    <BreadcrumbLink
+                      render={
+                        <button
+                          type='button'
+                          onClick={() => setPath([])}
+                        />
+                      }
+                      className='shrink-0'
                     >
-                      {node.title}
-                    </button>
-                  </span>
-                ))}
-              </nav>
+                      根
+                    </BreadcrumbLink>
+                  </BreadcrumbItem>
+                  {path.map((node, index) => (
+                    <BreadcrumbItem key={node.id}>
+                      <BreadcrumbSeparator />
+                      {index === path.length - 1 ? (
+                        <BreadcrumbPage className='truncate'>
+                          {node.title}
+                        </BreadcrumbPage>
+                      ) : (
+                        <BreadcrumbLink
+                          render={
+                            <button
+                              type='button'
+                              onClick={() => setPath(path.slice(0, index + 1))}
+                            />
+                          }
+                          className='truncate'
+                        >
+                          {node.title}
+                        </BreadcrumbLink>
+                      )}
+                    </BreadcrumbItem>
+                  ))}
+                </BreadcrumbList>
+              </Breadcrumb>
             </div>
             {currentNodes.length === 0 ? (
               <p className='py-8 text-center text-sm text-muted-foreground'>
