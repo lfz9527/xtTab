@@ -41,8 +41,8 @@ export default function EngineIcon({
   return (
     <span
       className={cn(
-        'flex items-center justify-center rounded-md',
-        showBg ? 'size-9 bg-white' : 'size-5'
+        'flex items-center justify-center rounded-md transition-shadow',
+        showBg ? 'size-9 bg-white group-hover:shadow-md' : 'size-5'
       )}
     >
       {src ? (
