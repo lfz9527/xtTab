@@ -15,6 +15,7 @@ import SuggestPopover, {
   type SuggestPopoverHandle
 } from './SuggestPopover'
 import EngineIcon from './EngineIcon'
+import { useEventListener } from '@/hooks/useEventListener'
 import useSearchEngines from '../store/useSearchEngines'
 import useSettings from '../store/useSettings'
 import useSearchHistory from '../store/useSearchHistory'
@@ -40,6 +41,13 @@ export default function SearchBar() {
       setPopoverWidth(w)
     }
   }, [])
+
+  // 页面缩小时同步更新弹层宽度，与搜索框保持一致
+  useEventListener('resize', () => {
+    if (inputGroupRef.current) {
+      setPopoverWidth(inputGroupRef.current.offsetWidth)
+    }
+  })
   const visibleEngines = engines.list.filter((e) => !e.hidden)
   const currentEngine =
     engines.list.find((e) => e.key === engines.current && !e.hidden) ??
@@ -91,7 +99,7 @@ export default function SearchBar() {
               <ChevronDownIcon className='size-4 text-muted-foreground transition-transform group-aria-expanded:rotate-180' />
             </PopoverTrigger>
             <PopoverContent align="start" alignOffset={-4} sideOffset={8} className='p-2 shadow-none rounded-2xl' style={{ width: popoverWidth }}>
-              <div className='flex items-center gap-1'>
+              <div className='flex flex-wrap items-center gap-1'>
                 {visibleEngines.map((engine) => (
                   <button
                     key={engine.key}
