@@ -25,18 +25,26 @@ export default function EngineIcon({
   engineKey,
   name,
   icon,
-  className
+  className,
+  showBg = true
 }: {
   engineKey: string
   name: string
   /** 自定义图标图片链接 */
   icon?: string
   className?: string
+  /** 是否显示白色圆角背景，默认 true */
+  showBg?: boolean
 }) {
   const imgClassName = className ?? 'size-5'
   const src = icon ?? engineIcons[engineKey]
   return (
-    <span className='flex size-9 items-center justify-center rounded-md bg-white'>
+    <span
+      className={cn(
+        'flex items-center justify-center rounded-md',
+        showBg ? 'size-9 bg-white' : 'size-5'
+      )}
+    >
       {src ? (
         <img src={src} alt={name} className={imgClassName} />
       ) : (
