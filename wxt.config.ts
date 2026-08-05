@@ -18,7 +18,6 @@ const viteConfig: WxtViteConfig = {
 
 // 浏览器manifest 配置
 const manifest = {
-    version: '1.0.0',
     name: 'xtTab',
     description: '这是一个 wxt-dev 的开发模板',
     permissions: ['activeTab', 'tabs', 'sidePanel', 'storage', 'bookmarks'],
