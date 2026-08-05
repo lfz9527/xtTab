@@ -68,7 +68,10 @@ function PinnedCard({
   }
 
   return (
-    <div className='group relative flex items-center gap-2 rounded-lg border border-border bg-background/60 px-3 py-2 shadow-sm transition-colors hover:bg-muted'>
+    <div
+      title={bookmark.title}
+      className='group relative flex items-center gap-2 rounded-lg border border-border bg-background/60 px-3 py-2 shadow-sm transition-colors hover:bg-muted'
+    >
       <button
         type='button'
         onClick={open}
