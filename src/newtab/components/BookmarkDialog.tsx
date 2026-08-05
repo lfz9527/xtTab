@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
-import { BookmarkIcon, ChevronLeftIcon, SearchIcon } from 'lucide-react'
+import { ChevronLeftIcon, SearchIcon } from 'lucide-react'
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -11,8 +11,7 @@ import {
 import {
   Dialog,
   DialogContent,
-  DialogTitle,
-  DialogTrigger
+  DialogTitle
 } from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
 import { ScrollArea } from '@/components/ui/scroll-area'
@@ -101,12 +100,6 @@ export default function BookmarkDialog() {
 
   return (
     <Dialog modal open={open} onOpenChange={setOpen}>
-      <DialogTrigger
-        aria-label='书签'
-        className='fixed right-14 top-2 z-40 flex size-9 cursor-pointer items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-muted hover:text-foreground'
-      >
-        <BookmarkIcon className='size-5' />
-      </DialogTrigger>
       <DialogContent
         aria-label='书签'
         showCloseButton={false}
