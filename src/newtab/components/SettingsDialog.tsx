@@ -1,9 +1,8 @@
-import { PlusIcon, SettingsIcon, Trash2Icon } from 'lucide-react'
+import { PlusIcon, Trash2Icon } from 'lucide-react'
 import {
   Dialog,
   DialogContent,
-  DialogTitle,
-  DialogTrigger
+  DialogTitle
 } from '@/components/ui/dialog'
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Switch } from '@/components/ui/switch'
@@ -84,12 +83,6 @@ export default function SettingsDialog() {
 
   return (
     <Dialog modal open={open} onOpenChange={setOpen}>
-      <DialogTrigger
-        aria-label='设置'
-        className='fixed right-2 top-2 z-40 flex size-9 cursor-pointer items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-muted hover:text-foreground'
-      >
-        <SettingsIcon className='size-5' />
-      </DialogTrigger>
       <DialogContent
         aria-label='设置'
         showCloseButton={false}
