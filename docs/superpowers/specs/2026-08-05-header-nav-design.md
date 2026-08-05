@@ -11,7 +11,7 @@
 
 ```
 <div 背景图容器 flex-col h-full>
-  <Header />              ← 上：80% 不透明度导航（fixed 顶部）
+  <Header />              ← 上：60% 不透明度导航（fixed 顶部）
   <main 中部>             ← 中：搜索框（偏上部）
     <SearchBar />
   </main>
@@ -24,7 +24,7 @@
 ## Header 组件（新增 `src/newTab/components/Header.tsx`）
 
 - 定位：`fixed inset-x-0 top-0 z-40`，不占文档流
-- 样式：`bg-background/80`（80% 不透明度），无高斯模糊，内边距容纳按钮
+- 样式：`bg-background/60`（60% 不透明度），无高斯模糊，内边距容纳按钮
 - 内容：右侧排列两个图标按钮
   - 书签按钮：`BookmarkIcon`，点击 `setBookmarkOpen(true)`
   - 设置按钮：`SettingsIcon`，点击 `setSettingsOpen(true)`
@@ -50,7 +50,7 @@
 
 ## 验收标准
 
-1. 页面顶部出现 80% 不透明度 Header，右侧含书签、设置两个图标按钮
+1. 页面顶部出现 60% 不透明度 Header，右侧含书签、设置两个图标按钮
 2. 点击书签按钮打开书签弹窗，点击设置按钮打开设置弹窗
 3. 原右上角悬浮按钮消失，无残留
 4. 搜索框位于中部偏上，置顶书签卡片位于底部
