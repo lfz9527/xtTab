@@ -1,4 +1,3 @@
-
 import './styles/index.css'
 import '@/styles/globals.css'
 import bgImage from './assets/new-tab-bg.webp'

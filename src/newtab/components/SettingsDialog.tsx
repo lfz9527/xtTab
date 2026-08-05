@@ -1,9 +1,5 @@
 import { PlusIcon, Trash2Icon } from 'lucide-react'
-import {
-  Dialog,
-  DialogContent,
-  DialogTitle
-} from '@/components/ui/dialog'
+import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog'
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Switch } from '@/components/ui/switch'
 import { Button } from '@/components/ui/button'

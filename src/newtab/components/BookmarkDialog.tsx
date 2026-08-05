@@ -8,11 +8,7 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator
 } from '@/components/ui/breadcrumb'
-import {
-  Dialog,
-  DialogContent,
-  DialogTitle
-} from '@/components/ui/dialog'
+import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import messageBus from '@/messages/message'
@@ -24,7 +20,7 @@ import usePinBookmarks from '@/newTab/store/usePinBookmarks'
 import BookmarkTree, { type BookmarkTreeNode } from './BookmarkTree'
 
 /**
- * 书签弹窗：右上角书签按钮，点击弹出 600px 弹窗
+ * 书签弹窗：点击顶部 Header 书签按钮或快捷键打开
  * 资源管理器式目录浏览：点击文件夹进入，面包屑 + 返回按钮导航
  */
 export default function BookmarkDialog() {

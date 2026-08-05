@@ -2,14 +2,14 @@ import { BookmarkIcon, SettingsIcon } from 'lucide-react'
 import { useAppStore } from '@/newTab/store/useAppStore'
 
 /**
- * 顶部导航栏：透明 + 毛玻璃模糊，右侧收纳书签/设置入口
+ * 顶部导航栏：80% 不透明度背景，右侧收纳书签/设置入口
  */
 export default function Header() {
   const setBookmarkOpen = useAppStore((s) => s.setBookmarkOpen)
   const setSettingsOpen = useAppStore((s) => s.setSettingsOpen)
 
   return (
-    <header className='fixed inset-x-0 top-0 z-40 bg-transparent backdrop-blur-md'>
+    <header className='fixed inset-x-0 top-0 z-40 bg-background/80'>
       <div className='flex items-center justify-end gap-2 p-2 pr-4'>
         <button
           type='button'
