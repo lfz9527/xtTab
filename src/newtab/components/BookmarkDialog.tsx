@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { ChevronLeftIcon, SearchIcon } from 'lucide-react'
 import {
   Breadcrumb,
@@ -28,6 +28,8 @@ export default function BookmarkDialog() {
   // 当前目录路径栈，[] 表示根目录
   const [path, setPath] = useState<BookmarkTreeNode[]>([])
   const [searchQuery, setSearchQuery] = useState('')
+  // 搜索框 ref：弹窗打开时自动聚焦，便于直接输入搜索
+  const searchInputRef = useRef<HTMLInputElement>(null)
   const composing = useComposing()
   const open = useAppStore((s) => s.bookmarkOpen)
   const setOpen = useAppStore((s) => s.setBookmarkOpen)
@@ -99,7 +101,7 @@ export default function BookmarkDialog() {
       <DialogContent
         aria-label='书签'
         showCloseButton={false}
-        initialFocus={false}
+        initialFocus={searchInputRef}
         className='max-w-175 sm:max-w-175'
       >
         <DialogTitle>书签</DialogTitle>
@@ -174,6 +176,7 @@ export default function BookmarkDialog() {
             <div className='relative w-50 shrink-0'>
               <SearchIcon className='absolute left-2.5 top-1/2 size-4 -translate-y-1/2 text-muted-foreground' />
               <Input
+                ref={searchInputRef}
                 placeholder='搜索书签...'
                 value={searchQuery}
                 onChange={(e) => {
