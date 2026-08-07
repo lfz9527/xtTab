@@ -19,12 +19,12 @@ function App() {
       {/* 上：顶部导航栏（fixed 定位，不占文档流） */}
       <Header />
       {/* 中：搜索框（偏上部） */}
-      <main className='flex w-full flex-1 flex-col items-center'>
+      <main className='flex w-full flex-col items-center'>
         <div className='flex w-full max-w-160 flex-col items-center gap-12 px-6 pt-50 pb-6'>
           <SearchBar />
         </div>
       </main>
-      {/* 下：置顶书签卡片区（flex-1 撑开中间，卡片区自然沉底，外层 items-center 保持居中） */}
+      {/* 下：置顶书签卡片区（紧贴搜索框下方，外层 items-center 保持居中） */}
       <PinnedBookmarks />
       {/* 弹窗（fixed 定位，不影响布局） */}
       <SettingsDialog />
