@@ -14,7 +14,7 @@ import { BackgroundAction } from '@/constants'
 import { useDebounceFn } from '@/hooks/useDebounceFn'
 import { useComposing } from '@/hooks/useComposing'
 import { useLatest } from '@/hooks/useLatest'
-import { useThrottleFn } from '@/hooks/useThrottledFn'
+import { useListNavigation } from '../hooks/useListNavigation'
 
 export interface SuggestPopoverHandle {
   /** 输入框聚焦时，如果有联想词或历史记录则展开下拉 */
@@ -55,7 +55,6 @@ export default function SuggestPopover({
   const [suggestions, setSuggestions] = useState<string[]>([])
   const [suggestOpen, setSuggestOpen] = useState(false)
   const composing = useComposing()
-  const [activeIndex, setActiveIndex] = useState(-1)
   const queryRef = useLatest({ query, engine: engineKey, history, inputFocused })
   // 聚焦后延迟展开的定时器，失焦时需清除，避免失焦后列表又弹出
   const openTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
@@ -64,6 +63,14 @@ export default function SuggestPopover({
   const trimmed = query.trim()
   const isHistoryMode = !trimmed
   const items = isHistoryMode ? history : suggestions
+
+  // 列表键盘导航：上下键循环高亮、回车搜索高亮项；返回 true 表示事件已被消费
+  // search 定义于下方，经内联箭头延迟求值，规避 TDZ
+  const { activeIndex, setActiveIndex, handleKeyDown } = useListNavigation({
+    items,
+    enabled: suggestOpen,
+    onActivate: (word) => search(word)
+  })
 
   // 联想请求：防抖 200ms
   const { run: runSuggest, cancel: cancelSuggest } = useDebounceFn(
@@ -101,40 +108,6 @@ export default function SuggestPopover({
     onSearch(word)
     setSuggestOpen(false)
     setActiveIndex(-1)
-  }
-
-  // 列表刷新后重置高亮
-  useEffect(() => {
-    setActiveIndex(-1)
-  }, [suggestions, history])
-
-  // 节流方向键切换：长按 key repeat（~30ms/次）时限制切换频率，避免高亮闪烁不可见
-  const throttledMove = useThrottleFn((direction: -1 | 1) => {
-    setActiveIndex((i) => {
-      if (direction > 0) return (i + 1) % items.length
-      return i <= 0 ? items.length - 1 : i - 1
-    })
-  }, { wait: 180, trailing: false })
-
-  // 方向键切换高亮、回车搜索高亮项；返回 true 表示事件已被消费
-  const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
-    if (!suggestOpen || items.length === 0) return false
-    if (e.key === 'ArrowDown') {
-      e.preventDefault()
-      throttledMove(1)
-      return true
-    }
-    if (e.key === 'ArrowUp') {
-      e.preventDefault()
-      throttledMove(-1)
-      return true
-    }
-    if (e.key === 'Enter' && activeIndex >= 0) {
-      e.preventDefault()
-      search(items[activeIndex])
-      return true
-    }
-    return false
   }
 
   const onFocus = () => {

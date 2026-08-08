@@ -9,7 +9,7 @@ import {
   type Ref
 } from 'react'
 import { faviconUrl, safeHost } from '@/utils'
-import { useThrottleFn } from '@/hooks/useThrottledFn'
+import { useListNavigation } from '../hooks/useListNavigation'
 
 /** 书签树节点最小字段（与 background 返回的浏览器书签结构一致） */
 export interface BookmarkTreeNode {
@@ -108,52 +108,21 @@ export default function BookmarkTree({
   onTogglePin,
   ref
 }: BookmarkTreeProps) {
-  // 键盘导航高亮索引，-1 表示无高亮；nodes 变化时重置
-  const [activeIndex, setActiveIndex] = useState(-1)
+  // 键盘导航：上下键循环高亮、回车激活（文件夹进入 / 书签打开）
+  const { activeIndex, handleKeyDown } = useListNavigation({
+    items: nodes,
+    onActivate: (node) => {
+      if (Array.isArray(node.children)) onEnterFolder(node)
+      else if (node.url) onOpenBookmark(node.url)
+    }
+  })
   // 高亮项 DOM 引用，用于滚动跟随
   const activeItemRef = useRef<HTMLLIElement | null>(null)
-
-  // 进入/返回目录、搜索词变化导致列表刷新时重置高亮
-  useEffect(() => {
-    setActiveIndex(-1)
-  }, [nodes])
 
   // 高亮项变化时滚动到可视区
   useEffect(() => {
     activeItemRef.current?.scrollIntoView({ block: 'nearest' })
   }, [activeIndex])
-
-  // 节流方向键切换：长按 key repeat（~30ms/次）时限制切换频率，避免高亮闪烁不可见
-  const throttledMove = useThrottleFn((direction: -1 | 1) => {
-    setActiveIndex((i) => {
-      if (direction > 0) return (i + 1) % nodes.length
-      return i <= 0 ? nodes.length - 1 : i - 1
-    })
-  }, { wait: 180, trailing: false })
-
-  // 方向键切换高亮、回车激活高亮项（文件夹进入 / 书签打开）；返回 true 表示事件已被消费
-  const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
-    if (nodes.length === 0) return false
-    if (e.key === 'ArrowDown') {
-      e.preventDefault()
-      throttledMove(1)
-      return true
-    }
-    if (e.key === 'ArrowUp') {
-      e.preventDefault()
-      throttledMove(-1)
-      return true
-    }
-    if (e.key === 'Enter' && activeIndex >= 0) {
-      const node = nodes[activeIndex]
-      e.preventDefault()
-      if (!node) return true
-      if (Array.isArray(node.children)) onEnterFolder(node)
-      else if (node.url) onOpenBookmark(node.url)
-      return true
-    }
-    return false
-  }
 
   useImperativeHandle(ref, () => ({ handleKeyDown }))
 
