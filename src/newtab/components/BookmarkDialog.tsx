@@ -17,7 +17,10 @@ import { useComposing } from '@/hooks/useComposing'
 import { useAppStore } from '@/newTab/store/useAppStore'
 import useSettings from '@/newTab/store/useSettings'
 import usePinBookmarks from '@/newTab/store/usePinBookmarks'
-import BookmarkTree, { type BookmarkTreeNode } from './BookmarkTree'
+import BookmarkTree, {
+  type BookmarkTreeNode,
+  type BookmarkTreeHandle
+} from './BookmarkTree'
 
 /**
  * 书签弹窗：点击顶部 Header 书签按钮或快捷键打开
@@ -30,6 +33,8 @@ export default function BookmarkDialog() {
   const [searchQuery, setSearchQuery] = useState('')
   // 搜索框 ref：弹窗打开时自动聚焦，便于直接输入搜索
   const searchInputRef = useRef<HTMLInputElement>(null)
+  // 列表键盘导航句柄：方向键/回车由 BookmarkTree 内部处理
+  const treeRef = useRef<BookmarkTreeHandle>(null)
   const composing = useComposing()
   const open = useAppStore((s) => s.bookmarkOpen)
   const setOpen = useAppStore((s) => s.setBookmarkOpen)
@@ -183,6 +188,11 @@ export default function BookmarkDialog() {
                   setSearchQuery(e.target.value)
                   if (e.target.value.trim()) setPath([])
                 }}
+                onKeyDown={(e) => {
+                  // 中文输入法组合期间不消费按键，避免干扰选词
+                  if (e.nativeEvent.isComposing) return
+                  treeRef.current?.handleKeyDown(e)
+                }}
                 className='pl-8'
                 autoFocus={false}
               />
@@ -201,6 +211,7 @@ export default function BookmarkDialog() {
               ) : (
                 <ScrollArea className='h-100'>
                   <BookmarkTree
+                    ref={treeRef}
                     nodes={currentNodes}
                     onEnterFolder={enterFolder}
                     onOpenBookmark={(url) =>
