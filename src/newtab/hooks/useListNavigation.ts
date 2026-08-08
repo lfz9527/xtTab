@@ -21,7 +21,7 @@ export function useListNavigation<T>({
   items,
   enabled = true,
   onActivate,
-  throttleWait = 180
+  throttleWait = 150
 }: UseListNavigationOptions<T>) {
   // 高亮索引，-1 表示无高亮
   const [activeIndex, setActiveIndex] = useState(-1)
