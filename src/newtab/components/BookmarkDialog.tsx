@@ -191,7 +191,8 @@ export default function BookmarkDialog() {
                 onKeyDown={(e) => {
                   // 中文输入法组合期间不消费按键，避免干扰选词
                   if (e.nativeEvent.isComposing) return
-                  treeRef.current?.handleKeyDown(e)
+                  // 列表键盘导航优先消费方向键/回车
+                  if (treeRef.current?.handleKeyDown(e)) return
                 }}
                 className='pl-8'
                 autoFocus={false}

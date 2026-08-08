@@ -147,6 +147,7 @@ export default function BookmarkTree({
     if (e.key === 'Enter' && activeIndex >= 0) {
       const node = nodes[activeIndex]
       e.preventDefault()
+      if (!node) return true
       if (Array.isArray(node.children)) onEnterFolder(node)
       else if (node.url) onOpenBookmark(node.url)
       return true
