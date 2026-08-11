@@ -91,40 +91,43 @@ export default function TabsPanel() {
           全部关闭
         </button>
       </div>
-      {/* 域名卡片列表（纵向堆叠） */}
-      {hostGroups.map((group) => (
-        <section
-          key={group.host}
-          className='flex flex-col rounded-lg border border-border bg-background/60'
-        >
-          <header className='flex items-center justify-between px-3 py-2'>
-            <span className='text-sm font-medium text-foreground'>
-              {group.host}
-              <span className='ml-2 text-xs font-normal text-muted-foreground'>
-                {group.tabs.length}
+      {/* 域名卡片列表（纵向堆叠，限高内部滚动——滚动条在列表内而非页面） */}
+      {/* max-h 任意值说明：视口高度减去顶部偏移（Header≈52px + pt-50 搜索区偏移 200px + 搜索框等≈88px），使列表底部与页面底部对齐 */}
+      <div className='flex max-h-[calc(100vh-340px)] flex-col gap-3 overflow-y-auto pr-1'>
+        {hostGroups.map((group) => (
+          <section
+            key={group.host}
+            className='flex flex-col rounded-lg border border-border bg-background/60'
+          >
+            <header className='flex items-center justify-between px-3 py-2'>
+              <span className='text-sm font-medium text-foreground'>
+                {group.host}
+                <span className='ml-2 text-xs font-normal text-muted-foreground'>
+                  {group.tabs.length}
+                </span>
               </span>
-            </span>
-            <button
-              type='button'
-              aria-label={`关闭 ${group.host} 标签页`}
-              onClick={() => closeHost(group.host)}
-              className='flex size-6 cursor-pointer items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-muted hover:text-foreground'
-            >
-              <XIcon className='size-3.5' />
-            </button>
-          </header>
-          <ul className='flex flex-col gap-0.5 px-1 pb-1'>
-            {group.tabs.map((tab) => (
-              <TabItem
-                key={tab.id}
-                tab={tab}
-                isActive={tab.id === activeTabId}
-                onActivate={activate}
-              />
-            ))}
-          </ul>
-        </section>
-      ))}
+              <button
+                type='button'
+                aria-label={`关闭 ${group.host} 标签页`}
+                onClick={() => closeHost(group.host)}
+                className='flex size-6 cursor-pointer items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-muted hover:text-foreground'
+              >
+                <XIcon className='size-3.5' />
+              </button>
+            </header>
+            <ul className='flex flex-col gap-0.5 px-1 pb-1'>
+              {group.tabs.map((tab) => (
+                <TabItem
+                  key={tab.id}
+                  tab={tab}
+                  isActive={tab.id === activeTabId}
+                  onActivate={activate}
+                />
+              ))}
+            </ul>
+          </section>
+        ))}
+      </div>
     </div>
   )
 }
