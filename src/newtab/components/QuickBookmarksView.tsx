@@ -82,7 +82,7 @@ function QuickBookmarkItem({
             onError={() => setIconFailed(true)}
           />
         )}
-        <span className='truncate'>{bookmark.title ?? ''}</span>
+        <span className='min-w-0 flex-1 truncate'>{bookmark.title ?? ''}</span>
       </button>
     </li>
   )
