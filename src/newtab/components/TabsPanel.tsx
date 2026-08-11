@@ -109,7 +109,7 @@ export default function TabsPanel() {
       <div className='max-h-[calc(100vh-340px)] overflow-y-auto'>
         <Masonry
           breakpointCols={{ default: 5, 1280: 4, 768: 3, 480: 2 }}
-          className='flex gap-3'
+          className='flex gap-3 justify-center'
           columnClassName=''
         >
           {hostGroups.map((group) => (
