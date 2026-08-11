@@ -87,8 +87,8 @@ export default function TabsPanel() {
 
   return (
     <div className='flex w-full flex-col gap-3 px-4'>
-      {/* 顶部工具条：标题 + 总标签数 + 全部关闭（左对齐紧凑条，宽屏下不拉满整行） */}
-      <div className='inline-flex items-center gap-4 rounded-lg border border-border bg-background/60 px-3 py-2'>
+      {/* 顶部工具条：标题 + 总标签数 + 全部关闭（左对齐紧凑条，宽屏下不拉满整行，无背景色） */}
+      <div className='inline-flex items-center gap-4 rounded-lg border border-border px-3 py-2'>
         <span className='text-sm font-medium text-foreground'>
           标签页面板
           <span className='ml-2 text-xs font-normal text-muted-foreground'>
