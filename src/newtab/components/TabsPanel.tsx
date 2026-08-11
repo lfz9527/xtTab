@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { CopyIcon, GlobeIcon, XIcon } from 'lucide-react'
 import { Masonry } from 'antd'
+import { Button } from '@/components/ui/button'
 import { toast } from '@/components/ui/toast'
 import useTabs from '@/hooks/useTabs'
 import { safeHost } from '@/utils'
@@ -86,14 +87,15 @@ export default function TabsPanel() {
   return (    <div className='flex w-full flex-col gap-3 px-4'>
       {/* 顶部操作条：仅全部关闭按钮（右对齐） */}
       <div className='flex justify-end'>
-        <button
-          type='button'
+        <Button
+          variant='outline'
+          size='sm'
           onClick={closeAll}
-          className='flex cursor-pointer items-center gap-1 rounded-md px-2 py-1 text-xs text-muted-foreground transition-colors hover:bg-muted hover:text-foreground'
+          className='text-xs text-muted-foreground'
         >
           <XIcon className='size-3.5' />
           全部关闭
-        </button>
+        </Button>
       </div>
       {/* 域名卡片瀑布流（antd Masonry 固定 5 列，限高内部滚动——滚动条在列表内而非页面） */}
       {/* max-h 任意值说明：视口高度减去顶部偏移（Header≈52px + pt-50 搜索区偏移 200px + 搜索框等≈88px），使列表底部与页面底部对齐 */}
