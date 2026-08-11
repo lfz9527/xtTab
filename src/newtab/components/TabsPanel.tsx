@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { CopyIcon, GlobeIcon, XIcon } from 'lucide-react'
+import Masonry from 'react-masonry-css'
 import { toast } from '@/components/ui/toast'
 import useTabs from '@/hooks/useTabs'
 import { safeHost } from '@/utils'
@@ -103,14 +104,19 @@ export default function TabsPanel() {
           全部关闭
         </button>
       </div>
-      {/* 域名卡片列表（响应式网格：默认 1 列，sm 2 列，lg 3 列，xl 4 列；限高内部滚动——滚动条在列表内而非页面） */}
+      {/* 域名卡片瀑布流（react-masonry-css：默认 4 列，1280px 4 列、1024px 3 列、640px 2 列；限高内部滚动——滚动条在列表内而非页面） */}
       {/* max-h 任意值说明：视口高度减去顶部偏移（Header≈52px + pt-50 搜索区偏移 200px + 搜索框等≈88px），使列表底部与页面底部对齐 */}
-      <div className='grid max-h-[calc(100vh-340px)] grid-cols-1 gap-3 overflow-y-auto sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'>
-        {hostGroups.map((group) => (
-          <section
-            key={group.host}
-            className='flex flex-col rounded-lg border border-border bg-background/60'
-          >
+      <div className='max-h-[calc(100vh-340px)] overflow-y-auto'>
+        <Masonry
+          breakpointCols={{ default: 4, 1280: 4, 1024: 3, 640: 2 }}
+          className='flex gap-3'
+          columnClassName=''
+        >
+          {hostGroups.map((group) => (
+            <section
+              key={group.host}
+              className='mb-3 flex flex-col break-inside-avoid rounded-lg border border-border bg-background/60'
+            >
             <header className='flex items-center justify-between px-3 py-2'>
               <span className='text-sm font-medium text-foreground'>
                 {group.host}
@@ -141,6 +147,7 @@ export default function TabsPanel() {
             </ul>
           </section>
         ))}
+        </Masonry>
       </div>
     </div>
   )
