@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { GlobeIcon } from 'lucide-react'
+import { GlobeIcon, XIcon } from 'lucide-react'
 import useTabs from '@/hooks/useTabs'
 import { safeHost } from '@/utils'
 
@@ -24,8 +24,18 @@ export function groupTabsByHost(
     .map(([host, list]) => ({ host, tabs: list }))
 }
 
+/** 关闭标签页：pinned 先取消固定，再批量关闭 */
+function closeTabs(ids: number[]) {
+  const valid = ids.filter((id) => id != null)
+  if (valid.length === 0) return
+  valid.forEach((id) => {
+    browser.tabs.update(id, { pinned: false }).catch(() => {})
+  })
+  browser.tabs.remove(valid).catch(() => {})
+}
+
 /**
- * 标签页面板：展示所有标签页并按域名分组；点击激活对应标签页并聚焦窗口
+ * 标签页面板：按域名分组展示所有窗口标签页（卡片形式），支持全部关闭与按域名关闭
  */
 export default function TabsPanel() {
   const { tabs } = useTabs({})
@@ -50,14 +60,60 @@ export default function TabsPanel() {
     browser.windows.update(tab.windowId, { focused: true })
   }
 
+  const closeAll = () => {
+    closeTabs(tabs.map((tab) => tab.id ?? -1).filter((id) => id >= 0))
+  }
+
+  const closeHost = (host: string) => {
+    const group = hostGroups.find((g) => g.host === host)
+    if (!group) return
+    closeTabs(group.tabs.map((tab) => tab.id ?? -1).filter((id) => id >= 0))
+  }
+
+  const total = tabs.length
+
   return (
     <div className='flex w-full max-w-160 flex-col gap-3'>
+      {/* 顶部工具条：标题 + 总标签数 + 全部关闭 */}
+      <div className='flex items-center justify-between rounded-lg border border-border bg-background/60 px-3 py-2'>
+        <span className='text-sm font-medium text-foreground'>
+          标签页面板
+          <span className='ml-2 text-xs font-normal text-muted-foreground'>
+            总 {total}
+          </span>
+        </span>
+        <button
+          type='button'
+          onClick={closeAll}
+          className='flex cursor-pointer items-center gap-1 rounded-md px-2 py-1 text-xs text-muted-foreground transition-colors hover:bg-muted hover:text-foreground'
+        >
+          <XIcon className='size-3.5' />
+          全部关闭
+        </button>
+      </div>
+      {/* 域名卡片列表（纵向堆叠） */}
       {hostGroups.map((group) => (
-        <section key={group.host}>
-          <h2 className='mb-1 text-xs font-medium text-muted-foreground'>
-            {group.host}
-          </h2>
-          <ul className='flex flex-col gap-0.5'>
+        <section
+          key={group.host}
+          className='flex flex-col rounded-lg border border-border bg-background/60'
+        >
+          <header className='flex items-center justify-between px-3 py-2'>
+            <span className='text-sm font-medium text-foreground'>
+              {group.host}
+              <span className='ml-2 text-xs font-normal text-muted-foreground'>
+                {group.tabs.length}
+              </span>
+            </span>
+            <button
+              type='button'
+              aria-label={`关闭 ${group.host} 标签页`}
+              onClick={() => closeHost(group.host)}
+              className='flex size-6 cursor-pointer items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-muted hover:text-foreground'
+            >
+              <XIcon className='size-3.5' />
+            </button>
+          </header>
+          <ul className='flex flex-col gap-0.5 px-1 pb-1'>
             {group.tabs.map((tab) => (
               <TabItem
                 key={tab.id}
@@ -90,7 +146,7 @@ function TabItem({
       <button
         type='button'
         onClick={() => onActivate(tab)}
-        className={`flex w-full items-center gap-2 rounded-lg px-3 py-2 text-left text-sm transition-colors hover:bg-muted ${isActive ? 'bg-muted text-foreground' : 'text-foreground'}`}
+        className={`flex w-full items-center gap-2 rounded-lg px-2 py-1.5 text-left text-sm transition-colors hover:bg-muted ${isActive ? 'bg-muted text-foreground' : 'text-foreground'}`}
       >
         {iconFailed || !tab.favIconUrl ? (
           <GlobeIcon className='size-4 shrink-0 text-muted-foreground' />
