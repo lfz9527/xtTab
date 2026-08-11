@@ -73,7 +73,7 @@ export default function TabsPanel() {
   const total = tabs.length
 
   return (
-    <div className='flex w-full max-w-360 flex-col gap-3'>
+    <div className='flex w-full max-w-360 flex-col gap-3 px-4'>
       {/* 顶部工具条：标题 + 总标签数 + 全部关闭 */}
       <div className='flex items-center justify-between rounded-lg border border-border bg-background/60 px-3 py-2'>
         <span className='text-sm font-medium text-foreground'>
@@ -93,7 +93,7 @@ export default function TabsPanel() {
       </div>
       {/* 域名卡片列表（响应式网格：默认 1 列，sm 2 列，lg 3 列，xl 4 列；限高内部滚动——滚动条在列表内而非页面） */}
       {/* max-h 任意值说明：视口高度减去顶部偏移（Header≈52px + pt-50 搜索区偏移 200px + 搜索框等≈88px），使列表底部与页面底部对齐 */}
-      <div className='grid max-h-[calc(100vh-340px)] grid-cols-1 gap-3 overflow-y-auto px-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'>
+      <div className='grid max-h-[calc(100vh-340px)] grid-cols-1 gap-3 overflow-y-auto sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'>
         {hostGroups.map((group) => (
           <section
             key={group.host}
