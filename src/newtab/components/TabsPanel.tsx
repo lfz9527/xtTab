@@ -70,6 +70,11 @@ export default function TabsPanel() {
     closeTabs(group.tabs.map((tab) => tab.id ?? -1).filter((id) => id >= 0))
   }
 
+  const closeTab = (tab: Browser.tabs.Tab) => {
+    if (tab.id == null) return
+    browser.tabs.remove(tab.id).catch(() => {})
+  }
+
   const total = tabs.length
 
   return (
@@ -122,6 +127,7 @@ export default function TabsPanel() {
                   tab={tab}
                   isActive={tab.id === activeTabId}
                   onActivate={activate}
+                  onClose={closeTab}
                 />
               ))}
             </ul>
@@ -135,20 +141,22 @@ export default function TabsPanel() {
 function TabItem({
   tab,
   isActive,
-  onActivate
+  onActivate,
+  onClose
 }: {
   tab: Browser.tabs.Tab
   isActive: boolean
   onActivate: (tab: Browser.tabs.Tab) => void
+  onClose: (tab: Browser.tabs.Tab) => void
 }) {
   const [iconFailed, setIconFailed] = useState(false)
 
   return (
-    <li>
+    <li className='group flex w-full items-center rounded-lg transition-colors hover:bg-muted'>
       <button
         type='button'
         onClick={() => onActivate(tab)}
-        className={`flex w-full items-center gap-2 rounded-lg px-2 py-1.5 text-left text-sm transition-colors hover:bg-muted ${isActive ? 'bg-muted text-foreground' : 'text-foreground'}`}
+        className={`flex min-w-0 flex-1 items-center gap-2 rounded-lg px-2 py-1.5 text-left text-sm ${isActive ? 'bg-muted text-foreground' : 'text-foreground'}`}
       >
         {iconFailed || !tab.favIconUrl ? (
           <GlobeIcon className='size-4 shrink-0 text-muted-foreground' />
@@ -161,6 +169,14 @@ function TabItem({
           />
         )}
         <span className='min-w-0 flex-1 truncate'>{tab.title ?? ''}</span>
+      </button>
+      <button
+        type='button'
+        aria-label='关闭标签页'
+        onClick={() => onClose(tab)}
+        className='mr-1 shrink-0 rounded-md p-1 text-muted-foreground opacity-0 transition-opacity group-hover:opacity-100 hover:text-foreground'
+      >
+        <XIcon className='size-3.5' />
       </button>
     </li>
   )
