@@ -36,7 +36,11 @@ export default function TabsPanel() {
   const hostGroups = groupTabsByHost(visibleTabs)
 
   if (hostGroups.length === 0) {
-    return <p className='py-4 text-sm text-muted-foreground'>暂无标签页</p>
+    return (
+      <div className='flex w-full items-center justify-center py-4'>
+        <p className='text-sm text-muted-foreground'>暂无标签页</p>
+      </div>
+    )
   }
 
   const activate = (tab: Browser.tabs.Tab) => {
