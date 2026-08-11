@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { toast } from '@/components/ui/toast'
 import useTabs from '@/hooks/useTabs'
-import { groupTabsByHost, safeHost } from '@/utils'
+import { groupTabsByHost } from '@/utils'
 
 /** 关闭标签页：pinned 先取消固定，再批量关闭 */
 function closeTabs(ids: number[]) {
@@ -43,8 +43,16 @@ export default function TabsPanel() {
     browser.windows.update(tab.windowId, { focused: true })
   }
 
-  const closeAll = () => {
-    closeTabs(tabs.map((tab) => tab.id ?? -1).filter((id) => id >= 0))
+  const closeAll = async () => {
+    // 全部关闭时保留当前活动标签页不关闭
+    const [activeTab] = await browser.tabs.query({
+      active: true,
+      lastFocusedWindow: true
+    })
+    const ids = tabs
+      .map((tab) => tab.id ?? -1)
+      .filter((id) => id >= 0 && id !== activeTab?.id)
+    closeTabs(ids)
   }
 
   const closeHost = (host: string) => {
