@@ -31,7 +31,7 @@ function App() {
       {/* 下：内容区，由 Header 左侧按钮切换（pins 置顶卡片 / tabs 标签页面板） */}
       {activeHeaderView === 'pins' && <PinnedBookmarks />}
       {activeHeaderView === 'tabs' && (
-        <div className='w-full'>
+        <div className='w-full px-4'>
           <TabsPanel />
         </div>
       )}

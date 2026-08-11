@@ -101,7 +101,7 @@ export default function TabsPanel() {
       </div>
       {/* 域名卡片瀑布流（antd Masonry，限高内部滚动——滚动条在列表内而非页面） */}
       {/* 高度任意值说明：视口高度减去顶部偏移（Header≈52px + pt-50 搜索区偏移 200px + 搜索框等≈88px），使列表底部与页面底部对齐 */}
-      <ScrollArea className='h-[calc(100vh-340px)]'>
+      <ScrollArea className='h-[calc(100vh-340px)] px-4'>
         <Masonry
           columns={{ xs: 1, sm: 2, md: 3, lg: 4 }}
           gutter={{ xs: 8, sm: 12, md: 16 }}
