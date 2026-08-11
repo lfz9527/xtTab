@@ -104,11 +104,11 @@ export default function TabsPanel() {
           全部关闭
         </button>
       </div>
-      {/* 域名卡片瀑布流（react-masonry-css：默认 4 列，1280px 4 列、1024px 3 列、640px 2 列；限高内部滚动——滚动条在列表内而非页面） */}
+      {/* 域名卡片瀑布流（react-masonry-css 响应式：default 1 列兜底，≥480 2 列、≥768 3 列、≥1280 4 列；限高内部滚动——滚动条在列表内而非页面） */}
       {/* max-h 任意值说明：视口高度减去顶部偏移（Header≈52px + pt-50 搜索区偏移 200px + 搜索框等≈88px），使列表底部与页面底部对齐 */}
       <div className='max-h-[calc(100vh-340px)] overflow-y-auto'>
         <Masonry
-          breakpointCols={{ default: 4, 1280: 4, 1024: 3, 640: 2 }}
+          breakpointCols={{ default: 1, 480: 2, 768: 3, 1280: 4 }}
           className='flex gap-3'
           columnClassName=''
         >
