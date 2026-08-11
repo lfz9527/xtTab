@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { CopyIcon, GlobeIcon, XIcon } from 'lucide-react'
 import { Masonry } from 'antd'
 import { Button } from '@/components/ui/button'
+import { ScrollArea } from '@/components/ui/scroll-area'
 import { toast } from '@/components/ui/toast'
 import useTabs from '@/hooks/useTabs'
 import { safeHost } from '@/utils'
@@ -84,7 +85,8 @@ export default function TabsPanel() {
     toast.success('已复制链接')
   }
 
-  return (    <div className='mx-auto flex w-full max-w-300 flex-col gap-3 px-4'>
+  return (
+    <div className='mx-auto flex w-full max-w-300 flex-col gap-3 px-4'>
       {/* 顶部操作条：仅全部关闭按钮（右对齐） */}
       <div className='flex justify-end'>
         <Button
@@ -97,9 +99,9 @@ export default function TabsPanel() {
           全部关闭
         </Button>
       </div>
-      {/* 域名卡片瀑布流（antd Masonry 固定 5 列，限高内部滚动——滚动条在列表内而非页面） */}
-      {/* max-h 任意值说明：视口高度减去顶部偏移（Header≈52px + pt-50 搜索区偏移 200px + 搜索框等≈88px），使列表底部与页面底部对齐 */}
-      <div className='max-h-[calc(100vh-340px)] overflow-y-auto'>
+      {/* 域名卡片瀑布流（antd Masonry，限高内部滚动——滚动条在列表内而非页面） */}
+      {/* 高度任意值说明：视口高度减去顶部偏移（Header≈52px + pt-50 搜索区偏移 200px + 搜索框等≈88px），使列表底部与页面底部对齐 */}
+      <ScrollArea className='h-[calc(100vh-340px)]'>
         <Masonry
           columns={{ xs: 1, sm: 2, md: 3, lg: 4 }}
           gutter={{ xs: 8, sm: 12, md: 16 }}
@@ -139,7 +141,7 @@ export default function TabsPanel() {
             </section>
           )}
         />
-      </div>
+      </ScrollArea>
     </div>
   )
 }
