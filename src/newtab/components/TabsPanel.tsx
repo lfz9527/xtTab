@@ -91,9 +91,9 @@ export default function TabsPanel() {
           全部关闭
         </button>
       </div>
-      {/* 域名卡片列表（纵向堆叠，限高内部滚动——滚动条在列表内而非页面） */}
+      {/* 域名卡片列表（网格布局一行 4 个，限高内部滚动——滚动条在列表内而非页面） */}
       {/* max-h 任意值说明：视口高度减去顶部偏移（Header≈52px + pt-50 搜索区偏移 200px + 搜索框等≈88px），使列表底部与页面底部对齐 */}
-      <div className='flex max-h-[calc(100vh-340px)] flex-col gap-3 overflow-y-auto pr-1'>
+      <div className='grid max-h-[calc(100vh-340px)] grid-cols-4 gap-3 overflow-y-auto pr-1'>
         {hostGroups.map((group) => (
           <section
             key={group.host}
