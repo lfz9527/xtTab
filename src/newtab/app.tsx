@@ -7,10 +7,14 @@ import SearchBar from './components/SearchBar'
 import SettingsDialog from './components/SettingsDialog'
 import BookmarkDialog from './components/BookmarkDialog'
 import PinnedBookmarks from './components/PinnedBookmarks'
+import QuickBookmarksView from './components/QuickBookmarksView'
+import TabsPanel from './components/TabsPanel'
+import { useAppStore } from './store/useAppStore'
 
 function App() {
   // 注册全局快捷键（书签/设置弹窗）
   useShortcuts()
+  const activeHeaderView = useAppStore((s) => s.activeHeaderView)
   return (
     <div
       className='flex h-full w-full flex-col items-center'
@@ -24,8 +28,10 @@ function App() {
           <SearchBar />
         </div>
       </main>
-      {/* 下：置顶书签卡片区（紧贴搜索框下方，外层 items-center 保持居中） */}
-      <PinnedBookmarks />
+      {/* 下：内容区，由 Header 左侧菜单切换（pins 置顶卡片 / quick 快捷书签 / tabs 标签页面板） */}
+      {activeHeaderView === 'pins' && <PinnedBookmarks />}
+      {activeHeaderView === 'quick' && <QuickBookmarksView />}
+      {activeHeaderView === 'tabs' && <TabsPanel />}
       {/* 弹窗（fixed 定位，不影响布局） */}
       <SettingsDialog />
       <BookmarkDialog />
