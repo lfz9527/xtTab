@@ -5,19 +5,18 @@
 
 ## 需求背景
 
-新标签页顶部 Header 左侧目前为空。本次在左侧添加两个菜单入口：**快捷书签**、**标签页面板**。二者不是下拉浮层，而是**切换搜索框下方内容区**的视图切换器。
+新标签页顶部 Header 左侧目前为空。本次在左侧添加一个菜单入口：**快捷书签**。它不是下拉浮层，而是**切换搜索框下方内容区**的视图切换器。
 
 ## 交互规格
 
-1. 搜索框下方内容区由全局状态 `activeHeaderView` 驱动，共三个视图：
+1. 搜索框下方内容区由全局状态 `activeHeaderView` 驱动，共两个视图：
 
    | 视图 | 触发方式 | 内容 |
    |---|---|---|
    | `pins`（默认） | 初始状态 | 现有置顶书签卡片区（`PinnedBookmarks`） |
    | `quick` | 点击「快捷书签」 | 置顶书签紧凑列表 |
-   | `tabs` | 点击「标签页面板」 | 所有窗口标签页列表 |
 
-2. 纯切换、无关闭：点哪个菜单显示哪个视图，没有"关闭/恢复默认"操作
+2. 纯切换、无关闭：点击菜单显示对应视图，没有"关闭/恢复默认"操作
 3. 当前激活的菜单按钮高亮（`text-foreground`），未激活不高亮；初始均不高亮
 4. 点击已激活的菜单按钮：仍保持该视图（无 toggle 行为）
 
@@ -25,16 +24,15 @@
 
 ### `src/newTab/store/useAppStore.ts`
 
-- 新增 `activeHeaderView: 'pins' | 'quick' | 'tabs'`（初始 `'pins'`）+ `setActiveHeaderView(view)`
+- 新增 `activeHeaderView: 'pins' | 'quick'`（初始 `'pins'`）+ `setActiveHeaderView(view)`
 - 属于全局临时 UI 状态，符合该 store 定位，不持久化
 
 ### `src/newTab/components/Header.tsx`
 
 - 布局从 `justify-end` 改为 `justify-between`
-- 左侧新增两个图标按钮（沿用右侧圆形按钮样式 `size-9 rounded-full hover:bg-muted`）：
+- 左侧新增一个图标按钮（沿用右侧圆形按钮样式 `size-9 rounded-full hover:bg-muted`）：
   - 快捷书签：`StarIcon`（与右侧 `BookmarkIcon` 区分），激活高亮
-  - 标签页面板：`LayoutGridIcon`，激活高亮
-- 点击时 `setActiveHeaderView('quick' | 'tabs')`
+- 点击时 `setActiveHeaderView('quick')`
 - 右侧书签/设置按钮不动
 
 ### `src/newTab/app.tsx`
@@ -44,7 +42,6 @@
 ```tsx
 {activeHeaderView === 'pins' && <PinnedBookmarks />}
 {activeHeaderView === 'quick' && <QuickBookmarksView />}
-{activeHeaderView === 'tabs' && <TabsPanel />}
 ```
 
 - `PinnedBookmarks` 自身逻辑不动
@@ -59,19 +56,13 @@
 - 无置顶书签时显示「暂无置顶书签」占位
 - 不渲染"取消置顶"按钮（仅快速打开入口）
 
-### 新建 `src/newTab/components/TabsPanel.tsx`
+### ~~新建 `src/newTab/components/TabsPanel.tsx`~~（已移除）
 
-- `browser.tabs.query({})` 获取**所有窗口**标签页，按 `windowId` 分组展示（组标题显示窗口序号）
-- 每项：favicon + 标题 + 域名（`safeHost`）
-- 当前活动标签高亮：`browser.tabs.query({ active: true, lastFocusedWindow: true })` 取其 id 作为高亮 id（每个窗口各有 active tab，需结合聚焦窗口判定）
-- 点击标签：`browser.tabs.update(tabId, { active: true })` + `browser.windows.update(windowId, { focused: true })`
-- 无标签页（理论不出现）兜底显示占位文案
+> 需求变更：标签页面板不再实现。原方案为 `browser.tabs.query({})` 获取所有窗口标签页按窗口分组展示，点击 `browser.tabs.update` + `browser.windows.update` 切换；相关内容与 `useTabs` 扩展均已回退删除。
 
-### `src/hooks/useTabs.tsx`
+### ~~`src/hooks/useTabs.tsx` 扩展~~（已回退）
 
-- 扩展为支持可选参数：`useTabs(query?: Browser.tabs.QueryInfo)`，默认 `{ currentWindow: true }` 不变
-- `TabsPanel` 传入 `{}` 查询全部窗口
-- 该 hook 当前无任何调用方，扩展安全
+> 原方案扩展为支持 `query` 参数查询所有窗口标签页；TabsPanel 移除后无调用方，已回退为原始实现（`currentWindow: true` 固定）。
 
 ## 不改动
 
@@ -82,11 +73,9 @@
 
 ## 验收标准
 
-1. Header 左侧出现「快捷书签」「标签页面板」两个按钮，右侧按钮不受影响
+1. Header 左侧出现「快捷书签」按钮，右侧按钮不受影响
 2. 初始搜索框下方显示置顶书签卡片区（现状不变）
 3. 点击「快捷书签」→ 下方切换为置顶书签紧凑列表，按钮高亮
-4. 点击「标签页面板」→ 下方切换为所有窗口标签页列表，按钮高亮
-5. 点击激活中的菜单按钮视图不变；两个按钮互斥切换
-6. 快捷书签列表点击按 `bookmarkTarget` 设置打开
-7. 标签页列表点击切换到对应标签页（窗口聚焦 + 标签激活）
-8. `pnpm compile` 与 `pnpm test` 通过
+4. 再次点击已激活的「快捷书签」按钮视图不变（无 toggle 行为）
+5. 快捷书签列表点击按 `bookmarkTarget` 设置打开
+6. `pnpm compile` 与 `pnpm test` 通过
