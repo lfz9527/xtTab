@@ -87,8 +87,8 @@ export default function TabsPanel() {
 
   return (
     <div className='mx-auto flex w-full max-w-300 flex-col gap-3 px-4'>
-      {/* 顶部操作条：仅全部关闭按钮（右对齐） */}
-      <div className='flex justify-end'>
+      {/* 顶部操作条：仅全部关闭按钮（右对齐，px-4 与滚动区对齐） */}
+      <div className='flex justify-end px-4'>
         <Button
           variant='outline'
           size='sm'
