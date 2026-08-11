@@ -83,18 +83,9 @@ export default function TabsPanel() {
     toast.success('已复制链接')
   }
 
-  const total = tabs.length
-
-  return (
-    <div className='flex w-full flex-col gap-3 px-4'>
-      {/* 顶部工具条：标题 + 总标签数 + 全部关闭（左对齐紧凑条，无背景/边框/圆角/内边距） */}
-      <div className='inline-flex items-center gap-4'>
-        <span className='text-sm font-medium text-foreground'>
-          标签页面板
-          <span className='ml-2 text-xs font-normal text-muted-foreground'>
-            总 {total}
-          </span>
-        </span>
+  return (    <div className='flex w-full flex-col gap-3 px-4'>
+      {/* 顶部操作条：仅全部关闭按钮（右对齐） */}
+      <div className='flex justify-end'>
         <button
           type='button'
           onClick={closeAll}
