@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { GlobeIcon, XIcon } from 'lucide-react'
+import { CopyIcon, GlobeIcon, XIcon } from 'lucide-react'
 import useTabs from '@/hooks/useTabs'
 import { safeHost } from '@/utils'
 
@@ -75,6 +75,11 @@ export default function TabsPanel() {
     browser.tabs.remove(tab.id).catch(() => {})
   }
 
+  const copyTab = (tab: Browser.tabs.Tab) => {
+    if (!tab.url) return
+    navigator.clipboard.writeText(tab.url).catch(() => {})
+  }
+
   const total = tabs.length
 
   return (
@@ -128,6 +133,7 @@ export default function TabsPanel() {
                   isActive={tab.id === activeTabId}
                   onActivate={activate}
                   onClose={closeTab}
+                  onCopy={copyTab}
                 />
               ))}
             </ul>
@@ -142,12 +148,14 @@ function TabItem({
   tab,
   isActive,
   onActivate,
-  onClose
+  onClose,
+  onCopy
 }: {
   tab: Browser.tabs.Tab
   isActive: boolean
   onActivate: (tab: Browser.tabs.Tab) => void
   onClose: (tab: Browser.tabs.Tab) => void
+  onCopy: (tab: Browser.tabs.Tab) => void
 }) {
   const [iconFailed, setIconFailed] = useState(false)
 
@@ -169,6 +177,14 @@ function TabItem({
           />
         )}
         <span className='min-w-0 flex-1 truncate'>{tab.title ?? ''}</span>
+      </button>
+      <button
+        type='button'
+        aria-label='复制链接'
+        onClick={() => onCopy(tab)}
+        className='shrink-0 rounded-md p-1 text-muted-foreground opacity-0 transition-opacity group-hover:opacity-100 hover:text-foreground'
+      >
+        <CopyIcon className='size-3.5' />
       </button>
       <button
         type='button'
