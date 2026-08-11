@@ -68,6 +68,7 @@ pnpm clear           # 清除 node_modules + pnpm-lock.yaml
 - **测试**: Vitest，放置在 `src/**/*.test.{ts,tsx}`，使用 `WxtVitest` 插件
 - **WXT 配置**: `wxt.config.ts`，入口目录为 `entries/`，React 模块通过 `@wxt-dev/module-react`
 - **组件库**: shadcn v4 (`components.json` 配置，`base-nova` 风格)，图标用 `lucide-react`，工具类用 `cva` (class-variance-authority)
+- **antd 使用**: 已引入 `antd` 依赖，**瀑布流组件统一使用 antd 的 `Masonry`**（`import { Masonry } from 'antd'`，数据驱动：`items` + `itemRender`，支持响应式 `columns`/`gutter`），不再引入其他瀑布流库
 - **组件保护**: 如需修改 `src/components/ui/` 下的 shadcn 组件源码，必须先征得我同意，并明确列出修改内容，经我二次确认后方可执行。默认优先从外部传入 className 或封装 wrapper 组件。
 - **TailwindCSS**: 优先使用 Tailwind 规范类（如 `max-w-175`）而非任意值（如 `max-w-[700px]`），避免触发 `tailwindcss(suggestCanonicalClasses)` 警告。若必须使用任意值，需添加注释说明原因
 - **类型校验**: 禁止使用 `@ts-ignore`、`@ts-nocheck`、`eslint-disable` 等方式跳过 TypeScript 或 ESLint 类型校验
