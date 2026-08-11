@@ -84,7 +84,7 @@ export default function TabsPanel() {
     toast.success('已复制链接')
   }
 
-  return (    <div className='flex w-full max-w-300 flex-col gap-3 px-4'>
+  return (    <div className='mx-auto flex w-full max-w-300 flex-col gap-3 px-4'>
       {/* 顶部操作条：仅全部关闭按钮（右对齐） */}
       <div className='flex justify-end'>
         <Button
