@@ -63,7 +63,7 @@
 
 - `browser.tabs.query({})` 获取**所有窗口**标签页，按 `windowId` 分组展示（组标题显示窗口序号）
 - 每项：favicon + 标题 + 域名（`safeHost`）
-- 当前活动标签（`tab.active && tab.windowId === 当前聚焦窗口`）高亮
+- 当前活动标签高亮：`browser.tabs.query({ active: true, lastFocusedWindow: true })` 取其 id 作为高亮 id（每个窗口各有 active tab，需结合聚焦窗口判定）
 - 点击标签：`browser.tabs.update(tabId, { active: true })` + `browser.windows.update(windowId, { focused: true })`
 - 无标签页（理论不出现）兜底显示占位文案
 
