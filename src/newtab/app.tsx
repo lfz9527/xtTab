@@ -8,6 +8,7 @@ import SettingsDialog from './components/SettingsDialog'
 import BookmarkDialog from './components/BookmarkDialog'
 import PinnedBookmarks from './components/PinnedBookmarks'
 import TabsPanel from './components/TabsPanel'
+import { Toaster } from '@/components/ui/toast'
 import { useAppStore } from './store/useAppStore'
 
 function App() {
@@ -33,6 +34,8 @@ function App() {
       {/* 弹窗（fixed 定位，不影响布局） */}
       <SettingsDialog />
       <BookmarkDialog />
+      {/* 顶部居中 toast（antd message 风格） */}
+      <Toaster />
     </div>
   )
 }
