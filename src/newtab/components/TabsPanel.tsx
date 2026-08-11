@@ -31,7 +31,9 @@ export default function TabsPanel() {
       .then((res) => setActiveTabId(res[0]?.id))
   }, [tabs])
 
-  const hostGroups = groupTabsByHost(tabs)
+  // 展示时过滤掉当前活动标签页（面板不显示当前页）
+  const visibleTabs = tabs.filter((tab) => tab.id !== activeTabId)
+  const hostGroups = groupTabsByHost(visibleTabs)
 
   if (hostGroups.length === 0) {
     return <p className='py-4 text-sm text-muted-foreground'>暂无标签页</p>
