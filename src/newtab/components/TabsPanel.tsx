@@ -3,23 +3,29 @@ import { GlobeIcon } from 'lucide-react'
 import useTabs from '@/hooks/useTabs'
 import { safeHost } from '@/utils'
 
-/** 按 windowId 升序分组标签页；返回数组，组内保持原顺序 */
-export function groupTabsByWindow(
+/** 按域名分组标签页：同域名合并、域名字母升序、无 URL 归「其他」排最后；组内保持原顺序 */
+export function groupTabsByHost(
   tabs: Browser.tabs.Tab[]
-): Browser.tabs.Tab[][] {
-  const groups = new Map<number, Browser.tabs.Tab[]>()
+): { host: string; tabs: Browser.tabs.Tab[] }[] {
+  const groups = new Map<string, Browser.tabs.Tab[]>()
   for (const tab of tabs) {
-    const list = groups.get(tab.windowId)
+    const host = tab.url ? safeHost(tab.url) : ''
+    const key = host || '其他'
+    const list = groups.get(key)
     if (list) list.push(tab)
-    else groups.set(tab.windowId, [tab])
+    else groups.set(key, [tab])
   }
   return [...groups.entries()]
-    .sort((a, b) => a[0] - b[0])
-    .map(([, list]) => list)
+    .sort((a, b) => {
+      if (a[0] === '其他') return 1
+      if (b[0] === '其他') return -1
+      return a[0].localeCompare(b[0])
+    })
+    .map(([host, list]) => ({ host, tabs: list }))
 }
 
 /**
- * 标签页面板：展示所有窗口的标签页，按窗口分组；点击激活对应标签页并聚焦窗口
+ * 标签页面板：展示所有标签页并按域名分组；点击激活对应标签页并聚焦窗口
  */
 export default function TabsPanel() {
   const { tabs } = useTabs({})
@@ -32,9 +38,9 @@ export default function TabsPanel() {
       .then((res) => setActiveTabId(res[0]?.id))
   }, [tabs])
 
-  const groups = groupTabsByWindow(tabs)
+  const hostGroups = groupTabsByHost(tabs)
 
-  if (groups.length === 0) {
+  if (hostGroups.length === 0) {
     return <p className='py-4 text-sm text-muted-foreground'>暂无标签页</p>
   }
 
@@ -46,13 +52,13 @@ export default function TabsPanel() {
 
   return (
     <div className='flex w-full max-w-160 flex-col gap-3'>
-      {groups.map((group, index) => (
-        <section key={group[0].windowId}>
+      {hostGroups.map((group) => (
+        <section key={group.host}>
           <h2 className='mb-1 text-xs font-medium text-muted-foreground'>
-            窗口 {index + 1}
+            {group.host}
           </h2>
           <ul className='flex flex-col gap-0.5'>
-            {group.map((tab) => (
+            {group.tabs.map((tab) => (
               <TabItem
                 key={tab.id}
                 tab={tab}
