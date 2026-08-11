@@ -30,7 +30,11 @@ function App() {
       </main>
       {/* 下：内容区，由 Header 左侧按钮切换（pins 置顶卡片 / tabs 标签页面板） */}
       {activeHeaderView === 'pins' && <PinnedBookmarks />}
-      {activeHeaderView === 'tabs' && <TabsPanel />}
+      {activeHeaderView === 'tabs' && (
+        <div className='w-full'>
+          <TabsPanel />
+        </div>
+      )}
       {/* 弹窗（fixed 定位，不影响布局） */}
       <SettingsDialog />
       <BookmarkDialog />
