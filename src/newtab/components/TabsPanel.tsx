@@ -148,7 +148,7 @@ function TabItem({
       <button
         type='button'
         onClick={() => onActivate(tab)}
-        className={`flex w-full items-center gap-2 rounded-lg px-2 py-1.5 text-left text-sm transition-colors hover:bg-muted ${isActive ? 'bg-muted text-foreground' : 'text-foreground'}`}
+        className={`flex w-full items-center gap-2 rounded-lg px-2 py-1.5 text-left text-sm transition-colors hover:bg-muted ${isActive ? 'bg-primary text-primary-foreground' : 'text-foreground'}`}
       >
         {iconFailed || !tab.favIconUrl ? (
           <GlobeIcon className='size-4 shrink-0 text-muted-foreground' />
