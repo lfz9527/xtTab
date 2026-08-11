@@ -2,9 +2,7 @@ import type { Browser } from 'wxt/browser'
 
 type Unwrap<T> = T extends Browser.events.Event<infer Inner> ? Inner : never
 
-const useTabs = (
-    query: Browser.tabs.QueryInfo = { currentWindow: true }
-): {
+const useTabs = (): {
     tabs: Browser.tabs.Tab[]
     activeTab: Browser.tabs.Tab | undefined
 } => {
@@ -14,7 +12,7 @@ const useTabs = (
     )
 
     const sync = async () => {
-        const tabs = await browser.tabs.query(query)
+        const tabs = await browser.tabs.query({ currentWindow: true })
         const activeTab = tabs.find((tab) => tab.active)
         setActiveTab(activeTab)
         setTabs(tabs)

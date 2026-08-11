@@ -1,8 +1,8 @@
-import { BookmarkIcon, LayoutGridIcon, SettingsIcon, StarIcon } from 'lucide-react'
+import { BookmarkIcon, SettingsIcon, StarIcon } from 'lucide-react'
 import { useAppStore } from '@/newTab/store/useAppStore'
 
 /**
- * 顶部导航栏：60% 不透明度背景，左侧内容区切换菜单，右侧收纳书签/设置入口
+ * 顶部导航栏：60% 不透明度背景，左侧快捷书签切换按钮，右侧收纳书签/设置入口
  */
 export default function Header() {
   const activeHeaderView = useAppStore((s) => s.activeHeaderView)
@@ -21,14 +21,6 @@ export default function Header() {
             className={`flex size-9 cursor-pointer items-center justify-center rounded-full transition-colors hover:bg-muted hover:text-foreground ${activeHeaderView === 'quick' ? 'bg-muted text-foreground' : 'text-muted-foreground'}`}
           >
             <StarIcon className='size-5' />
-          </button>
-          <button
-            type='button'
-            aria-label='标签页面板'
-            onClick={() => setActiveHeaderView('tabs')}
-            className={`flex size-9 cursor-pointer items-center justify-center rounded-full transition-colors hover:bg-muted hover:text-foreground ${activeHeaderView === 'tabs' ? 'bg-muted text-foreground' : 'text-muted-foreground'}`}
-          >
-            <LayoutGridIcon className='size-5' />
           </button>
         </div>
         <div className='flex items-center gap-2'>

@@ -8,7 +8,6 @@ import SettingsDialog from './components/SettingsDialog'
 import BookmarkDialog from './components/BookmarkDialog'
 import PinnedBookmarks from './components/PinnedBookmarks'
 import QuickBookmarksView from './components/QuickBookmarksView'
-import TabsPanel from './components/TabsPanel'
 import { useAppStore } from './store/useAppStore'
 
 function App() {
@@ -28,10 +27,9 @@ function App() {
           <SearchBar />
         </div>
       </main>
-      {/* 下：内容区，由 Header 左侧菜单切换（pins 置顶卡片 / quick 快捷书签 / tabs 标签页面板） */}
+      {/* 下：内容区，由 Header 左侧快捷书签按钮切换（pins 置顶卡片 / quick 快捷书签列表） */}
       {activeHeaderView === 'pins' && <PinnedBookmarks />}
       {activeHeaderView === 'quick' && <QuickBookmarksView />}
-      {activeHeaderView === 'tabs' && <TabsPanel />}
       {/* 弹窗（fixed 定位，不影响布局） */}
       <SettingsDialog />
       <BookmarkDialog />
