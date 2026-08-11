@@ -73,7 +73,7 @@ export default function TabsPanel() {
   const total = tabs.length
 
   return (
-    <div className='flex w-full max-w-160 flex-col gap-3'>
+    <div className='flex w-full max-w-360 flex-col gap-3'>
       {/* 顶部工具条：标题 + 总标签数 + 全部关闭 */}
       <div className='flex items-center justify-between rounded-lg border border-border bg-background/60 px-3 py-2'>
         <span className='text-sm font-medium text-foreground'>
