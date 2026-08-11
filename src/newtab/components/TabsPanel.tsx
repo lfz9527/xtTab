@@ -165,11 +165,11 @@ function TabItem({
   if (!label) return null
 
   return (
-    <li className='group flex w-full items-center rounded-lg transition-colors hover:bg-muted'>
+    <li className={`group flex w-full items-center rounded-lg transition-colors hover:bg-muted ${isActive ? 'bg-muted' : ''}`}>
       <button
         type='button'
         onClick={() => onActivate(tab)}
-        className={`flex min-w-0 flex-1 items-center gap-2 rounded-lg px-2 py-1.5 text-left text-sm ${isActive ? 'bg-muted text-foreground' : 'text-foreground'}`}
+        className='flex min-w-0 flex-1 items-center gap-2 rounded-lg px-2 py-1.5 text-left text-sm text-foreground'
       >
         {iconFailed || !tab.favIconUrl ? (
           <GlobeIcon className='size-4 shrink-0 text-muted-foreground' />
