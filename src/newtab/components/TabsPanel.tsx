@@ -158,6 +158,9 @@ function TabItem({
   onCopy: (tab: Browser.tabs.Tab) => void
 }) {
   const [iconFailed, setIconFailed] = useState(false)
+  // 兜底：title 不存在时展示链接；title 和链接都没有则不显示该行
+  const label = tab.title || tab.url
+  if (!label) return null
 
   return (
     <li className='group flex w-full items-center rounded-lg transition-colors hover:bg-muted'>
@@ -176,7 +179,7 @@ function TabItem({
             onError={() => setIconFailed(true)}
           />
         )}
-        <span className='min-w-0 flex-1 truncate'>{tab.title ?? ''}</span>
+        <span className='min-w-0 flex-1 truncate'>{label}</span>
       </button>
       <button
         type='button'
