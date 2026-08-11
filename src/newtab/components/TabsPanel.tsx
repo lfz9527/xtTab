@@ -108,8 +108,8 @@ export default function TabsPanel() {
       {/* max-h 任意值说明：视口高度减去顶部偏移（Header≈52px + pt-50 搜索区偏移 200px + 搜索框等≈88px），使列表底部与页面底部对齐 */}
       <div className='max-h-[calc(100vh-340px)] overflow-y-auto'>
         <Masonry
-          columns={5}
-          gutter={12}
+          columns={{ xs: 1, sm: 2, md: 3, lg: 4 }}
+          gutter={{ xs: 8, sm: 12, md: 16 }}
           items={hostGroups.map((group) => ({ key: group.host, data: group }))}
           itemRender={({ data: group }) => (
             <section className='flex flex-col rounded-lg border border-border bg-background/60'>
