@@ -12,3 +12,24 @@ export function safeHost(url: string): string {
     return ''
   }
 }
+
+/** 按域名分组标签页：同域名合并、域名字母升序、无 URL 归「其他」排最后；组内保持原顺序 */
+export function groupTabsByHost(
+  tabs: Browser.tabs.Tab[]
+): { host: string; tabs: Browser.tabs.Tab[] }[] {
+  const groups = new Map<string, Browser.tabs.Tab[]>()
+  for (const tab of tabs) {
+    const host = tab.url ? safeHost(tab.url) : ''
+    const key = host || '其他'
+    const list = groups.get(key)
+    if (list) list.push(tab)
+    else groups.set(key, [tab])
+  }
+  return [...groups.entries()]
+    .sort((a, b) => {
+      if (a[0] === '其他') return 1
+      if (b[0] === '其他') return -1
+      return a[0].localeCompare(b[0])
+    })
+    .map(([host, list]) => ({ host, tabs: list }))
+}

@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import type { Browser } from 'wxt/browser'
-import { groupTabsByHost } from './TabsPanel'
+import { groupTabsByHost } from '@/utils'
 
 const makeTab = (
   id: number,
