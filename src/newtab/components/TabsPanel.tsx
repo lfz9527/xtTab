@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { CopyIcon, GlobeIcon, XIcon } from 'lucide-react'
+import { toast } from '@/components/ui/toast'
 import useTabs from '@/hooks/useTabs'
 import { safeHost } from '@/utils'
 
@@ -78,6 +79,7 @@ export default function TabsPanel() {
   const copyTab = (tab: Browser.tabs.Tab) => {
     if (!tab.url) return
     navigator.clipboard.writeText(tab.url).catch(() => {})
+    toast.success('已复制链接')
   }
 
   const total = tabs.length
