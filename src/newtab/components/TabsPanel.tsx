@@ -117,10 +117,12 @@ export default function TabsPanel() {
               key={group.host}
               className='mb-3 flex flex-col break-inside-avoid rounded-lg border border-border bg-background/60'
             >
-            <header className='flex items-center justify-between px-3 py-2'>
-              <span className='text-sm font-medium text-foreground'>
-                {group.host}
-                <span className='ml-2 text-xs font-normal text-muted-foreground'>
+            <header className='flex items-center justify-between gap-2 px-3 py-2'>
+              <span className='flex min-w-0 flex-1 items-baseline gap-2'>
+                <span className='truncate text-sm font-medium text-foreground'>
+                  {group.host}
+                </span>
+                <span className='shrink-0 text-xs font-normal text-muted-foreground'>
                   {group.tabs.length}
                 </span>
               </span>
