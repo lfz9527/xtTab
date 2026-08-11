@@ -1,8 +1,11 @@
 import { create } from 'zustand'
 
+/** 搜索框下方内容区视图类型：置顶卡片 / 快捷书签列表 / 标签页列表 */
+export type HeaderView = 'pins' | 'quick' | 'tabs'
+
 /**
  * 全局临时 UI 状态（不持久化）
- * 持久化数据仍由 @wxt-dev/storage 管理，此处仅存放弹窗开关、当前 tab 等临时态
+ * 持久化数据仍由 @wxt-dev/storage 管理，此处仅存放弹窗开关、内容区视图等临时态
  */
 interface AppState {
   /** 书签弹窗开关 */
@@ -13,11 +16,14 @@ interface AppState {
   settingsActiveTab: string
   /** 添加引擎弹窗开关 */
   addEngineOpen: boolean
+  /** 搜索框下方内容区当前视图 */
+  activeHeaderView: HeaderView
 
   setBookmarkOpen: (open: boolean) => void
   setSettingsOpen: (open: boolean) => void
   setSettingsActiveTab: (tab: string) => void
   setAddEngineOpen: (open: boolean) => void
+  setActiveHeaderView: (view: HeaderView) => void
 }
 
 export const useAppStore = create<AppState>((set) => ({
@@ -25,9 +31,11 @@ export const useAppStore = create<AppState>((set) => ({
   settingsOpen: false,
   settingsActiveTab: 'general',
   addEngineOpen: false,
+  activeHeaderView: 'pins',
 
   setBookmarkOpen: (open) => set({ bookmarkOpen: open }),
   setSettingsOpen: (open) => set({ settingsOpen: open }),
   setSettingsActiveTab: (tab) => set({ settingsActiveTab: tab }),
-  setAddEngineOpen: (open) => set({ addEngineOpen: open })
+  setAddEngineOpen: (open) => set({ addEngineOpen: open }),
+  setActiveHeaderView: (view) => set({ activeHeaderView: view })
 }))
