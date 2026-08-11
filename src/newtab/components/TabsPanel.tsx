@@ -142,7 +142,6 @@ function TabItem({
   onActivate: (tab: Browser.tabs.Tab) => void
 }) {
   const [iconFailed, setIconFailed] = useState(false)
-  const host = tab.url ? safeHost(tab.url) : ''
 
   return (
     <li>
@@ -162,9 +161,6 @@ function TabItem({
           />
         )}
         <span className='min-w-0 flex-1 truncate'>{tab.title ?? ''}</span>
-        {host && (
-          <span className='shrink-0 text-xs text-muted-foreground'>{host}</span>
-        )}
       </button>
     </li>
   )
