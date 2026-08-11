@@ -1,7 +1,7 @@
 import { create } from 'zustand'
 
-/** 搜索框下方内容区视图类型：置顶卡片 / 快捷书签列表 */
-export type HeaderView = 'pins' | 'quick'
+/** 搜索框下方内容区视图类型：置顶卡片 / 标签页列表 */
+export type HeaderView = 'pins' | 'tabs'
 
 /**
  * 全局临时 UI 状态（不持久化）
