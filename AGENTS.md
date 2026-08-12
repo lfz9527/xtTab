@@ -6,12 +6,11 @@
 
 - **技术栈**: WXT 0.20, React 19, TypeScript, Vite, Vitest, TailwindCSS v4
 - **包管理**: pnpm
-- **入口**: `src/entries/` 下有 3 个 WXT 入口点 (`srcDir: 'src'`, `entrypointsDir: 'entries'`)
+- **入口**: `src/entries/` 下有 2 个 WXT 入口点 (`srcDir: 'src'`, `entrypointsDir: 'entries'`)
   - `src/entries/background/index.ts` → 转导出 `@/background`
-  - `src/entries/content/index.tsx` → 注入 ShadowRoot React UI (matches `<all_urls>`)
   - `src/entries/newtab/index.html` → 引用 `@/newTab/main.tsx` (替换新标签页)
 - **路径别名**: `@` → `src/`
-- **扩展权限**: `activeTab`、`tabs`、`storage`、`bookmarks`、`host_permissions: <all_urls>`
+- **扩展权限**: `tabs`、`storage`、`bookmarks`、`host_permissions: <all_urls>`
 - **静态资源**: `public/` 存放不经过 Vite 处理的图片等 (如 `icon/`)
 
 ## 命令
@@ -40,7 +39,6 @@ pnpm clear           # 清除 node_modules + pnpm-lock.yaml
 | 模块 | 位置 | 职责 |
 |---|---|---|
 | **background** | `src/background/` | Service Worker — 消息总线注册、suggest 搜索联想 API 代理 |
-| **content** | `src/content/` | 注入页面的 React 组件 (ShadowRoot UI) |
 | **newTab** | `src/newTab/` | 新标签页 React 应用 (SearchBar + SuggestPopover + BookmarkDialog + SettingsDialog + AddEngineDialog + store/ 配置存储) |
 | **components** | `src/components/` | shadcn UI 组件 (`ui/` 目录，受组件保护约定约束) |
 | **services** | `src/services/` | HTTP 请求封装 (`fetch.ts` Fetch 包装器 + `index.ts` Services 类)，支持请求取消与超时；`pnpm openapi` 从 swagger 重新生成 |
@@ -54,7 +52,7 @@ pnpm clear           # 清除 node_modules + pnpm-lock.yaml
 
 ## 约定
 
-- **WXT 自动导入**: `defineBackground`、`defineContentScript`、`browser`、React hooks (`useState`/`useEffect` 等) 无需显式 import，由 WXT 自动生成 (类型声明在 `.wxt/`)
+- **WXT 自动导入**: `defineBackground`、`browser`、React hooks (`useState`/`useEffect` 等) 无需显式 import，由 WXT 自动生成 (类型声明在 `.wxt/`)
 - **状态管理**: `zustand` — `src/newTab/store/` 下的 `use*.ts` store 均为 zustand 写法；`useWxtStorage` hook 负责持久化读写
 - **缩进**: 2 空格 (EditorConfig + Prettier) — 注意部分历史文件 (如 `src/background/index.ts`) 为 4 空格，改动时遵循配置
 - **引号**: 单引号 (`singleQuote: true`)，JSX 也用单引号 (`jsxSingleQuote: true`)

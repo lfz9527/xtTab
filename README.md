@@ -8,7 +8,6 @@ root/                           # 项目根目录
 │   ├── hooks/                  # 默认自动导入，包含项目钩子的源代码，用于 React
 │   ├── utils/                  # 默认自动导入，包含通用工具
 │   ├── constants/              # 常量
-│   ├── content/                # content.js 执行代码
 │   ├── services/               # 接口服务
 │   └── types/                  # 类型
 ├── .env                        # 全局环境变量

@@ -1,4 +1,3 @@
-import uid from "tiny-uid"
 import MessageBus from '@/messages/message'
 import { registerSuggestListener } from '@/background/suggest'
 import { registerBookmarksListener } from '@/background/bookmarks'
@@ -19,8 +18,4 @@ browser.runtime.onInstalled.addListener((details) => {
     if (details.reason === 'install') {
         browser.tabs.create({})
     }
-})
-
-MessageBus.on('content_bg', () => {
-    console.log('content_bg', uid())
 })
