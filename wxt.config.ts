@@ -29,9 +29,6 @@ const manifest = {
         '96': 'icon/96.png',
         '128': 'icon/128.png'
     },
-    action: {
-        default_title: 'Click Me'
-    },
     chrome_url_overrides: {
         newtab: "newTab.html"
     },
