@@ -18,8 +18,9 @@ const viteConfig: WxtViteConfig = {
 
 // 浏览器manifest 配置
 const manifest = {
-    name: 'xtTab',
-    description: '极简美观的新标签页效率工具：多引擎搜索与联想、书签管理置顶、标签页分组管理，一站式提升浏览效率',
+    name: '__MSG_extName__',
+    description: '__MSG_extDescription__',
+    default_locale: 'zh_CN',
     permissions: ['tabs', 'storage', 'bookmarks'],
     host_permissions: ['<all_urls>'],
     icons: {

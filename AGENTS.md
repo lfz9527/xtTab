@@ -11,6 +11,7 @@
   - `src/entries/newtab/index.html` → 引用 `@/newTab/main.tsx` (替换新标签页)
 - **路径别名**: `@` → `src/`
 - **扩展权限**: `tabs`、`storage`、`bookmarks`、`host_permissions: <all_urls>`
+- **国际化**: `default_locale: 'zh_CN'`，语言包位于 `public/_locales/zh_CN/messages.json`；manifest 的 `name`/`description` 使用 `__MSG_extName__`/`__MSG_extDescription__` 占位符，勿直接改回字面文本
 - **静态资源**: `public/` 存放不经过 Vite 处理的图片等 (如 `icon/`)
 
 ## 命令
