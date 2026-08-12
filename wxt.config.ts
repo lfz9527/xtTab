@@ -19,8 +19,8 @@ const viteConfig: WxtViteConfig = {
 // 浏览器manifest 配置
 const manifest = {
     name: 'xtTab',
-    description: '极简美观的新标签页：多引擎搜索与联想、书签管理置顶，提升浏览效率',
-    permissions: ['activeTab', 'tabs', 'sidePanel', 'storage', 'bookmarks'],
+    description: '极简美观的新标签页效率工具：多引擎搜索与联想、书签管理置顶、标签页分组管理，一站式提升浏览效率',
+    permissions: ['activeTab', 'tabs', 'storage', 'bookmarks'],
     host_permissions: ['<all_urls>'],
     icons: {
         '16': 'icon/16.png',
@@ -31,9 +31,6 @@ const manifest = {
     },
     action: {
         default_title: 'Click Me'
-    },
-    side_panel: {
-        default_path: 'sidePanel.html'
     },
     chrome_url_overrides: {
         newtab: "newTab.html"
