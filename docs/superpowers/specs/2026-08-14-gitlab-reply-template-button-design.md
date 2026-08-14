@@ -34,7 +34,7 @@
 ## 数据流
 
 1. content script 启动 → `createGitLabReplyTemplate(ctx)` 注册 MutationObserver 监听 `document.body`
-2. 检测到 `li.discussion-reply-holder.is-replying` 内 `.note-form-actions` 且未标记 → `createShadowRootUi` 在操作区上方挂载（`append: 'before'`），shadow 内渲染自带 div 容器的「主题回复」按钮组件
+2. 检测到 `li.discussion-reply-holder.is-replying` 内 `.note-form-actions` 且未标记 → `createShadowRootUi` 在操作区上方挂载（`append: 'before'`），shadow 内渲染自带 div 容器的「文件解决模板」按钮组件
 3. 点击按钮 → 经 shadow host 定位同表单内 textarea，内容替换为模板 → 派发 `input` 事件（GitLab 提交按钮激活）
 4. 回复框移除 → 操作区脱离文档，编排层 `ui.remove()` 卸载并清理；再次展开的新节点重新注入
 
@@ -46,4 +46,4 @@
 
 ## 验证方式
 
-`pnpm dev` 加载扩展 → 打开实测 MR 页面 → 展开回复框 → 确认操作区上方出现「主题回复」按钮（shadow UI 内 div 容器） → 点击 → 输入框内容被替换、「立即添加评论」按钮变可用。
+`pnpm dev` 加载扩展 → 打开实测 MR 页面 → 展开回复框 → 确认操作区上方出现「文件解决模板」按钮（shadow UI 内 div 容器） → 点击 → 输入框内容被替换、「立即添加评论」按钮变可用。

@@ -15,7 +15,7 @@ export class BackgroundAction extends BaseEnumCls<string> {
 }
 
 // GitLab MR 回复模板——固定单模板，修改需改代码
-export const GITLAB_REPLY_TEMPLATE = '已根据评审意见修复，请再次确认。'
+export const GITLAB_REPLY_TEMPLATE = '@yebao\n\ncommit:\n\n该commit已修复该问题'
 
 // GitLab 15.10 评论编辑器 DOM 选择器（GitLab 升级需重新校准）
 export const GITLAB_REPLY_SELECTORS = {

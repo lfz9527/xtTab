@@ -35,7 +35,7 @@ const mountButton = async (actionBar: HTMLElement, ctx: ContentScriptContext) =>
 /**
  * 创建gitlab回复模板content
  * 监听页面 DOM，在线程回复框的表单操作区上方以 shadow UI 挂载
- * div 容器并渲染主题回复按钮，回复框移除时同步卸载
+ * div 容器并渲染文件解决模板按钮，回复框移除时同步卸载
  * @param ctx ContentScriptContext
  */
 const createGitLabReplyTemplate = async (ctx: ContentScriptContext) => {

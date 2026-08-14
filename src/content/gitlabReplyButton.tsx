@@ -3,7 +3,7 @@ import { GITLAB_REPLY_SELECTORS, GITLAB_REPLY_TEMPLATE } from '@/constants'
 import './gitlabReplyButton.css'
 
 /**
- * GitLab MR 回复框主题回复按钮
+ * GitLab MR 回复框文件解决模板按钮
  * 渲染于表单操作区上方 shadow UI 内，点击后经 shadow host
  * 向上定位同表单内的评论输入框，整体替换为模板内容
  */
@@ -33,10 +33,10 @@ const GitLabReplyButton = () => {
         ref={buttonRef}
         type="button"
         onClick={handleClick}
-        title="插入主题回复"
+        title="插入文件解决模板"
         className="gitlab-reply-button"
       >
-        主题回复
+        文件解决模板
       </button>
     </div>
   )
