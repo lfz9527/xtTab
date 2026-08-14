@@ -1,3 +1,4 @@
+
 import contentMessages from '@/messages/content'
 import type { ContentScriptContext } from './types'
 
