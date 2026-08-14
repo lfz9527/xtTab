@@ -1,0 +1,32 @@
+* {
+  margin: 0;
+}
+
+#gitlab-reply-button-wrap {
+  margin-top: 12px;
+}
+
+/* 参考 src/components/ui/button.tsx 的 default 变体
+   主色/圆角硬编码自 globals.css（shadow 内不继承页面 CSS 变量） */
+.gitlab-reply-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 32px;
+  padding: 0 10px;
+  border: 1px solid transparent;
+  border-radius: 10px;
+  background: oklch(0.488 0.243 264.376);
+  color: oklch(0.97 0.014 254.604);
+  font-size: 14px;
+  font-weight: 500;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  outline: none;
+  user-select: none;
+}
+
+.gitlab-reply-button:hover {
+  background: color-mix(in oklab, oklch(0.488 0.243 264.376) 80%, transparent);
+}
