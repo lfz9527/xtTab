@@ -1,4 +1,4 @@
-import { FolderIcon, GlobeIcon, PinIcon } from 'lucide-react'
+import { FolderIcon, GlobeIcon, StarIcon } from 'lucide-react'
 import {
   Fragment,
   useEffect,
@@ -176,7 +176,7 @@ export default function BookmarkTree({
                 aria-label={isPinned ? '取消置顶' : '置顶'}
                 className={`shrink-0 rounded-md p-1 transition-opacity ${isPinned ? 'text-foreground' : 'text-muted-foreground opacity-0 group-hover:opacity-100 hover:text-foreground'}`}
               >
-                <PinIcon className={`size-3.5 ${isPinned ? 'fill-foreground' : ''}`} />
+                <StarIcon className={`size-3.5 ${isPinned ? 'fill-primary stroke-primary' : ''}`} />
               </button>
             </div>
           </li>
