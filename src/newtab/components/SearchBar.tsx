@@ -97,7 +97,7 @@ export default function SearchBar() {
 
   return (
     <>
-      <InputGroup ref={inputGroupRef} className='h-12 rounded-2xl bg-white/60 backdrop-blur-md shadow-[0_2px_12px_rgba(0,0,0,0.04)] px-2 border-0 focus-within:ring-0!'>
+      <InputGroup ref={inputGroupRef} className='h-11.5 rounded-2xl bg-white/60 backdrop-blur-md shadow-[0_2px_12px_rgba(0,0,0,0.04)] px-2 border-0 focus-within:ring-0!'>
         <InputGroupAddon align="inline-start" className='h-full p-0'>
           <Popover open={enginePopoverOpen} onOpenChange={setEnginePopoverOpen}>
             <PopoverTrigger className='group flex h-full w-full cursor-pointer items-center gap-1 px-2 outline-none border-0'>
@@ -106,10 +106,11 @@ export default function SearchBar() {
                 name={currentEngine.name}
                 icon={currentEngine.icon}
                 showBg={false}
+                className='size-4.5'
               />
               <ChevronDownIcon className='size-4 text-muted-foreground transition-transform group-aria-expanded:rotate-180' />
             </PopoverTrigger>
-            <PopoverContent align="start" alignOffset={-4} sideOffset={8} className='bg-background/50 backdrop-blur-md p-2 shadow-none rounded-2xl' style={{ width: popoverWidth }}>
+            <PopoverContent align="start" alignOffset={-4} sideOffset={8} className='bg-background/40 backdrop-blur-md p-2 shadow-none rounded-2xl' style={{ width: popoverWidth }}>
               <div className='flex flex-wrap items-center gap-2'>
                 {visibleEngines.map((engine) => {
                   const isCurrent = engine.key === engines.current
@@ -117,7 +118,7 @@ export default function SearchBar() {
                     <div
                       key={engine.key}
                       onClick={() => handleEngineChange(engine.key)}
-                      className='group relative flex size-16 cursor-pointer flex-col items-center justify-center rounded-lg text-xs text-foreground transition-colors hover:bg-muted'
+                      className='group relative flex size-16 cursor-pointer flex-col items-center justify-center rounded-lg text-xs text-foreground transition-all hover:scale-105 hover:bg-muted/40'
                     >
                       {!isCurrent && (
                         <button
@@ -148,7 +149,7 @@ export default function SearchBar() {
                     setEnginePopoverOpen(false)
                     setAddDialogOpen(true)
                   }}
-                  className='group flex flex-col items-center justify-center rounded-lg size-16 text-xs text-foreground hover:bg-muted transition-colors'
+                  className='group flex flex-col items-center justify-center rounded-lg size-16 text-xs text-foreground hover:scale-105 hover:bg-muted/40 transition-all'
                 >
                   <span className='flex size-9 items-center justify-center rounded-md bg-white transition-shadow group-hover:shadow-md'>
                     <PlusIcon className='size-4.5 text-muted-foreground' />
