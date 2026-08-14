@@ -67,7 +67,12 @@ pnpm clear           # 清除 node_modules + pnpm-lock.yaml
 - **测试**: Vitest，放置在 `src/**/*.test.{ts,tsx}`，使用 `WxtVitest` 插件
 - **WXT 配置**: `wxt.config.ts`，入口目录为 `entries/`，React 模块通过 `@wxt-dev/module-react`
 - **组件库**: shadcn v4 (`components.json` 配置，`base-nova` 风格)，图标用 `lucide-react`，工具类用 `cva` (class-variance-authority)
+- **组件优先级**: UI 元素优先使用 `src/components/ui/` 下已有的 shadcn 组件，不重复封装；仅当 `ui/` 无现成组件且不适合新增时，才使用原生 Tailwind 或其他方式实现
 - **antd 使用**: 已引入 `antd` 依赖，但**仅使用它的 `Masonry` 瀑布流组件**（`import { Masonry } from 'antd'`，数据驱动：`items` + `itemRender`，支持响应式 `columns`/`gutter`）；antd 的其他组件（Button、message、Layout 等）一律不使用，按钮等 UI 元素统一用项目封装组件（shadcn `src/components/ui/`）或原生 Tailwind，不再引入其他瀑布流库
 - **组件保护**: 如需修改 `src/components/ui/` 下的 shadcn 组件源码，必须先征得我同意，并明确列出修改内容，经我二次确认后方可执行。默认优先从外部传入 className 或封装 wrapper 组件。
 - **TailwindCSS**: 优先使用 Tailwind 规范类（如 `max-w-175`）而非任意值（如 `max-w-[700px]`），避免触发 `tailwindcss(suggestCanonicalClasses)` 警告。若必须使用任意值，需添加注释说明原因
 - **类型校验**: 禁止使用 `@ts-ignore`、`@ts-nocheck`、`eslint-disable` 等方式跳过 TypeScript 或 ESLint 类型校验
+
+## Git
+
+- **提交规范**: 遵循 `leju_git_conventions` skill —— 提交信息格式 `<type>: <主题>` + 3-6 条动词开头的要点，分支命名 `<userSlug>/<type>/<snake_keywords>`（仅用下划线，禁短横线）；禁止 `git add .`/`-A` 通配暂存，需过滤后逐个暂存；commit 前必须将完整提交信息展示给用户确认后方可执行
