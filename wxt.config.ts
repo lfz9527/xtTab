@@ -49,7 +49,8 @@ export default defineConfig({
     // @ts-ignore
     webExt: {
         chromiumArgs: [
-            '--disable-features=DisableLoadExtensionCommandLineSwitch'
+            '--disable-features=DisableLoadExtensionCommandLineSwitch',
+            '--user-data-dir=./.wxt/chrome-data'
         ]
     }
 })
