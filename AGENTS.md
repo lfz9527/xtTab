@@ -6,9 +6,10 @@
 
 - **技术栈**: WXT 0.20, React 19, TypeScript, Vite, Vitest, TailwindCSS v4
 - **包管理**: pnpm
-- **入口**: `src/entries/` 下有 2 个 WXT 入口点 (`srcDir: 'src'`, `entrypointsDir: 'entries'`)
+- **入口**: `src/entries/` 下有 3 个 WXT 入口点 (`srcDir: 'src'`, `entrypointsDir: 'entries'`)
   - `src/entries/background/index.ts` → 转导出 `@/background`
   - `src/entries/newtab/index.html` → 引用 `@/newTab/main.tsx` (替换新标签页)
+  - `src/entries/content/index.tsx` → content script (匹配 `<all_urls>`，通过 `createShadowRootUi` 挂载 Shadow DOM UI)
 - **路径别名**: `@` → `src/`
 - **扩展权限**: `tabs`、`storage`、`bookmarks`、`host_permissions: <all_urls>`
 - **国际化**: `default_locale: 'zh_CN'`，语言包位于 `public/_locales/zh_CN/messages.json`；manifest 的 `name`/`description` 使用 `__MSG_extName__`/`__MSG_extDescription__` 占位符，勿直接改回字面文本
@@ -44,7 +45,8 @@ pnpm clear           # 清除 node_modules + pnpm-lock.yaml
 | **components** | `src/components/` | shadcn UI 组件 (`ui/` 目录，受组件保护约定约束) |
 | **services** | `src/services/` | HTTP 请求封装 (`fetch.ts` Fetch 包装器 + `index.ts` Services 类)，支持请求取消与超时；`pnpm openapi` 从 swagger 重新生成 |
 | **messages** | `src/messages/` | 自定义消息总线 (`MessageBus` 单例) + Content 消息类，基于 `browser.runtime.onMessage` |
-| **hooks** | `src/hooks/` | React Hooks — `useTabs` (标签页管理)、`useWxtStorage` (WXT storage 包装)、`useDebounceFn`/`useDebounceValue` (防抖)、`useThrottledFn` (节流)、`useEventListener` (通用事件监听)、`useComposing` (中文输入法组合状态)、`useLatest` (最新值引用)、`useUnmount` (卸载回调) |
+| **content** | `src/entries/content/` + `src/content/` | content script — 入口编排 (createShadowRootUi 挂载 Shadow DOM、注册 `@/messages/content` 监听、GitLab 回复模板)，实际组件在 `src/content/` |
+| **hooks** | `src/hooks/` | React Hooks — `useTabs` (标签页管理)、`useWxtStorage` (WXT storage 包装)、`useDebounceFn`/`useDebounceValue` (防抖)、`useThrottledFn` (节流)、`useEventListener` (通用事件监听)、`useComposing` (中文输入法组合状态)、`useLatest` (最新值引用)、`useUnmount` (卸载回调)、`useCommand` (键盘快捷键)、`useTimeout` (定时器) |
 | **constants** | `src/constants/` | 枚举定义体系 (`BaseEnumCls` 抽象类模式)、常量 |
 | **types** | `src/types/` | 全局类型定义 (`anyObject`、`Response<T>`) |
 | **utils** | `src/utils/` | 通用工具函数 |
