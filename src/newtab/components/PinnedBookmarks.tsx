@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { GlobeIcon, PinOffIcon } from 'lucide-react'
+import { GlobeIcon, StarIcon } from 'lucide-react'
 import messageBus from '@/messages/message'
 import { BackgroundAction } from '@/constants'
 import usePinBookmarks, {
@@ -95,7 +95,7 @@ function PinnedCard({
         aria-label='取消置顶'
         className='rounded-md p-1 text-muted-foreground opacity-0 transition-opacity group-hover:opacity-100 hover:text-foreground'
       >
-        <PinOffIcon className='size-3.5' />
+        <StarIcon className='size-3.5' />
       </button>
     </div>
   )
