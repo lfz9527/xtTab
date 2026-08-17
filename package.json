@@ -2,7 +2,7 @@
   "name": "xtTab",
   "description": "manifest.json description",
   "private": true,
-  "version": "1.0.1",
+  "version": "1.1.0-ge3b70ba",
   "type": "module",
   "scripts": {
     "dev": "wxt",
