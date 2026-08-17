@@ -13,6 +13,8 @@ stats.html
 stats-*.json
 .wxt
 web-ext.config.ts
+# wxt submit 生成的商店凭证文件（含 Chrome/Firefox/Edge API 密钥）
+.env.submit
 
 # Editor directories and files
 .vscode/*
