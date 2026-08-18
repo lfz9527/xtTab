@@ -38,7 +38,8 @@ export default function useHeaderViews() {
   const [rawOrder, setViewOrder] = useWxtStorage(headerViewOrderStorage)
   const viewOrder = normalizeViews(rawOrder)
   const moveView = useCallback(
-    (event: Parameters<typeof move>[1]) => setViewOrder(move(rawOrder, event)),
+    (event: Parameters<typeof move>[1]) =>
+      setViewOrder(move(normalizeViews(rawOrder), event)),
     [rawOrder, setViewOrder]
   )
   return { viewOrder, moveView }
