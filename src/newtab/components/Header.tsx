@@ -12,8 +12,7 @@ import { useAppStore, type HeaderView } from '@/newTab/store/useAppStore'
  * 顶部导航栏：60% 不透明度背景，左侧内容区切换按钮，右侧收纳书签/设置入口
  * 选中态背景色 bg-[#f1f3f3] 为设计稿指定色，非 Tailwind 标准色，故使用任意值
  */
-export default function Header() {
-  const activeHeaderView = useAppStore((s) => s.activeHeaderView)
+export default function Header({ activeView }: { activeView: HeaderView }) {
   const setActiveHeaderView = useAppStore((s) => s.setActiveHeaderView)
   const setBookmarkOpen = useAppStore((s) => s.setBookmarkOpen)
   const setSettingsOpen = useAppStore((s) => s.setSettingsOpen)
@@ -58,7 +57,7 @@ export default function Header() {
               variant='ghost'
               aria-label={ariaLabel}
               onClick={() => setActiveHeaderView(view)}
-              className={activeHeaderView === view ? 'bg-[#f1f3f3]' : undefined}
+              className={activeView === view ? 'bg-[#f1f3f3]' : undefined}
             >
               <Icon className='size-3.5' />
               {label}

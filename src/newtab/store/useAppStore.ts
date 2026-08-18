@@ -16,8 +16,8 @@ interface AppState {
   settingsActiveTab: string
   /** 添加引擎弹窗开关 */
   addEngineOpen: boolean
-  /** 搜索框下方内容区当前视图 */
-  activeHeaderView: HeaderView
+  /** 搜索框下方内容区当前视图；null = 未手动选择，跟随视图排序首位 */
+  activeHeaderView: HeaderView | null
 
   setBookmarkOpen: (open: boolean) => void
   setSettingsOpen: (open: boolean) => void
@@ -31,7 +31,7 @@ export const useAppStore = create<AppState>((set) => ({
   settingsOpen: false,
   settingsActiveTab: 'general',
   addEngineOpen: false,
-  activeHeaderView: 'pins',
+  activeHeaderView: null,
 
   setBookmarkOpen: (open) => set({ bookmarkOpen: open }),
   setSettingsOpen: (open) => set({ settingsOpen: open }),
