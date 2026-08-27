@@ -71,6 +71,9 @@ export default function Dock() {
     return () => el.removeEventListener('wheel', onWheel)
   }, [expanded])
 
+  // 无常用入口时不展示 Dock 栏
+  if (dockItems.list.length === 0) return null
+
   return (
     <nav
       aria-label='常用网站'
