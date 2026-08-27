@@ -16,6 +16,7 @@ import EngineIcon from './EngineIcon'
 import AddEngineDialog from './AddEngineDialog'
 import AddDockItemDialog from './AddDockItemDialog'
 import ShortcutInput from './ShortcutInput'
+import ChangelogPanel from './ChangelogPanel'
 
 interface SettingsTab {
   key: string
@@ -27,7 +28,8 @@ const SETTINGS_TABS: SettingsTab[] = [
   { key: 'general', label: '通用' },
   { key: 'engines', label: '搜索引擎' },
   { key: 'dock', label: '常用入口' },
-  { key: 'shortcuts', label: '快捷键' }
+  { key: 'shortcuts', label: '快捷键' },
+  { key: 'changelog', label: '更新日志' }
 ]
 
 /** 书签跳转方式选项 */
@@ -489,6 +491,11 @@ export default function SettingsDialog() {
                     />
                   </div>
                 </div>
+              </ScrollArea>
+            )}
+            {activeTab === 'changelog' && (
+              <ScrollArea className='min-h-0 flex-1'>
+                <ChangelogPanel />
               </ScrollArea>
             )}
           </div>
