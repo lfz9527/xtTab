@@ -1,4 +1,4 @@
-import { useCallback } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { storage } from '@wxt-dev/storage'
 import { move } from '@dnd-kit/helpers'
 import useWxtStorage from '@/hooks/useWxtStorage'
@@ -33,14 +33,30 @@ const headerViewOrderStorage = storage.defineItem<HeaderView[]>(
   { fallback: DEFAULT_VIEW_ORDER }
 )
 
-/** Header 左侧视图按钮顺序 hook：viewOrder（清洗后）+ moveView（拖拽结束更新顺序） */
+/** Header 左侧视图按钮顺序 hook：viewOrder（清洗后）+ moveView（拖拽结束更新顺序）+ ready（storage 就绪） */
 export default function useHeaderViews() {
   const [rawOrder, setViewOrder] = useWxtStorage(headerViewOrderStorage)
+  // useWxtStorage 首帧返回 fallback，真实值异步到达；此处跟踪读取完成时机
+  const [ready, setReady] = useState(false)
+  useEffect(() => {
+    let isMounted = true
+    headerViewOrderStorage
+      .getValue()
+      .then(() => {
+        if (isMounted) setReady(true)
+      })
+      .catch(() => {
+        if (isMounted) setReady(true)
+      })
+    return () => {
+      isMounted = false
+    }
+  }, [])
   const viewOrder = normalizeViews(rawOrder)
   const moveView = useCallback(
     (event: Parameters<typeof move>[1]) =>
       setViewOrder(move(normalizeViews(rawOrder), event)),
     [rawOrder, setViewOrder]
   )
-  return { viewOrder, moveView }
+  return { viewOrder, moveView, ready }
 }

@@ -17,7 +17,15 @@ function App() {
   // 注册全局快捷键（书签/设置弹窗）
   useShortcuts()
   const activeHeaderView = useAppStore((s) => s.activeHeaderView)
-  const { viewOrder } = useHeaderViews()
+  const setActiveHeaderView = useAppStore((s) => s.setActiveHeaderView)
+  const { viewOrder, ready } = useHeaderViews()
+  // storage 中的视图顺序就绪后，将首位固化为默认视图（用户已手动选择则跳过），
+  // 使 activeHeaderView 后续不再为 null，避免拖拽排序后高亮/内容区跟随排序首位变动
+  useEffect(() => {
+    if (ready && activeHeaderView === null) {
+      setActiveHeaderView(viewOrder[0])
+    }
+  }, [ready, viewOrder, activeHeaderView, setActiveHeaderView])
   // 未手动选择时（null）默认展示视图排序首位
   const effectiveView = activeHeaderView ?? viewOrder[0]
   return (
