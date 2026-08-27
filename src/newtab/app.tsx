@@ -8,6 +8,7 @@ import SettingsDialog from './components/SettingsDialog'
 import BookmarkDialog from './components/BookmarkDialog'
 import PinnedBookmarks from './components/PinnedBookmarks'
 import TabsPanel from './components/TabsPanel'
+import Dock from './components/Dock'
 import { Toaster } from '@/components/ui/toast'
 import { useAppStore } from './store/useAppStore'
 import useHeaderViews from './store/useHeaderViews'
@@ -22,7 +23,11 @@ function App() {
   return (
     <div
       className='flex h-full w-full flex-col items-center'
-      style={{ backgroundImage: `url(${bgImage})`, backgroundSize: 'cover', backgroundPosition: 'center' }}
+      style={{
+        backgroundImage: `url(${bgImage})`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center'
+      }}
     >
       {/* 上：顶部导航栏（fixed 定位，不占文档流） */}
       <Header activeView={effectiveView} />
@@ -39,6 +44,8 @@ function App() {
           <TabsPanel />
         </div>
       )}
+      {/* 底：Mac Dock 风格常用网站入口（fixed 定位，不占文档流） */}
+      <Dock />
       {/* 弹窗（fixed 定位，不影响布局） */}
       <SettingsDialog />
       <BookmarkDialog />
