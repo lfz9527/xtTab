@@ -150,7 +150,9 @@ export default function BookmarkTree({
         const isPinned = pinnedIds.has(node.id)
         return (
           <li key={node.id} ref={isActive ? activeItemRef : undefined}>
-            <div className={`group flex w-full items-center rounded-md px-2 py-1.5 text-sm text-foreground transition-colors hover:bg-muted ${isActive ? 'bg-muted' : ''}`}>
+            <div
+              className={`group flex w-full items-center rounded-md px-2 py-1.5 text-sm text-foreground transition-colors hover:bg-muted ${isActive ? 'bg-muted' : ''}`}
+            >
               <button
                 type='button'
                 onClick={() => node.url && onOpenBookmark(node.url)}
@@ -160,7 +162,10 @@ export default function BookmarkTree({
                   <div className='flex items-center gap-1.5'>
                     <BookmarkFavicon url={node.url} />
                     <span className='truncate'>
-                      <HighlightText text={node.title ?? ''} query={searchQuery} />
+                      <HighlightText
+                        text={node.title ?? ''}
+                        query={searchQuery}
+                      />
                     </span>
                   </div>
                   {node.url && (
@@ -176,7 +181,9 @@ export default function BookmarkTree({
                 aria-label={isPinned ? '取消置顶' : '置顶'}
                 className={`shrink-0 rounded-md p-1 transition-opacity ${isPinned ? 'text-foreground' : 'text-muted-foreground opacity-0 group-hover:opacity-100 hover:text-foreground'}`}
               >
-                <StarIcon className={`size-3.5 ${isPinned ? 'fill-primary stroke-primary' : ''}`} />
+                <StarIcon
+                  className={`size-3.5 ${isPinned ? 'fill-primary stroke-primary' : ''}`}
+                />
               </button>
             </div>
           </li>

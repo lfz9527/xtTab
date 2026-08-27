@@ -46,7 +46,8 @@ function parseKeyEvent(e: KeyboardEvent): string | null {
   // 无任何修饰键的单独按键不记录（避免误触）
   if (modifiers.length === 0) return null
 
-  const keyPart = rawKey.length === 1 ? rawKey.toLowerCase() : SPECIAL_KEYS[rawKey]
+  const keyPart =
+    rawKey.length === 1 ? rawKey.toLowerCase() : SPECIAL_KEYS[rawKey]
   if (!keyPart) return null
   return [...modifiers, keyPart].join('+')
 }
@@ -83,9 +84,7 @@ export default function ShortcutInput({
       }}
       className={cn(
         'h-8 min-w-32 rounded-lg border border-input bg-transparent px-3 text-sm text-foreground transition-colors',
-        recording
-          ? 'border-ring ring-3 ring-ring/50'
-          : 'hover:border-ring'
+        recording ? 'border-ring ring-3 ring-ring/50' : 'hover:border-ring'
       )}
     >
       {recording ? '按下快捷键...' : formatShortcut(value) || '未设置'}

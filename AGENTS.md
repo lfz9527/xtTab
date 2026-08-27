@@ -75,6 +75,7 @@ pnpm clear           # 清除 node_modules + pnpm-lock.yaml
 - **组件保护**: 如需修改 `src/components/ui/` 下的 shadcn 组件源码，必须先征得我同意，并明确列出修改内容，经我二次确认后方可执行。默认优先从外部传入 className 或封装 wrapper 组件。
 - **TailwindCSS**: 优先使用 Tailwind 规范类（如 `max-w-175`）而非任意值（如 `max-w-[700px]`），避免触发 `tailwindcss(suggestCanonicalClasses)` 警告。若必须使用任意值，需添加注释说明原因
 - **类型校验**: 禁止使用 `@ts-ignore`、`@ts-nocheck`、`eslint-disable` 等方式跳过 TypeScript 或 ESLint 类型校验
+- 运行单个测试使用 `pnpm exec vitest run test/<path>.test.tsx`；修改行为后运行相关联测试与 `pnpm lint`、`pnpm compile` 即可，无特殊要求不运行全量测试，不执行 `pnpm build`。
 
 ## Git
 

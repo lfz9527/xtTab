@@ -40,10 +40,7 @@ export default function AddEngineDialog({
 
   return (
     <Dialog modal open={open} onOpenChange={onOpenChange}>
-      <DialogContent
-        overlayForceRender
-        className='max-w-150 sm:max-w-150'
-      >
+      <DialogContent overlayForceRender className='max-w-150 sm:max-w-150'>
         <DialogTitle>自定义搜索引擎</DialogTitle>
         <div className='flex flex-col gap-2'>
           <Input

@@ -11,9 +11,7 @@ import {
   PopoverTrigger,
   PopoverContent
 } from '@/components/ui/popover'
-import SuggestPopover, {
-  type SuggestPopoverHandle
-} from './SuggestPopover'
+import SuggestPopover, { type SuggestPopoverHandle } from './SuggestPopover'
 import EngineIcon from './EngineIcon'
 import AddEngineDialog from './AddEngineDialog'
 import { useEventListener } from '@/hooks/useEventListener'
@@ -32,7 +30,9 @@ export default function SearchBar() {
   const [query, setQuery] = useState('')
   const [inputFocused, setInputFocused] = useState(false)
   const inputGroupRef = useRef<HTMLDivElement>(null)
-  const [popoverWidth, setPopoverWidth] = useState<number | undefined>(undefined)
+  const [popoverWidth, setPopoverWidth] = useState<number | undefined>(
+    undefined
+  )
   const [enginePopoverOpen, setEnginePopoverOpen] = useState(false)
   const [addDialogOpen, setAddDialogOpen] = useState(false)
   const suggestRef = useRef<SuggestPopoverHandle>(null)
@@ -97,8 +97,11 @@ export default function SearchBar() {
 
   return (
     <>
-      <InputGroup ref={inputGroupRef} className='h-11.5 rounded-2xl bg-white/60 backdrop-blur-md shadow-[0_2px_12px_rgba(0,0,0,0.04)] px-2 border-0 focus-within:ring-0!'>
-        <InputGroupAddon align="inline-start" className='h-full p-0'>
+      <InputGroup
+        ref={inputGroupRef}
+        className='h-11.5 rounded-2xl bg-white/60 backdrop-blur-md shadow-[0_2px_12px_rgba(0,0,0,0.04)] px-2 border-0 focus-within:ring-0!'
+      >
+        <InputGroupAddon align='inline-start' className='h-full p-0'>
           <Popover open={enginePopoverOpen} onOpenChange={setEnginePopoverOpen}>
             <PopoverTrigger className='group flex h-full w-full cursor-pointer items-center gap-1 px-2 outline-none border-0'>
               <EngineIcon
@@ -110,7 +113,13 @@ export default function SearchBar() {
               />
               <ChevronDownIcon className='size-4 text-muted-foreground transition-transform group-aria-expanded:rotate-180' />
             </PopoverTrigger>
-            <PopoverContent align="start" alignOffset={-4} sideOffset={8} className='bg-background/40 backdrop-blur-md p-2 shadow-none rounded-2xl' style={{ width: popoverWidth }}>
+            <PopoverContent
+              align='start'
+              alignOffset={-4}
+              sideOffset={8}
+              className='bg-background/40 backdrop-blur-md p-2 shadow-none rounded-2xl'
+              style={{ width: popoverWidth }}
+            >
               <div className='flex flex-wrap items-center gap-2'>
                 {visibleEngines.map((engine) => {
                   const isCurrent = engine.key === engines.current
@@ -176,8 +185,13 @@ export default function SearchBar() {
           placeholder='搜索...'
           autoFocus
         />
-        <InputGroupAddon align="inline-end">
-          <Button type='button' variant='ghost' size='icon-sm' onClick={handleSearch}>
+        <InputGroupAddon align='inline-end'>
+          <Button
+            type='button'
+            variant='ghost'
+            size='icon-sm'
+            onClick={handleSearch}
+          >
             <SearchIcon className='size-5 text-muted-foreground hover:text-foreground transition-colors' />
           </Button>
         </InputGroupAddon>

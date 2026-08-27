@@ -16,9 +16,15 @@ export function registerBookmarksListener() {
   MessageBus.on(BackgroundAction.BOOKMARK_GET_TREE.key, async () => {
     try {
       const tree = await getBookmarksTree()
-      return { code: MessagingCode.SUCCESS_CODE_NORMAL.key, data: tree } satisfies MessageResponse<BookmarksTree>
+      return {
+        code: MessagingCode.SUCCESS_CODE_NORMAL.key,
+        data: tree
+      } satisfies MessageResponse<BookmarksTree>
     } catch {
-      return { code: MessagingCode.SUCCESS_CODE_NORMAL.key, data: [] } satisfies MessageResponse<BookmarksTree>
+      return {
+        code: MessagingCode.SUCCESS_CODE_NORMAL.key,
+        data: []
+      } satisfies MessageResponse<BookmarksTree>
     }
   })
 }

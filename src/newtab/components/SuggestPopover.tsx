@@ -55,7 +55,12 @@ export default function SuggestPopover({
   const [suggestions, setSuggestions] = useState<string[]>([])
   const [suggestOpen, setSuggestOpen] = useState(false)
   const composing = useComposing()
-  const queryRef = useLatest({ query, engine: engineKey, history, inputFocused })
+  const queryRef = useLatest({
+    query,
+    engine: engineKey,
+    history,
+    inputFocused
+  })
   // 聚焦后延迟展开的定时器，失焦时需清除，避免失焦后列表又弹出
   const openTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
@@ -75,11 +80,15 @@ export default function SuggestPopover({
   // 联想请求：防抖 200ms
   const { run: runSuggest, cancel: cancelSuggest } = useDebounceFn(
     async (trimmed: string) => {
-      const res = await messageBus.send<{ engine: string; query: string }, string[]>(
-        BackgroundAction.SUGGEST.key,
-        { engine: engineKey, query: trimmed }
+      const res = await messageBus.send<
+        { engine: string; query: string },
+        string[]
+      >(BackgroundAction.SUGGEST.key, { engine: engineKey, query: trimmed })
+      if (
+        queryRef.current.query !== trimmed ||
+        queryRef.current.engine !== engineKey
       )
-      if (queryRef.current.query !== trimmed || queryRef.current.engine !== engineKey) return
+        return
       setSuggestions(res?.data ?? [])
       setSuggestOpen(true)
     },
@@ -142,7 +151,7 @@ export default function SuggestPopover({
     >
       <PopoverContent
         anchor={anchor}
-        align="center"
+        align='center'
         sideOffset={8}
         initialFocus={false}
         finalFocus={false}
@@ -153,13 +162,17 @@ export default function SuggestPopover({
           <>
             <ul className='flex flex-col'>
               {history.map((h, index) => (
-                <li key={h} className='group/history flex items-center gap-1 rounded-md hover:bg-muted'>
+                <li
+                  key={h}
+                  className='group/history flex items-center gap-1 rounded-md hover:bg-muted'
+                >
                   <button
                     type='button'
                     onMouseDown={(e) => e.preventDefault()}
                     onClick={() => search(h)}
-                    className={`flex w-full min-w-0 flex-1 items-center gap-2 rounded-md px-2 py-1.5 text-left text-sm text-foreground ${index === activeIndex ? 'bg-muted' : ''
-                      }`}
+                    className={`flex w-full min-w-0 flex-1 items-center gap-2 rounded-md px-2 py-1.5 text-left text-sm text-foreground ${
+                      index === activeIndex ? 'bg-muted' : ''
+                    }`}
                   >
                     <HistoryIcon className='size-3.5 shrink-0 text-muted-foreground' />
                     <span className='truncate'>{h}</span>
@@ -193,13 +206,24 @@ export default function SuggestPopover({
                   type='button'
                   onMouseDown={(e) => e.preventDefault()}
                   onClick={() => search(s)}
-                  className={`group flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-left text-sm text-foreground transition-colors duration-500 hover:bg-muted ${index === activeIndex ? 'bg-muted' : ''
-                    }`}
+                  className={`group flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-left text-sm text-foreground transition-colors duration-500 hover:bg-muted ${
+                    index === activeIndex ? 'bg-muted' : ''
+                  }`}
                 >
-                  <SearchIcon className={`size-3.5 shrink-0 text-muted-foreground transition-all duration-500 group-hover:text-foreground group-hover:translate-x-2.5 ${index === activeIndex ? 'text-foreground translate-x-2.5' : ''
-                    }`} />
-                  <span className={`truncate transition-transform duration-500 group-hover:translate-x-2.5 ${index === activeIndex ? 'translate-x-2.5' : ''
-                    }`}>{s}</span>
+                  <SearchIcon
+                    className={`size-3.5 shrink-0 text-muted-foreground transition-all duration-500 group-hover:text-foreground group-hover:translate-x-2.5 ${
+                      index === activeIndex
+                        ? 'text-foreground translate-x-2.5'
+                        : ''
+                    }`}
+                  />
+                  <span
+                    className={`truncate transition-transform duration-500 group-hover:translate-x-2.5 ${
+                      index === activeIndex ? 'translate-x-2.5' : ''
+                    }`}
+                  >
+                    {s}
+                  </span>
                 </button>
               </li>
             ))}

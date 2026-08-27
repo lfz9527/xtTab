@@ -2,10 +2,7 @@ import { describe, expect, it } from 'vitest'
 import type { Browser } from 'wxt/browser'
 import { groupTabsByHost } from '@/utils'
 
-const makeTab = (
-  id: number,
-  url: string | undefined
-): Browser.tabs.Tab =>
+const makeTab = (id: number, url: string | undefined): Browser.tabs.Tab =>
   ({ id, url }) as Browser.tabs.Tab
 
 describe('groupTabsByHost', () => {

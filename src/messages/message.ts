@@ -9,7 +9,7 @@ class MessageBus {
   private isListenerRegistered = false
 
   // 私有构造函数，防止实例化
-  private constructor() { }
+  private constructor() {}
 
   // 获取单例
   public static getInstance(): MessageBus {
@@ -27,14 +27,23 @@ class MessageBus {
       (request: MessageRequest, sender, sendResponse) => {
         const action = request.action
         if (!action) {
-          sendResponse({ code: MessagingCode.ERROR_CODE_NORMAL.key, message: '消息 action 未定义' })
+          sendResponse({
+            code: MessagingCode.ERROR_CODE_NORMAL.key,
+            message: '消息 action 未定义'
+          })
           return true
         }
         const handlers = this.handlers.get(action)
         const onceHandlers = this.onceHandlers.get(action)
 
-        if ((!handlers || handlers.size === 0) && (!onceHandlers || onceHandlers.size === 0)) {
-          sendResponse({ code: MessagingCode.ERROR_CODE_NORMAL.key, message: `未注册 handler: ${action}` })
+        if (
+          (!handlers || handlers.size === 0) &&
+          (!onceHandlers || onceHandlers.size === 0)
+        ) {
+          sendResponse({
+            code: MessagingCode.ERROR_CODE_NORMAL.key,
+            message: `未注册 handler: ${action}`
+          })
           return true
         }
 
@@ -90,7 +99,11 @@ class MessageBus {
   }
 
   /** 手动分发消息给订阅者 */
-  public dispatch(action: string, msg: any, sender?: Browser.runtime.MessageSender) {
+  public dispatch(
+    action: string,
+    msg: any,
+    sender?: Browser.runtime.MessageSender
+  ) {
     const handlers = this.handlers.get(action)
     if (!handlers) return
     handlers.forEach(async (handler) => {
@@ -122,7 +135,7 @@ class MessageBus {
   public async sendToTab(
     action: string,
     payload?: Record<string, any>,
-    current: boolean = true,
+    current: boolean = true
   ): Promise<{ success: MessageResponse[]; failed: any[] }> {
     return new Promise(async (resolve, reject) => {
       let isResolved = false
@@ -134,7 +147,6 @@ class MessageBus {
       }
 
       try {
-
         if (current) {
           const currentTabs = await browser.tabs.query({
             active: true,
@@ -150,10 +162,12 @@ class MessageBus {
               return resolve({ success: [res], failed: [] })
             } catch (error: any) {
               console.error('browser.tabs.sendMessage__error', error)
-              reject?.([{
-                code: MessagingCode.ERROR_CODE_NORMAL.key,
-                message: error.message || 'browser.tabs.sendMessage__error'
-              }])
+              reject?.([
+                {
+                  code: MessagingCode.ERROR_CODE_NORMAL.key,
+                  message: error.message || 'browser.tabs.sendMessage__error'
+                }
+              ])
             } finally {
               isResolved = true
             }
@@ -182,11 +196,11 @@ class MessageBus {
         })
 
         const success = results
-          .filter(r => r.status === 'fulfilled')
-          .map(r => (r as PromiseFulfilledResult<any>).value)
+          .filter((r) => r.status === 'fulfilled')
+          .map((r) => (r as PromiseFulfilledResult<any>).value)
         const failed = results
-          .filter(r => r.status === 'rejected')
-          .map(r => (r as PromiseRejectedResult).reason)
+          .filter((r) => r.status === 'rejected')
+          .map((r) => (r as PromiseRejectedResult).reason)
 
         console.log('成功结果:', success)
         console.log('失败结果:', failed)
@@ -194,10 +208,8 @@ class MessageBus {
       } catch (error) {
         reject(error)
       }
-
     })
   }
-
 }
 
 const messageBus = MessageBus.getInstance()

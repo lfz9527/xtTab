@@ -12,9 +12,9 @@ function closeTabs(ids: number[]) {
   const valid = ids.filter((id) => id != null)
   if (valid.length === 0) return
   valid.forEach((id) => {
-    browser.tabs.update(id, { pinned: false }).catch(() => { })
+    browser.tabs.update(id, { pinned: false }).catch(() => {})
   })
-  browser.tabs.remove(valid).catch(() => { })
+  browser.tabs.remove(valid).catch(() => {})
 }
 
 /**
@@ -65,12 +65,12 @@ export default function TabsPanel() {
 
   const closeTab = (tab: Browser.tabs.Tab) => {
     if (tab.id == null) return
-    browser.tabs.remove(tab.id).catch(() => { })
+    browser.tabs.remove(tab.id).catch(() => {})
   }
 
   const copyTab = (tab: Browser.tabs.Tab) => {
     if (!tab.url) return
-    navigator.clipboard.writeText(tab.url).catch(() => { })
+    navigator.clipboard.writeText(tab.url).catch(() => {})
     toast.success('已复制链接')
   }
 
@@ -154,7 +154,9 @@ function TabItem({
   if (!label) return null
 
   return (
-    <li className={`group flex w-full items-center rounded-lg transition-colors hover:bg-muted ${isActive ? 'bg-muted' : ''}`}>
+    <li
+      className={`group flex w-full items-center rounded-lg transition-colors hover:bg-muted ${isActive ? 'bg-muted' : ''}`}
+    >
       <button
         type='button'
         onClick={() => onActivate(tab)}

@@ -149,7 +149,8 @@ export default function SettingsDialog() {
                       onValueChange={(value) =>
                         setSettings({
                           ...settings,
-                          bookmarkTarget: value as SettingsState['bookmarkTarget']
+                          bookmarkTarget:
+                            value as SettingsState['bookmarkTarget']
                         })
                       }
                       className='w-fit'
@@ -234,7 +235,9 @@ export default function SettingsDialog() {
                             </div>
                             <Switch
                               checked={!engine.hidden}
-                              onCheckedChange={() => toggleEngineHidden(engine.key)}
+                              onCheckedChange={() =>
+                                toggleEngineHidden(engine.key)
+                              }
                               disabled={isCurrent}
                               aria-label={`显示${engine.name}`}
                             />

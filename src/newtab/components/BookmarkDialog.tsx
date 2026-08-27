@@ -44,14 +44,14 @@ export default function BookmarkDialog() {
 
   useEffect(() => {
     messageBus
-      .send<undefined, BookmarkTreeNode[]>(BackgroundAction.BOOKMARK_GET_TREE.key)
+      .send<undefined, BookmarkTreeNode[]>(
+        BackgroundAction.BOOKMARK_GET_TREE.key
+      )
       .then((res) => {
         const raw = res?.data ?? []
         // folderType 为 bookmarks-bar 的节点不展示，直接展示其二级数据
         const flattened = raw.flatMap((node) =>
-          node.folderType === 'bookmarks-bar'
-            ? node.children ?? []
-            : [node]
+          node.folderType === 'bookmarks-bar' ? (node.children ?? []) : [node]
         )
         setTree(flattened)
       })
@@ -88,10 +88,10 @@ export default function BookmarkDialog() {
   const currentNodes = isSearching
     ? path.length === 0
       ? searchResults
-      : path[path.length - 1].children ?? []
+      : (path[path.length - 1].children ?? [])
     : path.length === 0
       ? tree
-      : path[path.length - 1].children ?? []
+      : (path[path.length - 1].children ?? [])
 
   const enterFolder = (node: BookmarkTreeNode) => {
     setPath((prev) => [...prev, node])
@@ -132,50 +132,52 @@ export default function BookmarkDialog() {
                     </BreadcrumbPage>
                   </BreadcrumbItem>
                 )}
-                {isSearching && path.map((node, index) => (
-                  <BreadcrumbItem key={node.id}>
-                    <BreadcrumbSeparator />
-                    {index === path.length - 1 ? (
-                      <BreadcrumbPage className='truncate'>
-                        {node.title}
-                      </BreadcrumbPage>
-                    ) : (
-                      <BreadcrumbLink
-                        render={
-                          <button
-                            type='button'
-                            onClick={() => setPath(path.slice(0, index + 1))}
-                          />
-                        }
-                        className='truncate'
-                      >
-                        {node.title}
-                      </BreadcrumbLink>
-                    )}
-                  </BreadcrumbItem>
-                ))}
-                {!isSearching && path.map((node, index) => (
-                  <BreadcrumbItem key={node.id}>
-                    {index > 0 && <BreadcrumbSeparator />}
-                    {index === path.length - 1 ? (
-                      <BreadcrumbPage className='truncate'>
-                        {node.title}
-                      </BreadcrumbPage>
-                    ) : (
-                      <BreadcrumbLink
-                        render={
-                          <button
-                            type='button'
-                            onClick={() => setPath(path.slice(0, index + 1))}
-                          />
-                        }
-                        className='truncate'
-                      >
-                        {node.title}
-                      </BreadcrumbLink>
-                    )}
-                  </BreadcrumbItem>
-                ))}
+                {isSearching &&
+                  path.map((node, index) => (
+                    <BreadcrumbItem key={node.id}>
+                      <BreadcrumbSeparator />
+                      {index === path.length - 1 ? (
+                        <BreadcrumbPage className='truncate'>
+                          {node.title}
+                        </BreadcrumbPage>
+                      ) : (
+                        <BreadcrumbLink
+                          render={
+                            <button
+                              type='button'
+                              onClick={() => setPath(path.slice(0, index + 1))}
+                            />
+                          }
+                          className='truncate'
+                        >
+                          {node.title}
+                        </BreadcrumbLink>
+                      )}
+                    </BreadcrumbItem>
+                  ))}
+                {!isSearching &&
+                  path.map((node, index) => (
+                    <BreadcrumbItem key={node.id}>
+                      {index > 0 && <BreadcrumbSeparator />}
+                      {index === path.length - 1 ? (
+                        <BreadcrumbPage className='truncate'>
+                          {node.title}
+                        </BreadcrumbPage>
+                      ) : (
+                        <BreadcrumbLink
+                          render={
+                            <button
+                              type='button'
+                              onClick={() => setPath(path.slice(0, index + 1))}
+                            />
+                          }
+                          className='truncate'
+                        >
+                          {node.title}
+                        </BreadcrumbLink>
+                      )}
+                    </BreadcrumbItem>
+                  ))}
               </BreadcrumbList>
             </Breadcrumb>
             <div className='relative w-50 shrink-0'>

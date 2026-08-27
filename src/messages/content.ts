@@ -5,7 +5,7 @@ export class Content {
   private static instance: Content
   private handlers: Map<string, Set<MessageHandler>> = new Map()
   private isListenerRegistered = false
-  private constructor() { }
+  private constructor() {}
   public static getInstance(): Content {
     if (!Content.instance) {
       Content.instance = new Content()
@@ -21,7 +21,10 @@ export class Content {
         const action = request.action
 
         if (!action) {
-          sendResponse({ code: MessagingCode.ERROR_CODE_NORMAL.key, message: '消息 action 未定义' })
+          sendResponse({
+            code: MessagingCode.ERROR_CODE_NORMAL.key,
+            message: '消息 action 未定义'
+          })
           return true
         }
 
@@ -29,7 +32,10 @@ export class Content {
 
         if (!handlers || handlers.size === 0) {
           console.error(`content 未注册 action: ${action}`)
-          sendResponse({ code: MessagingCode.ERROR_CODE_NORMAL.key, message: `未注册 action: ${action}` })
+          sendResponse({
+            code: MessagingCode.ERROR_CODE_NORMAL.key,
+            message: `未注册 action: ${action}`
+          })
           return true
         }
         // 立即返回 sendResponse，异步 handler 自行处理
@@ -41,7 +47,10 @@ export class Content {
           try {
             handler(response, sender)
           } catch (err: any) {
-            console.error(`[Content Messages] handler 错误 action=${action}:`, err)
+            console.error(
+              `[Content Messages] handler 错误 action=${action}:`,
+              err
+            )
           }
         })
         // 始终返回 true，以支持异步响应
@@ -74,13 +83,18 @@ export class Content {
         data: payload,
         message: ''
       }
-      const response = await browser.runtime.sendMessage({ action, payload: data })
+      const response = await browser.runtime.sendMessage({
+        action,
+        payload: data
+      })
       return response
     } catch (err: any) {
-      return { code: MessagingCode.ERROR_CODE_NORMAL.key, message: err?.message || 'contentBus sendMessage error' }
+      return {
+        code: MessagingCode.ERROR_CODE_NORMAL.key,
+        message: err?.message || 'contentBus sendMessage error'
+      }
     }
   }
-
 }
 const contentMessages = Content.getInstance()
 export default contentMessages

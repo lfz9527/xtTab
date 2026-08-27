@@ -30,8 +30,8 @@ export default [
         { allowConstantExport: true }
       ],
       '@typescript-eslint/no-explicit-any': 'off',
-      quotes: ['warn', 'single', { avoidEscape: true }],
-      endOfLine: ['error', 'lf']
+      quotes: ['warn', 'single', { avoidEscape: true }]
+      // 原 endOfLine 规则名不存在于 ESLint 核心规则，已移除；LF 换行由 Prettier 默认与 .editorconfig 共同保证
     }
   },
   // 忽略文件

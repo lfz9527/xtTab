@@ -1,4 +1,3 @@
-
 export type anyObject<V = any> = Record<string, V>
 
 export type AnyFunction<R = any> = (...args: any[]) => R

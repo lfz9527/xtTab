@@ -2,7 +2,6 @@ import Fetch, { FetchError, type RequestOptions } from './fetch'
 import { anyObject, Response } from '@/types'
 import uid from 'tiny-uid'
 
-
 type ErrorCallback = {
   onError: (data: Response) => {}
   // 认证权限校验错误回调
@@ -12,9 +11,9 @@ type ErrorCallback = {
 const errorMessage = (code: number) => {
   switch (code) {
     case 408:
-      return "请求超时,请稍后重试"
+      return '请求超时,请稍后重试'
     case 500:
-      return "服务器内部错误"
+      return '服务器内部错误'
     default:
       return `网络异常,请稍后重试`
   }
@@ -26,7 +25,6 @@ type RequestOpt = Omit<RequestOptions, 'abortSignal'> & {
   timeout?: number
 }
 
-
 class Services {
   private fetch = Fetch.request
   private timeout = 5000
@@ -34,10 +32,10 @@ class Services {
   private abortControllers: Map<string, AbortController> = new Map()
 
   /**
- * 错误处理
- * @param error 错误
- * @param errorCallback 针对性的错误回调
- */
+   * 错误处理
+   * @param error 错误
+   * @param errorCallback 针对性的错误回调
+   */
   errorHandler(errorData: Response, errorCallback?: ErrorCallback) {
     console.log('错误回调函数的捕获')
     switch (errorData?.code) {
@@ -51,11 +49,11 @@ class Services {
   }
 
   /**
- * 取消某个请求
- * @param key 请求唯一标识
- * @param message 取消原因
- * @returns 是否成功取消
- */
+   * 取消某个请求
+   * @param key 请求唯一标识
+   * @param message 取消原因
+   * @returns 是否成功取消
+   */
   cancelRequest(key: string, message?: string) {
     const controller = this.abortControllers.get(key)
     if (controller) {
@@ -66,11 +64,10 @@ class Services {
     return false
   }
 
-
   /**
    * 初始化终止请求控制
-   * @param opt 
-   * @returns 
+   * @param opt
+   * @returns
    */
   private setupCancelController(opt: RequestOpt) {
     const key = opt.requestKey ?? uid()
@@ -85,9 +82,9 @@ class Services {
 
   /**
    * 初始化超时
-   * @param key 
-   * @param opt 
-   * @returns 
+   * @param key
+   * @param opt
+   * @returns
    */
   private setupTimeout(opt: RequestOpt, fn: VoidFunction) {
     const timeout = opt.timeout ?? this.timeout
@@ -115,7 +112,6 @@ class Services {
         throw new Error(message)
       }
       return result.data ?? {}
-
     } catch (error) {
       // 处理请求系统错误回调
       if (error instanceof FetchError) {
@@ -123,7 +119,10 @@ class Services {
       }
       // 前端接口请求超时处理, 过期时间,前端决定
       if (isTimeout && this.abortControllers.get(key)) {
-        this.errorHandler({ code: 408, message: errorMessage(408) }, errorCallback)
+        this.errorHandler(
+          { code: 408, message: errorMessage(408) },
+          errorCallback
+        )
       }
 
       throw error
@@ -132,10 +131,10 @@ class Services {
     }
   }
   async get(opt: Omit<RequestOpt, 'method'>, errorCallback?: ErrorCallback) {
-    return this.http({ ...opt, method: 'GET', }, errorCallback)
+    return this.http({ ...opt, method: 'GET' }, errorCallback)
   }
   async post(opt: Omit<RequestOpt, 'method'>, errorCallback?: ErrorCallback) {
-    return this.http({ ...opt, method: 'POST', }, errorCallback)
+    return this.http({ ...opt, method: 'POST' }, errorCallback)
   }
   // 流式响应请求,直接返回请求体,供业务进行读流
   async httpSSE(opt: RequestOpt, errorCallback?: ErrorCallback) {
@@ -152,7 +151,10 @@ class Services {
         abortSignal
       })
       if (!response.body) {
-        throw new FetchError(response.status ?? 500, 'The response body is empty.')
+        throw new FetchError(
+          response.status ?? 500,
+          'The response body is empty.'
+        )
       }
       return response.body
     } catch (error) {
@@ -161,13 +163,15 @@ class Services {
       }
       // 前端接口请求超时处理, 过期时间,前端决定
       if (isTimeout && this.abortControllers.get(key)) {
-        this.errorHandler({ code: 408, message: errorMessage(408) }, errorCallback)
+        this.errorHandler(
+          { code: 408, message: errorMessage(408) },
+          errorCallback
+        )
       }
       throw error
     } finally {
       timer && clearTimeout(timer)
     }
   }
-
 }
 export default new Services()

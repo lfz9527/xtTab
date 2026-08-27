@@ -10,7 +10,10 @@ type ShadowUi = Awaited<ReturnType<typeof createShadowRootUi>>
 // 与异步挂载之间的竞态导致重复注入容器
 const INJECTED_FLAG = 'data-xt-gitlab-reply-injected'
 
-const mountButton = async (actionBar: HTMLElement, ctx: ContentScriptContext) => {
+const mountButton = async (
+  actionBar: HTMLElement,
+  ctx: ContentScriptContext
+) => {
   const App = await createShadowRootUi(ctx, {
     name: 'gitlab-reply-template-container',
     position: 'inline',
@@ -41,8 +44,6 @@ const mountButton = async (actionBar: HTMLElement, ctx: ContentScriptContext) =>
 const createGitLabReplyTemplate = async (ctx: ContentScriptContext) => {
   // 已挂载的操作区，用于断链清理（去重由 INJECTED_FLAG 同步标记保证）
   const mounted = new Map<HTMLElement, ShadowUi>()
-
-
 
   const scan = () => {
     // 清理已脱离文档的挂载（remove 会触发 onRemove 卸载 React root）

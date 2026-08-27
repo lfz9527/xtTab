@@ -1,10 +1,8 @@
-
 import contentMessages from '@/messages/content'
 import type { ContentScriptContext } from './types'
 
 import createGitLabReplyTemplate from './gitLabReplyContent'
 import createApp from './app'
-
 
 export default defineContentScript({
   matches: ['<all_urls>'],

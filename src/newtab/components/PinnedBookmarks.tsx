@@ -27,7 +27,9 @@ export default function PinnedBookmarks() {
       .send<undefined, BookmarkTreeNode[]>(
         BackgroundAction.BOOKMARK_GET_TREE.key
       )
-      .then((res) => setBookmarks(findBookmarksByIds(res?.data ?? [], pinnedIds)))
+      .then((res) =>
+        setBookmarks(findBookmarksByIds(res?.data ?? [], pinnedIds))
+      )
   }, [pinnedIds])
 
   if (bookmarks.length === 0) return null
@@ -87,7 +89,9 @@ function PinnedCard({
             onError={() => setIconFailed(true)}
           />
         )}
-        <span className='max-w-40 truncate text-sm'>{bookmark.title ?? ''}</span>
+        <span className='max-w-40 truncate text-sm'>
+          {bookmark.title ?? ''}
+        </span>
       </button>
       <button
         type='button'

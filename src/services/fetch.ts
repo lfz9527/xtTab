@@ -24,7 +24,10 @@ export type RequestOptions = {
 }
 
 export class FetchError extends Error {
-  constructor(public code: number, message?: string) {
+  constructor(
+    public code: number,
+    message?: string
+  ) {
     super(message)
     this.name = 'FetchError'
   }
@@ -50,7 +53,7 @@ class Fetch {
       method: options.method,
       headers,
       body: options.body,
-      signal: abortSignal,
+      signal: abortSignal
     })
     if (!response.ok) {
       throw new FetchError(

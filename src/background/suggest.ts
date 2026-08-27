@@ -43,7 +43,10 @@ export function parseSuggestResponse(text: string): string[] {
 }
 
 // 请求 suggest API 并解析联想词；失败时抛错交由调用方回退
-async function fetchSuggestions(engine: string, query: string): Promise<string[]> {
+async function fetchSuggestions(
+  engine: string,
+  query: string
+): Promise<string[]> {
   const api = SUGGEST_APIS[engine] ?? SUGGEST_APIS[FALLBACK_ENGINE]
   const res = await fetch(api + encodeURIComponent(query))
   if (!res.ok) throw new Error(`suggest request failed: ${res.status}`)
@@ -52,7 +55,10 @@ async function fetchSuggestions(engine: string, query: string): Promise<string[]
 }
 
 // 请求 suggest API，失败返回空数组（由调用方决定是否回退）
-async function tryFetchSuggestions(engine: string, query: string): Promise<string[]> {
+async function tryFetchSuggestions(
+  engine: string,
+  query: string
+): Promise<string[]> {
   try {
     return await fetchSuggestions(engine, query)
   } catch {
@@ -65,13 +71,19 @@ export function registerSuggestListener() {
   MessageBus.on(BackgroundAction.SUGGEST.key, async (req) => {
     const { engine, query } = (req as anyObject) ?? {}
     if (typeof query !== 'string' || !query.trim()) {
-      return { code: MessagingCode.SUCCESS_CODE_NORMAL.key, data: [] } satisfies MessageResponse<string[]>
+      return {
+        code: MessagingCode.SUCCESS_CODE_NORMAL.key,
+        data: []
+      } satisfies MessageResponse<string[]>
     }
     // 主引擎失败/为空 → 回退百度；百度也失败 → 空列表，前端不展示下拉
     let suggestions = await tryFetchSuggestions(engine, query)
     if (suggestions.length === 0) {
       suggestions = await tryFetchSuggestions(FALLBACK_ENGINE, query)
     }
-    return { code: MessagingCode.SUCCESS_CODE_NORMAL.key, data: suggestions } satisfies MessageResponse<string[]>
+    return {
+      code: MessagingCode.SUCCESS_CODE_NORMAL.key,
+      data: suggestions
+    } satisfies MessageResponse<string[]>
   })
 }

@@ -87,6 +87,6 @@ export function useDebounceFn<T extends AnyFunction>(
   return {
     cancel,
     run,
-    flush,
+    flush
   }
 }

@@ -25,11 +25,13 @@
 ### Task 1: 视图顺序存储层（useHeaderViews）
 
 **Files:**
+
 - Create: `src/newTab/store/useHeaderViews.ts`
 - Test: `src/newTab/store/useHeaderViews.test.ts`
 - Modify: `package.json`、`pnpm-lock.yaml`（依赖已由 `pnpm add` 安装，随本任务提交）
 
 **Interfaces:**
+
 - Consumes: `HeaderView` 类型（`@/newTab/store/useAppStore`）、`useWxtStorage`（`@/hooks/useWxtStorage`）、`move`（`@dnd-kit/helpers`）
 - Produces: `normalizeViews(views: unknown): HeaderView[]`（纯函数）；`useHeaderViews()` → `{ viewOrder: HeaderView[], moveView: (event: Parameters<typeof move>[1]) => void }`。Task 2 消费 `viewOrder`，Task 3 消费 `viewOrder` 与 `moveView`
 
@@ -66,8 +68,7 @@ describe('normalizeViews', () => {
 
 - [ ] **Step 2: 运行测试确认失败**
 
-Run: `pnpm test src/newTab/store/useHeaderViews.test.ts`
-Expected: FAIL，`Failed to resolve import "./useHeaderViews"`（文件不存在）
+Run: `pnpm test src/newTab/store/useHeaderViews.test.ts` Expected: FAIL，`Failed to resolve import "./useHeaderViews"`（文件不存在）
 
 - [ ] **Step 3: 写实现**
 
@@ -123,13 +124,11 @@ export default function useHeaderViews() {
 
 - [ ] **Step 4: 运行测试确认通过**
 
-Run: `pnpm test src/newTab/store/useHeaderViews.test.ts`
-Expected: PASS，4 个用例全绿
+Run: `pnpm test src/newTab/store/useHeaderViews.test.ts` Expected: PASS，4 个用例全绿
 
 - [ ] **Step 5: 类型检查**
 
-Run: `pnpm compile`
-Expected: 无错误输出
+Run: `pnpm compile` Expected: 无错误输出
 
 - [ ] **Step 6: 提交**（依赖变更一并提交；提交信息经用户确认后执行）
 
@@ -147,11 +146,13 @@ git commit -m "feat: 新增 Header 视图顺序存储与拖拽排序 hook
 ### Task 2: 默认视图跟随排序首位
 
 **Files:**
+
 - Modify: `src/newTab/store/useAppStore.ts:4,20,34`
 - Modify: `src/newTab/app.tsx:1-46`
 - Modify: `src/newTab/components/Header.tsx:15-19,55-65`
 
 **Interfaces:**
+
 - Consumes: Task 1 的 `useHeaderViews()` → `{ viewOrder }`；`HeaderView` 类型
 - Produces: `Header` 组件新增 prop `activeView: HeaderView`（Task 3 继续消费）；`useAppStore.activeHeaderView` 类型变为 `HeaderView | null`
 
@@ -189,8 +190,7 @@ In `src/newTab/components/Header.tsx`：
 
 - [ ] **Step 4: 验证**
 
-Run: `pnpm compile` 与 `pnpm test`
-Expected: 两者均无错误输出/全部通过
+Run: `pnpm compile` 与 `pnpm test` Expected: 两者均无错误输出/全部通过
 
 - [ ] **Step 5: 提交**（提交信息经用户确认后执行）
 
@@ -208,9 +208,11 @@ git commit -m "feat: 默认视图跟随 Header 按钮排序首位
 ### Task 3: Header 左侧按钮拖拽排序
 
 **Files:**
+
 - Modify: `src/newTab/components/Header.tsx`（整体重写左侧按钮区）
 
 **Interfaces:**
+
 - Consumes: Task 1 的 `useHeaderViews()` → `{ viewOrder, moveView }`；Task 2 的 `activeView` prop；`@dnd-kit/react` 的 `DragDropProvider`、`@dnd-kit/react/sortable` 的 `useSortable`、`@/lib/utils` 的 `cn`
 
 - [ ] **Step 1: 重写 Header.tsx**
@@ -223,7 +225,7 @@ import {
   LayoutGridIcon,
   SettingsIcon,
   StarIcon,
-  type LucideIcon,
+  type LucideIcon
 } from 'lucide-react'
 import { DragDropProvider } from '@dnd-kit/react'
 import { useSortable } from '@dnd-kit/react/sortable'
@@ -241,14 +243,14 @@ const VIEW_META: Record<
   { label: string; ariaLabel: string; icon: LucideIcon }
 > = {
   pins: { label: '快捷书签', ariaLabel: '快捷书签', icon: StarIcon },
-  tabs: { label: '标签页', ariaLabel: '标签页面板', icon: LayoutGridIcon },
+  tabs: { label: '标签页', ariaLabel: '标签页面板', icon: LayoutGridIcon }
 }
 
 /** 左侧单个视图按钮：整按钮可拖拽排序，拖拽中降透明度并加阴影提示 */
 function SortableViewButton({
   view,
   index,
-  active,
+  active
 }: {
   view: HeaderView
   index: number
@@ -264,7 +266,10 @@ function SortableViewButton({
       variant='ghost'
       aria-label={ariaLabel}
       onClick={() => setActiveHeaderView(view)}
-      className={cn(active && 'bg-[#f1f3f3]', isDragging && 'opacity-80 shadow-md')}
+      className={cn(
+        active && 'bg-[#f1f3f3]',
+        isDragging && 'opacity-80 shadow-md'
+      )}
     >
       <Icon className='size-3.5' />
       {label}
@@ -287,14 +292,14 @@ export default function Header({ activeView }: { activeView: HeaderView }) {
       label: '书签',
       ariaLabel: '书签',
       icon: BookmarkIcon,
-      onClick: () => setBookmarkOpen(true),
+      onClick: () => setBookmarkOpen(true)
     },
     {
       label: '设置',
       ariaLabel: '设置',
       icon: SettingsIcon,
-      onClick: () => setSettingsOpen(true),
-    },
+      onClick: () => setSettingsOpen(true)
+    }
   ]
 
   return (
@@ -334,11 +339,9 @@ export default function Header({ activeView }: { activeView: HeaderView }) {
 
 - [ ] **Step 2: 验证**
 
-Run: `pnpm compile`
-Expected: 无错误输出（若报 `moveView` 事件类型不匹配，将 `onDragEnd` 改为 `onDragEnd={(event) => moveView(event)}` 显式传参；`move` 事件参数类型 `Parameters<typeof move>[1]` 已在临时验证中实测与 provider 的 dragend 事件兼容，预期无需调整）
+Run: `pnpm compile` Expected: 无错误输出（若报 `moveView` 事件类型不匹配，将 `onDragEnd` 改为 `onDragEnd={(event) => moveView(event)}` 显式传参；`move` 事件参数类型 `Parameters<typeof move>[1]` 已在临时验证中实测与 provider 的 dragend 事件兼容，预期无需调整）
 
-Run: `pnpm test`
-Expected: 全部通过
+Run: `pnpm test` Expected: 全部通过
 
 - [ ] **Step 3: 提交**（提交信息经用户确认后执行）
 
@@ -359,8 +362,7 @@ git commit -m "feat: Header 左侧按钮支持拖拽排序
 
 - [ ] **Step 1: 类型检查与单测**
 
-Run: `pnpm compile`、`pnpm test`
-Expected: 均无错误输出/全部通过
+Run: `pnpm compile`、`pnpm test` Expected: 均无错误输出/全部通过
 
 - [ ] **Step 2: 手动验证（pnpm dev）**
 

@@ -31,10 +31,10 @@ const GitLabReplyButton = () => {
     <div id='gitlab-reply-button-wrap'>
       <button
         ref={buttonRef}
-        type="button"
+        type='button'
         onClick={handleClick}
-        title="问题解决回复"
-        className="gitlab-reply-button"
+        title='问题解决回复'
+        className='gitlab-reply-button'
       >
         问题解决回复
       </button>

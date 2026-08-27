@@ -3,7 +3,7 @@ import {
   LayoutGridIcon,
   SettingsIcon,
   StarIcon,
-  type LucideIcon,
+  type LucideIcon
 } from 'lucide-react'
 import { DragDropProvider } from '@dnd-kit/react'
 import { useSortable } from '@dnd-kit/react/sortable'
@@ -21,14 +21,14 @@ const VIEW_META: Record<
   { label: string; ariaLabel: string; icon: LucideIcon }
 > = {
   pins: { label: '快捷书签', ariaLabel: '快捷书签', icon: StarIcon },
-  tabs: { label: '标签页', ariaLabel: '标签页面板', icon: LayoutGridIcon },
+  tabs: { label: '标签页', ariaLabel: '标签页面板', icon: LayoutGridIcon }
 }
 
 /** 左侧单个视图按钮：整按钮可拖拽排序，拖拽中降透明度并加阴影提示 */
 function SortableViewButton({
   view,
   index,
-  active,
+  active
 }: {
   view: HeaderView
   index: number
@@ -44,7 +44,10 @@ function SortableViewButton({
       variant='ghost'
       aria-label={ariaLabel}
       onClick={() => setActiveHeaderView(view)}
-      className={cn(active && 'bg-[#f1f3f3]', isDragging && 'opacity-80 shadow-md')}
+      className={cn(
+        active && 'bg-[#f1f3f3]',
+        isDragging && 'opacity-80 shadow-md'
+      )}
     >
       <Icon className='size-3.5' />
       {label}
@@ -67,14 +70,14 @@ export default function Header({ activeView }: { activeView: HeaderView }) {
       label: '书签',
       ariaLabel: '书签',
       icon: BookmarkIcon,
-      onClick: () => setBookmarkOpen(true),
+      onClick: () => setBookmarkOpen(true)
     },
     {
       label: '设置',
       ariaLabel: '设置',
       icon: SettingsIcon,
-      onClick: () => setSettingsOpen(true),
-    },
+      onClick: () => setSettingsOpen(true)
+    }
   ]
 
   return (

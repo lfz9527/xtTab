@@ -16,9 +16,7 @@ export default function useSearchHistory() {
   const addHistory = (word: string) => {
     const trimmed = word.trim()
     if (!trimmed) return
-    setHistory(
-      [trimmed, ...history.filter((h) => h !== trimmed)].slice(0, 10)
-    )
+    setHistory([trimmed, ...history.filter((h) => h !== trimmed)].slice(0, 10))
   }
 
   /** 删除单条历史 */
