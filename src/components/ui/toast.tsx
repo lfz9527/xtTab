@@ -1,5 +1,3 @@
-'use client'
-
 import type { ReactNode } from 'react'
 import { CheckCircle2Icon, InfoIcon, XCircleIcon } from 'lucide-react'
 import { Toaster as Sonner, toast as sonnerToast } from 'sonner'
