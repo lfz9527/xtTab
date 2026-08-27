@@ -1,4 +1,5 @@
 import { GlobeIcon } from 'lucide-react'
+import { cn } from '@/lib/utils'
 import useDockItems, { type DockItem } from '../store/useDockItems'
 import useSettings from '../store/useSettings'
 
@@ -43,13 +44,26 @@ export default function Dock() {
   const [settings] = useSettings()
   // 跳转方式：'current' 当前标签页（不设 target），'new' 新标签页
   const target = settings.dockItemTarget === 'current' ? undefined : '_blank'
+  // 宽度模式：auto 内容自适应（容器随内容收缩）；full 贴近全屏；fixed 固定宽度居中
+  const widthMode = settings.dockWidthMode ?? 'auto'
+  const widthValue = settings.dockWidthValue ?? 1200
 
   return (
     <nav
       aria-label='常用网站'
-      className='fixed bottom-4 left-1/2 z-40 -translate-x-1/2 rounded-3xl border border-white/30 bg-white/25 px-5 py-3 shadow-lg backdrop-blur-2xl'
+      className={cn(
+        'fixed bottom-4 z-40 rounded-3xl border border-white/30 bg-white/25 px-5 py-3 shadow-lg backdrop-blur-2xl',
+        // 全屏模式两侧留 16px 边距，其余模式水平居中
+        widthMode === 'full' ? 'inset-x-4' : 'left-1/2 -translate-x-1/2'
+      )}
+      style={widthMode === 'fixed' ? { width: widthValue } : undefined}
     >
-      <ul className='flex items-end gap-2.5'>
+      <ul
+        className={cn(
+          'flex items-end gap-2.5',
+          widthMode !== 'auto' && 'w-full justify-center'
+        )}
+      >
         {dockItems.list.map((item) => (
           <DockItem key={item.id} item={item} target={target} />
         ))}

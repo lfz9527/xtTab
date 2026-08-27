@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { GlobeIcon, PencilIcon, PlusIcon, Trash2Icon } from 'lucide-react'
 import { Dialog, DialogContent } from '@/components/ui/dialog'
+import { Input } from '@/components/ui/input'
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Switch } from '@/components/ui/switch'
 import { Button } from '@/components/ui/button'
@@ -47,6 +48,13 @@ const DOCK_ITEM_TARGET_OPTIONS = [
   { value: 'new', label: '新标签页' }
 ] as const
 
+/** 入口栏宽度模式选项 */
+const DOCK_WIDTH_MODE_OPTIONS = [
+  { value: 'auto', label: '自适应' },
+  { value: 'full', label: '全屏' },
+  { value: 'fixed', label: '固定宽度' }
+] as const
+
 /** 设置弹窗左右区域共用高度 */
 const PANEL_HEIGHT_CLASS = 'h-125'
 
@@ -63,6 +71,7 @@ export default function SettingsDialog() {
   const [settings, setSettings] = useSettings()
   const openTarget = settings.openTarget ?? 'current'
   const dockItemTarget = settings.dockItemTarget ?? 'new'
+  const dockWidthMode = settings.dockWidthMode ?? 'auto'
   const [engines, setEngines] = useSearchEngines()
   const { clearHistory } = useSearchHistory()
 
@@ -226,6 +235,56 @@ export default function SettingsDialog() {
                         ))}
                       </TabsList>
                     </Tabs>
+                  </div>
+                  <div className='rounded-lg border border-border bg-card p-4 flex flex-col gap-3'>
+                    <span className='text-sm font-medium text-foreground'>
+                      入口栏宽度
+                    </span>
+                    <div className='flex items-center gap-3'>
+                      <Tabs
+                        value={dockWidthMode}
+                        onValueChange={(value) =>
+                          setSettings({
+                            ...settings,
+                            dockWidthMode:
+                              value as SettingsState['dockWidthMode']
+                          })
+                        }
+                        className='w-fit'
+                      >
+                        <TabsList>
+                          {DOCK_WIDTH_MODE_OPTIONS.map((opt) => (
+                            <TabsTrigger
+                              key={opt.value}
+                              value={opt.value}
+                              className='px-3'
+                            >
+                              {opt.label}
+                            </TabsTrigger>
+                          ))}
+                        </TabsList>
+                      </Tabs>
+                      {dockWidthMode === 'fixed' && (
+                        <div className='flex items-center gap-1.5'>
+                          <Input
+                            type='number'
+                            aria-label='入口栏宽度'
+                            className='w-25'
+                            value={settings.dockWidthValue ?? 1200}
+                            onChange={(e) => {
+                              // 非法输入（空/非正数）不写入，输入框回显上次合法值
+                              const v = Number(e.target.value)
+                              if (Number.isFinite(v) && v > 0) {
+                                setSettings({ ...settings, dockWidthValue: v })
+                              }
+                            }}
+                          />
+                          <span className='text-xs text-muted-foreground'>
+                            px
+                          </span>
+                        </div>
+                      )}
+                    </div>
                   </div>
                   <div className='flex items-center justify-between rounded-lg border border-border bg-card p-4'>
                     <div className='flex flex-col gap-1'>
