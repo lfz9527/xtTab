@@ -16,6 +16,8 @@ interface AppState {
   settingsActiveTab: string
   /** 添加引擎弹窗开关 */
   addEngineOpen: boolean
+  /** 添加常用入口弹窗开关 */
+  addDockItemOpen: boolean
   /** 搜索框下方内容区当前视图；null = 未手动选择，跟随视图排序首位 */
   activeHeaderView: HeaderView | null
 
@@ -23,6 +25,7 @@ interface AppState {
   setSettingsOpen: (open: boolean) => void
   setSettingsActiveTab: (tab: string) => void
   setAddEngineOpen: (open: boolean) => void
+  setAddDockItemOpen: (open: boolean) => void
   setActiveHeaderView: (view: HeaderView) => void
 }
 
@@ -31,11 +34,13 @@ export const useAppStore = create<AppState>((set) => ({
   settingsOpen: false,
   settingsActiveTab: 'general',
   addEngineOpen: false,
+  addDockItemOpen: false,
   activeHeaderView: null,
 
   setBookmarkOpen: (open) => set({ bookmarkOpen: open }),
   setSettingsOpen: (open) => set({ settingsOpen: open }),
   setSettingsActiveTab: (tab) => set({ settingsActiveTab: tab }),
   setAddEngineOpen: (open) => set({ addEngineOpen: open }),
+  setAddDockItemOpen: (open) => set({ addDockItemOpen: open }),
   setActiveHeaderView: (view) => set({ activeHeaderView: view })
 }))

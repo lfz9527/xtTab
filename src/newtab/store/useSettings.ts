@@ -8,6 +8,8 @@ export interface SettingsState {
   searchHistoryEnabled: boolean
   /** 书签跳转方式：'current' 当前标签页 / 'new' 新标签页 */
   bookmarkTarget: 'current' | 'new'
+  /** 常用入口跳转方式：'current' 当前标签页 / 'new' 新标签页 */
+  dockItemTarget: 'current' | 'new'
   /** 打开书签弹窗快捷键（小写组合，如 ctrl+k） */
   bookmarkShortcut: string
   /** 打开设置弹窗快捷键（小写组合，如 ctrl+,） */
@@ -20,6 +22,7 @@ const settingsStorage = storage.defineItem<SettingsState>('local:settings', {
     openTarget: 'current',
     searchHistoryEnabled: true,
     bookmarkTarget: 'new',
+    dockItemTarget: 'new',
     bookmarkShortcut: 'ctrl+k',
     settingsShortcut: 'ctrl+,'
   }

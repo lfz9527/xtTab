@@ -1,5 +1,6 @@
-import { PlusIcon, Trash2Icon } from 'lucide-react'
-import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog'
+import { useState } from 'react'
+import { GlobeIcon, PencilIcon, PlusIcon, Trash2Icon } from 'lucide-react'
+import { Dialog, DialogContent } from '@/components/ui/dialog'
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Switch } from '@/components/ui/switch'
 import { Button } from '@/components/ui/button'
@@ -9,8 +10,10 @@ import { useAppStore } from '@/newTab/store/useAppStore'
 import useSettings, { type SettingsState } from '../store/useSettings'
 import useSearchEngines from '../store/useSearchEngines'
 import useSearchHistory from '../store/useSearchHistory'
+import useDockItems, { type DockItem } from '../store/useDockItems'
 import EngineIcon from './EngineIcon'
 import AddEngineDialog from './AddEngineDialog'
+import AddDockItemDialog from './AddDockItemDialog'
 import ShortcutInput from './ShortcutInput'
 
 interface SettingsTab {
@@ -22,6 +25,7 @@ interface SettingsTab {
 const SETTINGS_TABS: SettingsTab[] = [
   { key: 'general', label: '通用' },
   { key: 'engines', label: '搜索引擎' },
+  { key: 'dock', label: '常用入口' },
   { key: 'shortcuts', label: '快捷键' }
 ]
 
@@ -33,6 +37,12 @@ const BOOKMARK_TARGET_OPTIONS = [
 
 /** 搜索结果打开方式选项 */
 const OPEN_TARGET_OPTIONS = [
+  { value: 'current', label: '当前标签页' },
+  { value: 'new', label: '新标签页' }
+] as const
+
+/** 常用入口跳转方式选项 */
+const DOCK_ITEM_TARGET_OPTIONS = [
   { value: 'current', label: '当前标签页' },
   { value: 'new', label: '新标签页' }
 ] as const
@@ -52,6 +62,7 @@ export default function SettingsDialog() {
   const setActiveTab = useAppStore((s) => s.setSettingsActiveTab)
   const [settings, setSettings] = useSettings()
   const openTarget = settings.openTarget ?? 'current'
+  const dockItemTarget = settings.dockItemTarget ?? 'new'
   const [engines, setEngines] = useSearchEngines()
   const { clearHistory } = useSearchHistory()
 
@@ -76,6 +87,26 @@ export default function SettingsDialog() {
   /** 添加引擎弹窗开关（全局状态） */
   const addDialogOpen = useAppStore((s) => s.addEngineOpen)
   const setAddDialogOpen = useAppStore((s) => s.setAddEngineOpen)
+  /** 添加常用入口弹窗开关（全局状态） */
+  const addDockItemOpen = useAppStore((s) => s.addDockItemOpen)
+  const setAddDockItemOpen = useAppStore((s) => s.setAddDockItemOpen)
+  const [dockItems, setDockItems] = useDockItems()
+  /** 常用入口弹窗编辑目标；null = 添加模式 */
+  const [editingDockItem, setEditingDockItem] = useState<DockItem | null>(null)
+
+  /** 删除常用入口 */
+  const removeDockItem = (id: string) => {
+    setDockItems({
+      ...dockItems,
+      list: dockItems.list.filter((item) => item.id !== id)
+    })
+  }
+
+  /** 打开常用入口弹窗：null 为添加模式，传入条目为编辑模式 */
+  const openDockItemDialog = (item: DockItem | null) => {
+    setEditingDockItem(item)
+    setAddDockItemOpen(true)
+  }
 
   return (
     <Dialog modal open={open} onOpenChange={setOpen}>
@@ -157,6 +188,34 @@ export default function SettingsDialog() {
                     >
                       <TabsList>
                         {BOOKMARK_TARGET_OPTIONS.map((opt) => (
+                          <TabsTrigger
+                            key={opt.value}
+                            value={opt.value}
+                            className='px-3'
+                          >
+                            {opt.label}
+                          </TabsTrigger>
+                        ))}
+                      </TabsList>
+                    </Tabs>
+                  </div>
+                  <div className='rounded-lg border border-border bg-card p-4 flex flex-col gap-3'>
+                    <span className='text-sm font-medium text-foreground'>
+                      常用入口跳转方式
+                    </span>
+                    <Tabs
+                      value={dockItemTarget}
+                      onValueChange={(value) =>
+                        setSettings({
+                          ...settings,
+                          dockItemTarget:
+                            value as SettingsState['dockItemTarget']
+                        })
+                      }
+                      className='w-fit'
+                    >
+                      <TabsList>
+                        {DOCK_ITEM_TARGET_OPTIONS.map((opt) => (
                           <TabsTrigger
                             key={opt.value}
                             value={opt.value}
@@ -263,6 +322,72 @@ export default function SettingsDialog() {
                 </ScrollArea>
               </div>
             )}
+            {activeTab === 'dock' && (
+              <div className='flex min-h-0 flex-1 flex-col gap-2'>
+                {/* header：添加按钮固定不滚动 */}
+                <div className='flex items-center justify-end'>
+                  <Button
+                    variant='default'
+                    className='w-fit'
+                    onClick={() => openDockItemDialog(null)}
+                  >
+                    <PlusIcon className='size-4' />
+                    添加
+                  </Button>
+                </div>
+                {/* list：仅列表区域滚动 */}
+                <ScrollArea className='min-h-0 flex-1'>
+                  <div className='grid grid-cols-2 gap-2 pr-3'>
+                    {dockItems.list.map((item) => (
+                      <div
+                        key={item.id}
+                        className='flex flex-col justify-between gap-2 rounded-lg border border-border bg-card p-3'
+                      >
+                        <div className='flex items-center justify-between gap-2'>
+                          <div className='flex min-w-0 items-center gap-2'>
+                            <span className='flex size-8 shrink-0 items-center justify-center rounded-md bg-white'>
+                              {item.icon ? (
+                                <img
+                                  src={item.icon}
+                                  alt={item.name}
+                                  className='size-6'
+                                />
+                              ) : (
+                                <GlobeIcon className='size-5 text-muted-foreground' />
+                              )}
+                            </span>
+                            <span className='truncate text-sm font-medium text-foreground'>
+                              {item.name}
+                            </span>
+                          </div>
+                          <div className='flex shrink-0 items-center gap-1'>
+                            <button
+                              type='button'
+                              onClick={() => openDockItemDialog(item)}
+                              aria-label={`编辑${item.name}`}
+                              className='rounded p-0.5 text-muted-foreground transition-colors hover:text-foreground'
+                            >
+                              <PencilIcon className='size-3.5' />
+                            </button>
+                            <button
+                              type='button'
+                              onClick={() => removeDockItem(item.id)}
+                              aria-label={`删除${item.name}`}
+                              className='rounded p-0.5 text-muted-foreground transition-colors hover:text-destructive'
+                            >
+                              <Trash2Icon className='size-3.5' />
+                            </button>
+                          </div>
+                        </div>
+                        <span className='truncate text-xs text-muted-foreground'>
+                          {item.url}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </ScrollArea>
+              </div>
+            )}
             {activeTab === 'shortcuts' && (
               <ScrollArea className='min-h-0 flex-1'>
                 <div className='flex flex-col gap-4 pr-3'>
@@ -312,6 +437,13 @@ export default function SettingsDialog() {
       </DialogContent>
       {/* 自定义搜索引擎二次弹窗 */}
       <AddEngineDialog open={addDialogOpen} onOpenChange={setAddDialogOpen} />
+      {/* 添加/编辑常用入口二次弹窗：key 含编辑目标与开合状态，保证每次打开重建并初始化表单 */}
+      <AddDockItemDialog
+        key={`${editingDockItem?.id ?? 'new'}-${addDockItemOpen}`}
+        open={addDockItemOpen}
+        onOpenChange={setAddDockItemOpen}
+        editingItem={editingDockItem}
+      />
     </Dialog>
   )
 }
