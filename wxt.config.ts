@@ -45,12 +45,5 @@ export default defineConfig({
     server: {
       port: 3000
     }
-  },
-  // @ts-ignore
-  webExt: {
-    chromiumArgs: [
-      '--disable-features=DisableLoadExtensionCommandLineSwitch',
-      '--user-data-dir=./.wxt/chrome-data'
-    ]
   }
 })
