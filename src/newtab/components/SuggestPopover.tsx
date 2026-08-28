@@ -69,6 +69,18 @@ export default function SuggestPopover({
   const isHistoryMode = !trimmed
   const items = isHistoryMode ? history : suggestions
 
+  // 上次生效的输入值，用于在渲染阶段重置联想状态（React 文档推荐的 prop 变化时调整 state 模式），
+  // 避免在 effect 中同步 setState 触发级联渲染
+  const [prevTrimmed, setPrevTrimmed] = useState(trimmed)
+  if (!composing && prevTrimmed !== trimmed) {
+    setPrevTrimmed(trimmed)
+    setSuggestions([])
+    // 输入清空时回到历史模式：仅聚焦且有历史时展开（失焦收起由 close() 处理）
+    if (!trimmed) {
+      setSuggestOpen(inputFocused && history.length > 0)
+    }
+  }
+
   // 列表键盘导航：上下键循环高亮、回车搜索高亮项；返回 true 表示事件已被消费
   // search 定义于下方，经内联箭头延迟求值，规避 TDZ
   const { activeIndex, setActiveIndex, handleKeyDown } = useListNavigation({
@@ -95,23 +107,15 @@ export default function SuggestPopover({
     { delay: 200 }
   )
 
+  // 联想请求触发：非组合输入且输入非空时防抖查询，组合输入或清空时取消在途请求；
+  // 仅输入内容变化时触发查询，切换搜索引擎不重新查询联想，避免无谓展开列表
   useEffect(() => {
-    if (composing) {
+    if (composing || !trimmed) {
       cancelSuggest()
       return
     }
-    const trimmed = query.trim()
-    if (!trimmed) {
-      cancelSuggest()
-      setSuggestions([])
-      // 输入清空时回到历史模式：仅聚焦且有历史时展开（失焦收起由 close() 处理）
-      setSuggestOpen(queryRef.current.inputFocused && history.length > 0)
-      return
-    }
-    setSuggestions([])
     runSuggest(trimmed)
-    // 仅输入框内容变化时触发查询；切换搜索引擎不重新查询联想，避免无谓展开列表
-  }, [query, composing, runSuggest, cancelSuggest])
+  }, [trimmed, composing, runSuggest, cancelSuggest])
 
   const search = (word: string) => {
     onSearch(word)
