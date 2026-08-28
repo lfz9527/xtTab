@@ -1,13 +1,6 @@
 import { useState } from 'react'
 import { cn } from '@/lib/utils'
-
-/** 修饰键显示名 */
-const MODIFIER_DISPLAY: Record<string, string> = {
-  ctrl: 'Ctrl',
-  shift: 'Shift',
-  alt: 'Alt',
-  meta: 'Meta'
-}
+import { formatShortcut } from '@/utils'
 
 /** 特殊键名映射为 useCommand 可识别的小写形式 */
 const SPECIAL_KEYS: Record<string, string> = {
@@ -21,15 +14,6 @@ const SPECIAL_KEYS: Record<string, string> = {
   ArrowDown: 'arrowdown',
   ArrowLeft: 'arrowleft',
   ArrowRight: 'arrowright'
-}
-
-/** 将存储的小写组合键格式化为显示文本，如 ctrl+k -> Ctrl+K */
-export function formatShortcut(shortcut: string): string {
-  if (!shortcut) return ''
-  return shortcut
-    .split('+')
-    .map((part) => MODIFIER_DISPLAY[part] ?? part.toUpperCase())
-    .join('+')
 }
 
 /** 将 KeyboardEvent 解析为小写组合键字符串；纯修饰键或无修饰键返回 null */

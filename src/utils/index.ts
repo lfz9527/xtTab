@@ -33,3 +33,20 @@ export function groupTabsByHost(
     })
     .map(([host, list]) => ({ host, tabs: list }))
 }
+
+/** 修饰键显示名 */
+const MODIFIER_DISPLAY: Record<string, string> = {
+  ctrl: 'Ctrl',
+  shift: 'Shift',
+  alt: 'Alt',
+  meta: 'Meta'
+}
+
+/** 将存储的小写组合键格式化为显示文本，如 ctrl+k -> Ctrl+K */
+export function formatShortcut(shortcut: string): string {
+  if (!shortcut) return ''
+  return shortcut
+    .split('+')
+    .map((part) => MODIFIER_DISPLAY[part] ?? part.toUpperCase())
+    .join('+')
+}
