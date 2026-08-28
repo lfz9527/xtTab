@@ -102,8 +102,8 @@ export default function Dock() {
       >
         <ul
           className={cn(
-            'mx-auto flex gap-2.5',
-            // 展开：多行换行网格；收起：单行贴底横排
+            'flex gap-2.5',
+            // 展开：多行换行网格（整行铺满）；收起：单行贴底横排靠左
             expanded ? 'w-full flex-wrap content-start' : 'w-fit items-end'
           )}
         >
