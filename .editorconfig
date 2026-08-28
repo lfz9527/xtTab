@@ -4,7 +4,7 @@
 root = true
 
 # JavaScript 和 TypeScript 文件的配置
-[*.{js,ts}]
+[*.{js,ts,tsx,jsx}]
 indent_style = space       # 使用空格缩进
 indent_size = 2            # 每级缩进使用 2 个空格
 max_line_length = 80       # 每行最大字符数为 80
