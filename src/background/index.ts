@@ -8,7 +8,7 @@ export default defineBackground(() => {
   registerBookmarksListener()
 })
 
-browser.tabs.onActivated.addListener((activeInfo) => {
+browser.tabs.onActivated.addListener(() => {
   console.log('监听标签页激活事件')
 })
 
