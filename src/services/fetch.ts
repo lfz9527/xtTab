@@ -65,7 +65,7 @@ class Fetch {
   }
   async request(opt: RequestOptions) {
     let api = opt.api
-    let body = opt.body
+    const body = opt.body
     let finalBody: BodyInit | undefined
     const method = this.setUpMethod(opt.method)
     if (method === 'GET' && body) {
